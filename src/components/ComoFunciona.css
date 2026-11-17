@@ -1,0 +1,40 @@
+.passos {
+  display: grid;
+  gap: 16px;
+}
+
+.passo {
+  position: relative;
+  padding: 28px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--sup);
+  border: 1px solid var(--borda);
+  transition: border-color 0.3s;
+}
+
+/* Luz que segue o mouse dentro do card */
+.passo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), #8b5cf62a, transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.passo:hover { border-color: #8b5cf677; }
+.passo:hover::before { opacity: 1; }
+
+.passo__n {
+  font-family: var(--fonte-titulo);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--a2);
+}
+.passo h3 { font-size: 1.1rem; margin: 10px 0 6px; }
+.passo p { margin: 0; color: var(--suave); }
+
+@media (min-width: 800px) {
+  .passos { grid-template-columns: repeat(3, 1fr); }
+}

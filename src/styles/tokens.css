@@ -1,36 +1,24 @@
-/* Tokens de design: cores, fontes e espaçamentos usados no site todo.
-   Mudou aqui, muda em tudo. */
+/* Tokens de design: mudou aqui, muda no site todo. */
 :root {
-  /* Cores - base escura (Navalha) */
-  --cor-fundo: #0f0f10;
-  --cor-superficie: #1a1a1c;
-  --cor-borda: #2a2a2e;
-  --cor-texto: #f5f3ee;
-  --cor-texto-suave: #a8a49c;
+  --bg: #07070c;
+  --sup: #0f0f18;
+  --sup2: #141420;
+  --borda: #1d1d2c;
+  --txt: #f2f2f8;
+  --suave: #9898ae;
 
-  /* Destaque */
-  --cor-destaque: #ff6b2c;
-  --cor-destaque-hover: #ff8550;
-  --cor-sobre-destaque: #0f0f10;
+  --a1: #8b5cf6; /* violeta */
+  --a2: #2dd4bf; /* verde-água */
+  --ok: #4ade80;
+  --grad: linear-gradient(90deg, var(--a2), var(--a1));
 
-  /* Seções claras (toque do Balcão) */
-  --cor-claro-fundo: #faf7f2;
-  --cor-claro-texto: #1c1b19;
-  --cor-claro-suave: #5c5850;
+  --fonte-titulo: 'Unbounded', system-ui, sans-serif;
+  --fonte-texto: 'Manrope', system-ui, sans-serif;
 
-  /* Tipografia */
-  --fonte-titulo: 'Space Grotesk', system-ui, sans-serif;
-  --fonte-texto: 'DM Sans', system-ui, sans-serif;
-
-  /* Espaçamento e forma */
+  --largura-max: 1160px;
   --gutter: 16px;
-  --largura-max: 1120px;
-  --raio: 14px;
-  --raio-pill: 999px;
-}
 
-@media (min-width: 768px) {
-  :root {
-    --gutter: 32px;
-  }
+  /* Inclinação 3D controlada pelo mouse/scroll (de -1 a 1), ver useTiltGlobal */
+  --px: 0;
+  --py: 0;
 }

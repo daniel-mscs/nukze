@@ -1,0 +1,137 @@
+/* A seção é bem alta; a parte de dentro fica "grudada" (sticky) na tela
+   enquanto o scroll vertical empurra o trilho pro lado. */
+.projetos { position: relative; height: 400vh; }
+
+.projetos__fixo {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.projetos__cab {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin: 0 auto;
+  padding: 84px 16px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+}
+.projetos__cab h2 { font-size: clamp(1.5rem, 5vw, 2.8rem); margin: 10px 0 0; }
+
+.projetos__pct {
+  font-family: var(--fonte-titulo);
+  font-size: 0.8rem;
+  color: var(--a2);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.projetos__fundo {
+  position: absolute;
+  bottom: 3%;
+  left: 0;
+  white-space: nowrap;
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: clamp(5rem, 22vw, 16rem);
+  color: transparent;
+  -webkit-text-stroke: 1px #ffffff10;
+  pointer-events: none;
+}
+
+.projetos__trilho {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 16px;
+}
+
+.slide {
+  position: relative;
+  flex: none;
+  width: min(86vw, 880px);
+  height: min(68svh, 560px);
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--borda);
+  background: radial-gradient(ellipse at top right, #8b5cf61a, transparent 60%), var(--sup);
+}
+
+.slide h3 { font-size: clamp(1.3rem, 4vw, 2rem); margin: 12px 0 6px; }
+.slide p { color: var(--suave); font-size: 0.95rem; margin: 0 0 14px; }
+
+.slide__info { display: flex; flex-direction: column; justify-content: center; max-width: 420px; }
+.slide__rotulo { font-family: var(--fonte-titulo); font-size: 0.75rem; color: var(--a2); }
+
+.slide__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.slide__chips span { font-size: 0.72rem; border: 1px solid var(--borda); border-radius: 999px; padding: 4px 10px; color: #cfcfe0; }
+
+.slide__aparelhos {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+.slide__aparelhos .iphone { height: 94%; cursor: zoom-in; }
+.slide__aparelhos .tilt { height: 100%; display: flex; align-items: center; }
+.slide__aparelhos .flutua { height: 100%; }
+
+.slide .navegador { flex: 1; align-self: center; cursor: zoom-in; }
+
+.slide--seu {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px dashed #8b5cf688;
+}
+.slide__mais {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  font-size: 2.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--borda);
+  box-shadow: 0 0 40px #2dd4bf44;
+}
+
+.zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #000d;
+  backdrop-filter: blur(8px);
+  cursor: zoom-out;
+  border: 0;
+}
+.zoom img { max-width: 100%; max-height: 100%; border-radius: 18px; }
+
+@media (max-width: 799px) {
+  .slide { flex-direction: column; padding: 18px; }
+  .so-desktop { display: none !important; }
+  .slide__aparelhos .iphone { height: auto; width: min(42vw, 180px); }
+  .slide__aparelhos .flutua, .slide__aparelhos .tilt { height: auto; }
+  .slide__info p { font-size: 0.88rem; }
+}

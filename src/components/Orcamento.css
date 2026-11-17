@@ -1,0 +1,31 @@
+.orcamento {
+  position: relative;
+  overflow: hidden;
+  margin: 20px auto 100px;
+  padding: 110px 24px;
+  text-align: center;
+  border-radius: 40px;
+  border: 1px solid var(--borda);
+}
+
+/* Borda de luz girando */
+.orcamento::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg, transparent, var(--a1), var(--a2), transparent 40%);
+  opacity: 0.3;
+  animation: gira 7s linear infinite;
+}
+.orcamento::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 39px;
+  background: radial-gradient(ellipse at center, #100e1d, var(--bg) 70%);
+}
+.orcamento > * { position: relative; z-index: 1; }
+.orcamento h2 { font-size: clamp(2rem, 7vw, 3.8rem); margin-top: 20px; }
+.orcamento p { max-width: 460px; margin: 0 auto; }
+
+@keyframes gira { to { transform: rotate(1turn); } }

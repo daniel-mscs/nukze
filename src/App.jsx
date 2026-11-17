@@ -1,31 +1,29 @@
-import { site } from './data/site'
+import { useTiltGlobal } from './hooks/useTiltGlobal'
+import Nav from './components/Nav'
+import Hero from './components/Hero'
+import Faixa from './components/Faixa'
+import DemoEmBreve from './components/DemoEmBreve'
+import Projetos from './components/Projetos'
+import ComoFunciona from './components/ComoFunciona'
+import QuemFaz from './components/QuemFaz'
+import Orcamento from './components/Orcamento'
+import Rodape from './components/Rodape'
 
-// Prévia temporária da base visual (vai ser trocada pelas seções reais)
-function App() {
+export default function App() {
+  useTiltGlobal()
   return (
-    <main>
-      <section className="secao">
-        <div className="container">
-          <h1>
-            Seu negócio com <span className="destaque">site e agenda</span>
-          </h1>
-          <p>Prévia da base visual do {site.nome}.</p>
-          <a className="botao" href="#">
-            Botão principal
-          </a>{' '}
-          <a className="botao botao--contorno" href="#">
-            Botão contorno
-          </a>
-        </div>
-      </section>
-      <section className="secao secao--clara">
-        <div className="container">
-          <h2>Seção clara</h2>
-          <p>Usada pra alternar o ritmo da página (ex: planos e FAQ).</p>
-        </div>
-      </section>
-    </main>
+    <>
+      <Nav />
+      <main>
+        <Hero />
+        <Faixa />
+        <DemoEmBreve />
+        <Projetos />
+        <ComoFunciona />
+        <QuemFaz />
+        <Orcamento />
+      </main>
+      <Rodape />
+    </>
   )
 }
-
-export default App

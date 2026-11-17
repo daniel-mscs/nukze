@@ -1,0 +1,33 @@
+.quem {
+  display: grid;
+  gap: 32px;
+  align-items: center;
+  padding: 36px 24px;
+  border-radius: 32px;
+  border: 1px solid var(--borda);
+  background: radial-gradient(ellipse at top left, #2dd4bf14, transparent 55%), var(--sup);
+}
+
+.quem__foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-size: 2.4rem;
+  font-weight: 800;
+  background: var(--grad);
+  color: var(--bg);
+  box-shadow: 0 0 0 6px var(--sup), 0 0 0 7px var(--borda), 0 0 50px #8b5cf655;
+}
+
+.quem h2 { font-size: clamp(1.6rem, 5vw, 2.6rem); margin: 14px 0 6px; }
+.quem__cargo { color: var(--a2); font-weight: 700; font-size: 0.9rem; margin-bottom: 14px; }
+
+.quem__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.quem__links .btn { min-height: 42px; padding: 0 18px; font-size: 0.88rem; }
+
+@media (min-width: 800px) {
+  .quem { grid-template-columns: auto 1fr; padding: 48px; gap: 48px; }
+}

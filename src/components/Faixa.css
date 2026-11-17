@@ -1,0 +1,23 @@
+.faixa {
+  overflow: hidden;
+  padding: 16px 0;
+  margin: 30px 0;
+  border-block: 1px solid var(--borda);
+  background: #0b0b13;
+  transform: rotate(-1.5deg) scale(1.04);
+}
+
+.faixa__trilho {
+  display: flex;
+  gap: 36px;
+  width: max-content;
+  animation: rola 30s linear infinite;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.1rem, 3.6vw, 1.8rem);
+  font-weight: 700;
+}
+
+.faixa__trilho span { color: transparent; -webkit-text-stroke: 1px #ffffff50; }
+.faixa__trilho b { color: var(--a2); }
+
+@keyframes rola { to { transform: translateX(-50%); } }

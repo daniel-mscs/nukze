@@ -1,0 +1,83 @@
+.iphone {
+  position: relative;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 15% / 7%;
+  padding: 3.4%;
+  background: linear-gradient(150deg, #4a4a58 0%, #16161d 22%, #0c0c12 60%, #2a2a35 100%);
+  box-shadow:
+    inset 0 0 0 1.5px #6a6a7a,
+    inset 0 0 0 4px #09090d,
+    0 40px 80px -20px #000,
+    0 0 60px -10px #8b5cf640;
+}
+
+/* Botões laterais */
+.iphone__lado {
+  position: absolute;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(#55556a, #2a2a36);
+}
+.iphone__lado--1 { left: -2px; top: 18%; height: 5%; }
+.iphone__lado--2 { left: -2px; top: 26%; height: 9%; }
+.iphone__lado--3 { left: -2px; top: 37%; height: 9%; }
+.iphone__lado--4 { right: -2px; top: 29%; height: 13%; }
+
+.iphone__vidro {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12.5% / 5.8%;
+  overflow: hidden;
+  background: #000;
+}
+
+.iphone__vidro > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* Câmera (ilha) */
+.iphone__ilha {
+  position: absolute;
+  top: 1.6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 3.2%;
+  border-radius: 999px;
+  background: #000;
+  z-index: 20;
+}
+
+/* Reflexo do vidro que anda com o mouse */
+.iphone__reflexo {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    #ffffff12 calc(42% + var(--px) * 20%),
+    transparent calc(56% + var(--px) * 20%)
+  );
+}
+
+/* Inclinação 3D (força definida por --forca) */
+.tilt {
+  --forca: 10;
+  transform: perspective(1000px) rotateX(calc(var(--py) * -1deg * var(--forca)))
+    rotateY(calc(var(--px) * 1deg * var(--forca)));
+  transition: transform 0.25s ease-out;
+}
+
+.flutua {
+  animation: flutua 6s ease-in-out infinite;
+}
+.flutua--lento {
+  animation-duration: 7.5s;
+  animation-delay: -2.5s;
+}
