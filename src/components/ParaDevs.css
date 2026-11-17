@@ -1,0 +1,31 @@
+.devs {
+  display: grid;
+  gap: 28px;
+  align-items: center;
+}
+
+.devs h2 { font-size: clamp(1.6rem, 5vw, 2.6rem); margin-top: 14px; }
+.devs ul { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+.devs li { display: flex; gap: 10px; color: var(--suave); }
+.devs li::before { content: '→'; color: var(--a2); font-weight: 800; }
+
+/* "Editor de código" decorativo */
+.devs__codigo {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--borda);
+  background: #0b0b12;
+  font: 13px/1.7 'Space Mono', ui-monospace, monospace;
+  box-shadow: 0 30px 60px -30px #000, 0 0 60px -30px #8b5cf6;
+}
+.devs__codigo header { display: flex; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--borda); color: var(--suave); font-size: 11px; align-items: center; }
+.devs__codigo header i { width: 9px; height: 9px; border-radius: 50%; background: #333; }
+.devs__codigo pre { margin: 0; padding: 16px 18px; overflow-x: auto; color: #cfcfe0; }
+.devs__codigo .k { color: #c084fc; }
+.devs__codigo .s { color: #5eead4; }
+.devs__codigo .c { color: #5b5b72; }
+.devs__cursor { display: inline-block; width: 8px; height: 15px; background: var(--a2); vertical-align: -2px; animation: pisca 1s steps(1) infinite; }
+
+@media (min-width: 900px) {
+  .devs { grid-template-columns: 1fr 1fr; gap: 56px; }
+}

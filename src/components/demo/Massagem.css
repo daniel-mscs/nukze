@@ -1,0 +1,86 @@
+/* Site fictício: Lótus (claro, suave, serifado) */
+.lt {
+  --c-areia: #f6f1e9;
+  --c-salvia: #6f8f72;
+  --c-salvia-esc: #4c6a50;
+  --c-texto: #2f2b26;
+  --c-suave: #8d8478;
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  background: var(--c-areia);
+  color: var(--c-texto);
+  font-family: 'Manrope', sans-serif;
+}
+
+.lt-bolhas i { position: absolute; border-radius: 50%; filter: blur(30px); opacity: 0.55; animation: lt-flutua 12s ease-in-out infinite alternate; pointer-events: none; }
+.lt-bolhas i:nth-child(1) { width: 220px; height: 220px; background: #c9d8c2; top: -60px; right: -60px; }
+.lt-bolhas i:nth-child(2) { width: 180px; height: 180px; background: #ecd3bd; bottom: 10%; left: -70px; animation-delay: -5s; }
+@keyframes lt-flutua { to { transform: translate(20px, 30px) scale(1.1); } }
+
+.lt-topo { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 42px 18px 6px; font-size: 18px; }
+.lt-logo { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; letter-spacing: -0.02em; }
+.lt-logo em { font-size: 11px; font-style: italic; color: var(--c-suave); margin-left: 4px; }
+
+.lt-sec { position: relative; padding: 14px 18px 24px; }
+.lt-sobre { display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--c-salvia); font-weight: 700; margin: 10px 0 6px; }
+.lt h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 30px; line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 8px; }
+.lt h3 em { font-style: italic; color: var(--c-salvia); }
+.lt p { font-size: 13px; color: var(--c-suave); margin: 0 0 14px; }
+
+.lt-entra { animation: lt-entra 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes lt-entra { from { opacity: 0; transform: translateY(14px); } }
+
+.lt-sintomas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.lt-sintomas button { border: 1px solid #ddd2c2; background: #fffcf7; border-radius: 999px; padding: 10px 14px; font-size: 13px; transition: 0.25s; }
+.lt-sintomas button.on { background: var(--c-salvia); border-color: var(--c-salvia); color: #fff; transform: scale(1.04); }
+
+.lt-bt { width: 100%; border: 0; border-radius: 999px; padding: 14px; background: var(--c-texto); color: var(--c-areia); font-weight: 700; font-size: 14px; transition: 0.2s; }
+.lt-bt:disabled { opacity: 0.3; cursor: not-allowed; }
+.lt-link { display: block; margin: 10px auto 0; background: none; border: 0; color: var(--c-suave); font-size: 12px; }
+
+.lt-card { position: relative; padding: 22px 18px; border-radius: 26px; background: linear-gradient(160deg, #ffffff, #eef3ea); box-shadow: 0 20px 40px -20px #4c6a5055; margin-bottom: 14px; animation: lt-entra 0.7s 0.1s backwards; }
+.lt-card__selo { display: inline-block; font-size: 10px; background: var(--c-salvia); color: #fff; padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+.lt-card__info { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #e3dccf; padding-top: 10px; font-size: 12px; color: var(--c-suave); }
+.lt-card__info b { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: var(--c-texto); }
+
+.lt-outras { display: grid; gap: 6px; margin-bottom: 16px; }
+.lt-outras button { display: flex; justify-content: space-between; padding: 11px 14px; border-radius: 14px; border: 1px solid #e3dccf; background: #fffcf7; font-size: 13px; }
+.lt-outras button span { color: var(--c-suave); }
+.lt-outras button.on { border-color: var(--c-salvia); box-shadow: inset 0 0 0 1px var(--c-salvia); }
+
+/* Calendário do mês */
+.lt-mes { text-transform: capitalize; }
+.lt-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 14px; text-align: center; }
+.lt-cal__sem { font-size: 10px; color: var(--c-suave); padding: 4px 0; }
+.lt-cal button { aspect-ratio: 1; padding: 0; min-width: 0; border: 0; border-radius: 50%; background: none; font-size: 12px; font-weight: 600; transition: 0.2s; }
+.lt-cal button:hover:not(:disabled) { background: #e7efe3; }
+.lt-cal button:disabled { color: #cbc3b6; cursor: not-allowed; }
+.lt-cal button.on { background: var(--c-salvia); color: #fff; box-shadow: 0 6px 14px -4px var(--c-salvia); }
+
+.lt-periodos { display: flex; background: #ece5d9; border-radius: 999px; padding: 3px; margin-bottom: 10px; }
+.lt-periodos button { flex: 1; border: 0; border-radius: 999px; background: none; padding: 8px; font-size: 12px; font-weight: 600; color: var(--c-suave); }
+.lt-periodos button.on { background: #fff; color: var(--c-texto); box-shadow: 0 2px 6px #0001; }
+.lt-horas { display: flex; gap: 6px; margin-bottom: 12px; }
+.lt-horas button { flex: 1; border: 1px solid #ddd2c2; border-radius: 12px; background: #fffcf7; padding: 10px 0; font-size: 13px; font-weight: 600; }
+.lt-horas button.on { background: var(--c-texto); color: var(--c-areia); border-color: var(--c-texto); }
+.lt-quem { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--c-suave); margin-bottom: 12px; }
+.lt-quem button { border: 1px solid #ddd2c2; border-radius: 999px; background: #fffcf7; padding: 6px 12px; font-size: 12px; }
+.lt-quem button.on { border-color: var(--c-salvia); color: var(--c-salvia-esc); font-weight: 700; }
+.lt-input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid #ddd2c2; background: #fffcf7; font: inherit; font-size: 16px; margin-bottom: 12px; color: var(--c-texto); }
+.lt-input:focus { outline: 0; border-color: var(--c-salvia); }
+
+/* Tela final: círculo que "respira" */
+.lt-feito { text-align: center; padding-top: 30px; }
+.lt-respira { width: 120px; height: 120px; margin: 0 auto 6px; display: grid; place-items: center; }
+.lt-respira span { width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #a9c4a6, var(--c-salvia)); box-shadow: 0 0 0 14px #6f8f7222, 0 0 0 28px #6f8f7211; animation: lt-respira 5s ease-in-out infinite; }
+@keyframes lt-respira { 50% { transform: scale(1.6); } }
+.lt-respira__txt { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px !important; }
+
+@container app (min-width: 700px) {
+  .lt-topo { padding: 22px 40px; }
+  .lt-sec { max-width: 560px; margin: 0 auto; padding: 20px 0 30px; }
+  .lt h3 { font-size: 44px; }
+  .lt-bolhas i:nth-child(1) { width: 420px; height: 420px; }
+  .lt-bolhas i:nth-child(2) { width: 360px; height: 360px; }
+}

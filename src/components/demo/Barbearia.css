@@ -1,0 +1,139 @@
+/* Site fictício: Dom Bigode (vintage / industrial) */
+.bb {
+  --c-fundo: #141210;
+  --c-papel: #efe6d2;
+  --c-ferrugem: #d9622b;
+  --c-azul: #3f6e8c;
+  --c-linha: #2e2a24;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 100% 0, #d9622b18, transparent 40%),
+    repeating-linear-gradient(0deg, #ffffff03 0 2px, transparent 2px 4px),
+    var(--c-fundo);
+  color: var(--c-papel);
+  font-family: 'Manrope', sans-serif;
+  padding-bottom: 90px;
+}
+
+.bb-poste {
+  height: 8px;
+  background: repeating-linear-gradient(-45deg, var(--c-ferrugem) 0 10px, var(--c-papel) 10px 20px, var(--c-azul) 20px 30px, var(--c-papel) 30px 40px);
+  background-size: 57px 100%;
+  animation: bb-gira 1.4s linear infinite;
+}
+@keyframes bb-gira { to { background-position: 57px 0; } }
+
+.bb-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 38px 16px 12px;
+  border-bottom: 1px dashed var(--c-linha);
+}
+.bb-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; line-height: 0.9; }
+.bb-logo small { display: block; font-family: 'Manrope'; font-size: 8px; letter-spacing: 0.25em; color: #8f8572; margin-top: 4px; }
+.bb-aberto { font-size: 9px; letter-spacing: 0.2em; color: #7ddc8a; border: 1px solid #7ddc8a55; padding: 4px 8px; border-radius: 4px; }
+
+.bb-hero { padding: 18px 16px 8px; }
+.bb-hero h3 { font-family: 'Bebas Neue', sans-serif; font-size: 54px; line-height: 0.88; letter-spacing: 0.01em; margin: 0 0 10px; font-weight: 400; }
+.bb-hero em { font-style: normal; color: var(--c-ferrugem); }
+.bb-hero p { font-size: 12px; color: #a99e88; margin: 0; max-width: 300px; }
+
+.bb-reserva { padding: 8px 16px; }
+.bb-reserva h4 { font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 20px; letter-spacing: 0.04em; margin: 18px 0 10px; display: flex; gap: 8px; align-items: center; }
+.bb-reserva h4 span { font-family: 'Manrope'; font-size: 10px; font-weight: 800; color: var(--c-fundo); background: var(--c-ferrugem); padding: 2px 6px; border-radius: 3px; }
+
+.bb-barbeiros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.bb-barbeiros button { background: none; border: 1px solid var(--c-linha); border-radius: 10px; padding: 10px 4px; text-align: center; transition: 0.2s; }
+.bb-barbeiros button.on { border-color: var(--c-ferrugem); background: #d9622b14; }
+.bb-av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 6px; font-family: 'Bebas Neue'; font-size: 22px; color: #fff; box-shadow: 0 0 0 3px var(--c-fundo), 0 0 0 4px var(--c-linha); }
+.bb-barbeiros button.on .bb-av { box-shadow: 0 0 0 3px var(--c-fundo), 0 0 0 5px var(--c-ferrugem); }
+.bb-barbeiros b { display: block; font-size: 12px; }
+.bb-barbeiros small { font-size: 10px; color: #8f8572; }
+
+/* Serviços estilo cardápio: nome ....... preço */
+.bb-servicos { display: grid; gap: 2px; }
+.bb-servicos button { display: flex; align-items: baseline; gap: 6px; background: none; border: 0; padding: 9px 6px; border-radius: 6px; font-size: 13px; text-align: left; }
+.bb-servicos i { flex: 1; border-bottom: 2px dotted #4a4338; }
+.bb-servicos span { font-family: 'Bebas Neue'; font-size: 18px; color: var(--c-ferrugem); }
+.bb-servicos button.on { background: var(--c-ferrugem); color: var(--c-fundo); }
+.bb-servicos button.on span { color: var(--c-fundo); }
+.bb-servicos button.on i { border-color: #0005; }
+
+.bb-dias { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; }
+.bb-dias button { flex: 1; min-width: 50px; background: none; border: 1px solid var(--c-linha); border-radius: 8px; padding: 6px 0; font-size: 10px; color: #8f8572; }
+.bb-dias b { display: block; font-family: 'Bebas Neue'; font-size: 22px; font-weight: 400; color: var(--c-papel); line-height: 1; }
+.bb-dias button.on { background: var(--c-papel); color: var(--c-fundo); }
+.bb-dias button.on b { color: var(--c-fundo); }
+
+.bb-horas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.bb-horas button { background: none; border: 1px solid var(--c-linha); border-radius: 6px; padding: 8px 0; font-size: 12px; font-weight: 700; }
+.bb-horas button:disabled { opacity: 0.25; text-decoration: line-through; cursor: not-allowed; }
+.bb-horas button.on { background: var(--c-ferrugem); border-color: var(--c-ferrugem); color: #fff; }
+.bb-dica { font-size: 12px; color: #8f8572; border: 1px dashed var(--c-linha); border-radius: 8px; padding: 12px; text-align: center; }
+
+/* Comanda fixa no rodapé */
+.bb-comanda {
+  position: sticky;
+  bottom: 0;
+  margin: 18px -0px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--c-papel);
+  color: var(--c-fundo);
+  border-top: 3px dashed var(--c-fundo);
+  transform: translateY(6px);
+  transition: transform 0.3s;
+}
+.bb-comanda.pronta { transform: none; box-shadow: 0 -10px 30px #d9622b44; }
+.bb-comanda small { font-size: 8px; letter-spacing: 0.2em; font-weight: 800; }
+.bb-comanda b { display: block; font-family: 'Bebas Neue'; font-size: 20px; font-weight: 400; line-height: 1; }
+.bb-comanda span { font-size: 10px; color: #6b6153; }
+.bb-comanda button { border: 0; border-radius: 6px; background: var(--c-fundo); color: var(--c-papel); padding: 10px 12px; font-weight: 800; font-size: 12px; white-space: nowrap; }
+.bb-comanda button:disabled { opacity: 0.35; cursor: not-allowed; }
+.bb-comanda.pronta button { background: var(--c-ferrugem); animation: bb-pulsa 1.4s infinite; }
+@keyframes bb-pulsa { 50% { transform: scale(1.05); } }
+
+.bb-folha-fundo { position: absolute; inset: 0; z-index: 30; background: #000a; display: flex; align-items: flex-end; }
+.bb-folha { width: 100%; background: var(--c-papel); color: var(--c-fundo); padding: 20px 16px 28px; border-radius: 18px 18px 0 0; animation: bb-sobe 0.35s cubic-bezier(0.2, 1.2, 0.4, 1); }
+@keyframes bb-sobe { from { transform: translateY(100%); } }
+.bb-folha h4 { font-family: 'Bebas Neue'; font-weight: 400; font-size: 24px; margin: 0 0 10px; }
+.bb-folha label { display: block; font-size: 11px; font-weight: 700; }
+.bb-folha input { width: 100%; margin: 6px 0 12px; padding: 12px; border-radius: 8px; border: 2px solid var(--c-fundo); background: #fff; font: inherit; font-size: 16px; }
+.bb-folha button { width: 100%; border: 0; border-radius: 8px; padding: 13px; background: var(--c-ferrugem); color: #fff; font-weight: 800; }
+
+/* Comprovante */
+.bb--feito { display: flex; flex-direction: column; justify-content: center; padding: 50px 16px 20px; }
+.bb-ticket {
+  background: var(--c-papel);
+  color: var(--c-fundo);
+  padding: 22px 18px;
+  border-radius: 6px;
+  -webkit-mask: radial-gradient(circle 7px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 7px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  animation: bb-imprime 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+}
+@keyframes bb-imprime { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+.bb-ticket small { font-size: 9px; letter-spacing: 0.25em; font-weight: 800; color: var(--c-ferrugem); }
+.bb-ticket h3 { font-family: 'Bebas Neue'; font-weight: 400; font-size: 30px; margin: 6px 0 12px; line-height: 1; }
+.bb-ticket dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0 0 12px; padding: 12px 0; border-block: 2px dashed #0003; font-size: 12px; }
+.bb-ticket dt { color: #6b6153; }
+.bb-ticket dd { margin: 0; text-align: right; font-weight: 800; }
+.bb-ticket p { font-size: 11px; margin: 0; }
+
+/* Versão computador (container query: depende do tamanho da "tela" da demo) */
+@container app (min-width: 700px) {
+  .bb-topo { padding: 16px 32px; }
+  .bb-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 30px; padding: 0 32px; }
+  .bb-hero { padding: 40px 0; border-right: 1px dashed var(--c-linha); }
+  .bb-hero h3 { font-size: 110px; }
+  .bb-hero p { font-size: 15px; }
+  .bb-reserva { padding: 10px 0 20px; }
+  .bb-horas { grid-template-columns: repeat(6, 1fr); }
+  .bb-comanda { padding: 14px 32px; }
+  .bb--feito { align-items: center; }
+  .bb-ticket { width: 380px; }
+  .bb--feito .demo-chama { width: 380px; }
+}

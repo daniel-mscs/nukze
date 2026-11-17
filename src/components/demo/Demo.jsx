@@ -1,0 +1,272 @@
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
+import { nichos } from '../../data/demo'
+import Iphone from '../Iphone'
+import Navegador from '../Navegador'
+import Reveal from '../Reveal'
+import Segmentado from './Segmentado'
+import Painel from './Painel'
+import Barbearia from './Barbearia'
+import Tattoo from './Tattoo'
+import Massagem from './Massagem'
+import './Demo.css'
+import './Painel.css'
+
+const sites = { barbearia: Barbearia, tattoo: Tattoo, massagem: Massagem }
+
+// useReducer: guarda os pedidos e decide como cada "ação" muda a lista.
+// É como um useState, mas com as regras de mudança num lugar só.
+function inicial(nicho) {
+  return {
+    pedidos: nichos[nicho].seed.map((p, i) => ({ ...p, id: i + 1 })),
+    novos: [],
+  }
+}
+function reducer(estado, acao) {
+  switch (acao.tipo) {
+    case 'novo':
+      return {
+        pedidos: [...estado.pedidos, acao.pedido],
+        novos: [...estado.novos, acao.pedido.id],
+      }
+    case 'mudar':
+      return {
+        pedidos: estado.pedidos.map((p) =>
+          p.id === acao.id ? { ...p, ...acao.campos } : p,
+        ),
+        novos: estado.novos.filter((n) => n !== acao.id),
+      }
+    case 'reset':
+      return inicial(acao.nicho)
+    default:
+      return estado
+  }
+}
+
+// Escala o "computador" pra caber na tela sem quebrar o layout
+function useEscala(ativo, cheia) {
+  const caixa = useRef(null)
+  const [k, setK] = useState(1)
+  useLayoutEffect(() => {
+    if (!ativo) return
+    const mede = () => {
+      const largura = caixa.current.clientWidth
+      const porAltura = cheia ? (innerHeight - 170) / 680 : 1
+      setK(Math.min(1, largura / 1060, porAltura))
+    }
+    mede()
+    const ro = new ResizeObserver(mede)
+    ro.observe(caixa.current)
+    return () => ro.disconnect()
+  }, [ativo, cheia])
+  return [caixa, k]
+}
+
+export default function Demo() {
+  const [nicho, setNicho] = useState('barbearia')
+  const [aparelho, setAparelho] = useState('celular')
+  const [visao, setVisao] = useState('cliente')
+  const [cheia, setCheia] = useState(false)
+  const [estado, dispatch] = useReducer(reducer, 'barbearia', inicial)
+  const [push, setPush] = useState(null)
+  const [rodada, setRodada] = useState(0) // muda pra "recomeçar" o site do cliente
+  const [caixa, k] = useEscala(aparelho === 'computador', cheia)
+  const cfg = nichos[nicho]
+  const Site = sites[nicho]
+
+  // Notificação some sozinha depois de alguns segundos
+  useEffect(() => {
+    if (!push) return
+    const t = setTimeout(() => setPush(null), 4500)
+    return () => clearTimeout(t)
+  }, [push])
+
+  // Tela cheia: trava o scroll da página
+  useEffect(() => {
+    document.body.style.overflow = cheia ? 'hidden' : ''
+    const esc = (e) => e.key === 'Escape' && setCheia(false)
+    addEventListener('keydown', esc)
+    return () => {
+      document.body.style.overflow = ''
+      removeEventListener('keydown', esc)
+    }
+  }, [cheia])
+
+  function recomecar(n = nicho) {
+    dispatch({ tipo: 'reset', nicho: n })
+    setVisao('cliente')
+    setPush(null)
+    setRodada((r) => r + 1)
+  }
+  function trocaNicho(n) {
+    setNicho(n)
+    recomecar(n)
+  }
+
+  // O cliente enviou um pedido pelo site
+  function enviar(pedido, atraso = 700) {
+    const p = { ...pedido, id: Date.now() }
+    dispatch({ tipo: 'novo', pedido: p })
+    setTimeout(
+      () =>
+        setPush({
+          icone: cfg.icone,
+          titulo: 'Novo pedido!',
+          texto: `${p.nome} · ${p.titulo} · ${p.quando}`,
+          abrir: true,
+        }),
+      atraso,
+    )
+    return p
+  }
+
+  // O dono clicou num botão do card
+  function acao(p, a) {
+    const campos = { st: a.para }
+    if (a.quando) campos.quando = a.quando
+    dispatch({ tipo: 'mudar', id: p.id, campos })
+    if (a.push) {
+      const [icone, titulo, texto] = a.push
+      setPush({ icone, titulo, texto: texto(p) })
+    }
+  }
+
+  const tela =
+    visao === 'cliente' ? (
+      <Site
+        key={`${nicho}-${rodada}`}
+        cfg={cfg}
+        onEnviar={enviar}
+        verPainel={() => setVisao('dono')}
+      />
+    ) : (
+      <Painel
+        cfg={cfg}
+        pedidos={estado.pedidos}
+        novos={estado.novos}
+        onAcao={acao}
+      />
+    )
+
+  const temaPainel = Object.fromEntries(
+    Object.entries(cfg.tema).map(([c, v]) => [`--${c}`, v]),
+  )
+
+  const notificacao = (
+    <button
+      className={`demo-push ${push ? 'on' : ''}`}
+      onClick={() => {
+        if (push?.abrir) setVisao('dono')
+        setPush(null)
+      }}
+      tabIndex={push ? 0 : -1}
+    >
+      {push && (
+        <>
+          <span className="demo-push__ic">{push.icone}</span>
+          <span>
+            <b>{push.titulo}</b>
+            {push.texto}
+          </span>
+          <small>agora</small>
+        </>
+      )}
+    </button>
+  )
+
+  return (
+    <section className="secao container" id="demo">
+      <div className="cabecalho">
+        <Reveal as="span" className="tag">
+          Demo interativa
+        </Reveal>
+        <Reveal as="h2">
+          Testa aí, <span className="grad">sem compromisso.</span>
+        </Reveal>
+        <Reveal as="p" className="muted">
+          Três negócios fictícios, três sites totalmente diferentes. Faça um
+          pedido como cliente e veja chegar no painel do dono.
+        </Reveal>
+      </div>
+
+      <div className={`demo ${cheia ? 'demo--cheia' : ''}`}>
+        <div className="demo__controles">
+          <Segmentado
+            rotulo="Tipo de negócio"
+            valor={nicho}
+            onChange={trocaNicho}
+            opcoes={Object.entries(nichos).map(([id, n]) => [id, n.rotulo])}
+          />
+          <Segmentado
+            rotulo="Aparelho"
+            valor={aparelho}
+            onChange={setAparelho}
+            opcoes={[
+              ['celular', '📱 Celular'],
+              ['computador', '💻 Computador'],
+            ]}
+          />
+          <Segmentado
+            rotulo="Visão"
+            valor={visao}
+            onChange={setVisao}
+            opcoes={[
+              ['cliente', 'Sou cliente'],
+              [
+                'dono',
+                <>
+                  Sou o dono{' '}
+                  {estado.novos.length > 0 && (
+                    <span className="demo__badge">{estado.novos.length}</span>
+                  )}
+                </>,
+              ],
+            ]}
+          />
+          <button className="demo__cheia" onClick={() => setCheia((c) => !c)}>
+            {cheia ? '✕ Fechar' : '⛶ Tela cheia'}
+          </button>
+        </div>
+
+        <div className="demo__palco" style={temaPainel}>
+          {aparelho === 'celular' ? (
+            <div className="demo__cel">
+              <Iphone>
+                <div className="demo__tela">
+                  {notificacao}
+                  <div className="demo__app">{tela}</div>
+                </div>
+              </Iphone>
+            </div>
+          ) : (
+            <div className="demo__desk" ref={caixa}>
+              <div
+                style={{ width: 1060 * k, height: 680 * k, margin: '0 auto' }}
+              >
+                <div
+                  style={{
+                    width: 1060,
+                    transform: `scale(${k})`,
+                    transformOrigin: '0 0',
+                  }}
+                >
+                  <Navegador
+                    url={`${cfg.url}${visao === 'cliente' ? '' : '/painel'}`}
+                  >
+                    <div className="demo__tela">
+                      {notificacao}
+                      <div className="demo__app demo__app--desk">{tela}</div>
+                    </div>
+                  </Navegador>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="demo__rodape">
+          <button onClick={() => recomecar()}>↺ Recomeçar demo</button>
+        </div>
+      </div>
+    </section>
+  )
+}

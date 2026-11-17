@@ -1,0 +1,292 @@
+// Dados FICTÍCIOS da demo interativa. Nada daqui vai pro banco.
+// Cada nicho tem: tema (cores do painel), seed (pedidos iniciais) e fluxo
+// (quais botões o dono vê em cada status e pra onde o pedido vai).
+
+export const nichos = {
+  barbearia: {
+    nome: 'Dom Bigode',
+    rotulo: '💈 Barbearia',
+    url: 'dombigode.com.br',
+    icone: '💈',
+    tema: {
+      bg: '#121110',
+      card: '#1b1916',
+      line: '#2e2a24',
+      tx: '#efe6d2',
+      tx2: '#8f8572',
+      o: '#d9622b',
+      ink: '#fff7ec',
+    },
+    servicos: [
+      { id: 'corte', n: 'Corte', min: 40, p: 45 },
+      { id: 'barba', n: 'Barba', min: 30, p: 35 },
+      { id: 'combo', n: 'Corte + Barba', min: 60, p: 70 },
+      { id: 'pigm', n: 'Pigmentação', min: 30, p: 30 },
+    ],
+    barbeiros: [
+      { n: 'Lucas', esp: 'Degradê', cor: '#d9622b' },
+      { n: 'Rafa', esp: 'Barba', cor: '#3f6e8c' },
+      { n: 'Biel', esp: 'Freestyle', cor: '#8c6b3f' },
+    ],
+    seed: [
+      {
+        nome: 'Pedro',
+        titulo: 'Corte',
+        detalhe: 'com Lucas',
+        quando: 'Hoje 09:00',
+        valor: 45,
+        st: 'atendido',
+      },
+      {
+        nome: 'Marcos',
+        titulo: 'Barba',
+        detalhe: 'com Rafa',
+        quando: 'Hoje 10:20',
+        valor: 35,
+        st: 'confirmado',
+      },
+      {
+        nome: 'Caio',
+        titulo: 'Corte',
+        detalhe: 'com Biel',
+        quando: 'Hoje 14:10',
+        valor: 45,
+        st: 'pendente',
+      },
+    ],
+    status: {
+      pendente: 'pendente',
+      confirmado: 'confirmado',
+      atendido: 'atendido',
+      recusado: 'recusado',
+    },
+    fluxo: {
+      pendente: [
+        { rotulo: 'Recusar', para: 'recusado' },
+        {
+          rotulo: '✓ Confirmar',
+          para: 'confirmado',
+          pri: true,
+          push: [
+            '💬',
+            'WhatsApp enviado',
+            (p) => `Confirmação enviada pro ${p.nome}`,
+          ],
+        },
+      ],
+      confirmado: [
+        {
+          rotulo: 'Marcar como atendido',
+          para: 'atendido',
+          pri: true,
+          push: [
+            '💰',
+            'Entrou no caixa',
+            (p) => `+ R$ ${p.valor} · ${p.titulo}`,
+          ],
+        },
+      ],
+    },
+    pago: 'atendido',
+    caixa: (p) => p.valor,
+  },
+
+  tattoo: {
+    nome: 'Tinta Viva',
+    rotulo: '🖋️ Tatuagem',
+    url: 'tintaviva.com.br',
+    icone: '🖋️',
+    tema: {
+      bg: '#0c0c0c',
+      card: '#161616',
+      line: '#2a2a2a',
+      tx: '#f4f1ea',
+      tx2: '#8a8a8a',
+      o: '#e5302f',
+      ink: '#ffffff',
+    },
+    flashes: [
+      { id: 1, nome: 'Rosa', emoji: '🌹', p: 280 },
+      { id: 2, nome: 'Serpente', emoji: '🐍', p: 350 },
+      { id: 3, nome: 'Andorinha', emoji: '🐦', p: 260 },
+      { id: 4, nome: 'Lua', emoji: '🌙', p: 220 },
+      { id: 5, nome: 'Adaga', emoji: '🗡️', p: 300 },
+    ],
+    artistas: [
+      { n: 'Yas', esp: 'Fineline' },
+      { n: 'Dani', esp: 'Blackwork' },
+    ],
+    seed: [
+      {
+        nome: 'Larissa',
+        titulo: 'Flash #4 Lua',
+        detalhe: 'Antebraço · 8 cm · Yas',
+        quando: 'Sáb 10:00',
+        valor: 295,
+        st: 'agendado',
+      },
+      {
+        nome: 'Bruno',
+        titulo: 'Ideia própria',
+        detalhe: 'Costas · 25 cm · Dani',
+        quando: 'Aguardando',
+        valor: 700,
+        st: 'orcado',
+        ideia: 'Mandala geométrica',
+      },
+    ],
+    status: {
+      novo: 'novo pedido',
+      orcado: 'orçado',
+      agendado: 'sessão marcada',
+    },
+    fluxo: {
+      novo: [
+        {
+          rotulo: '💬 Enviar orçamento',
+          para: 'orcado',
+          wa: true,
+          push: [
+            '💬',
+            'Orçamento enviado no WhatsApp',
+            (p) => `${p.nome}: R$ ${p.valor} · sinal de 30% pra reservar`,
+          ],
+        },
+      ],
+      orcado: [
+        {
+          rotulo: '📅 Marcar sessão',
+          para: 'agendado',
+          pri: true,
+          quando: 'Sex 15:00',
+          push: [
+            '📅',
+            'Sessão marcada!',
+            (p) => `Sinal de R$ ${Math.round(p.valor * 0.3)} entrou no caixa`,
+          ],
+        },
+      ],
+    },
+    pago: 'agendado',
+    caixa: (p) => Math.round(p.valor * 0.3),
+  },
+
+  massagem: {
+    nome: 'Lótus',
+    rotulo: '🪷 Massagem',
+    url: 'lotusterapias.com.br',
+    icone: '🪷',
+    tema: {
+      bg: '#f6f1e9',
+      card: '#ffffff',
+      line: '#e7ddcf',
+      tx: '#2f2b26',
+      tx2: '#8d8478',
+      o: '#6f8f72',
+      ink: '#ffffff',
+    },
+    sintomas: [
+      { id: 'ombros', n: 'Ombros tensos', t: 'pedras' },
+      { id: 'costas', n: 'Dor nas costas', t: 'pedras' },
+      { id: 'pernas', n: 'Pernas inchadas', t: 'drenagem' },
+      { id: 'estresse', n: 'Muito estresse', t: 'relaxante' },
+      { id: 'sono', n: 'Dormindo mal', t: 'relaxante' },
+    ],
+    terapias: {
+      relaxante: {
+        n: 'Massagem relaxante',
+        min: 60,
+        p: 120,
+        porque: 'Movimentos lentos que baixam a tensão e ajudam no sono.',
+      },
+      drenagem: {
+        n: 'Drenagem linfática',
+        min: 50,
+        p: 110,
+        porque: 'Estimula a circulação e reduz o inchaço nas pernas.',
+      },
+      pedras: {
+        n: 'Pedras quentes',
+        min: 75,
+        p: 150,
+        porque: 'O calor solta a musculatura profunda de ombros e costas.',
+      },
+    },
+    terapeutas: ['Ana', 'Bruna'],
+    seed: [
+      {
+        nome: 'Carla',
+        titulo: 'Massagem relaxante',
+        detalhe: 'com Ana',
+        quando: 'Hoje 09:00',
+        valor: 120,
+        st: 'atendido',
+      },
+      {
+        nome: 'Júlia',
+        titulo: 'Drenagem linfática',
+        detalhe: 'com Bruna',
+        quando: 'Hoje 14:00',
+        valor: 110,
+        st: 'confirmado',
+      },
+    ],
+    status: {
+      pendente: 'pendente',
+      confirmado: 'confirmado',
+      atendido: 'atendido',
+      recusado: 'recusado',
+    },
+    fluxo: {
+      pendente: [
+        { rotulo: 'Recusar', para: 'recusado' },
+        {
+          rotulo: '✓ Confirmar',
+          para: 'confirmado',
+          pri: true,
+          push: [
+            '💬',
+            'WhatsApp enviado',
+            (p) => `Confirmação enviada pra ${p.nome}`,
+          ],
+        },
+      ],
+      confirmado: [
+        {
+          rotulo: 'Sessão concluída',
+          para: 'atendido',
+          pri: true,
+          push: [
+            '💰',
+            'Entrou no caixa',
+            (p) => `+ R$ ${p.valor} · ${p.titulo}`,
+          ],
+        },
+      ],
+    },
+    pago: 'atendido',
+    caixa: (p) => p.valor,
+  },
+}
+
+// Próximos dias úteis (sem domingo), usados nas agendas
+export function proximosDias(qtd = 6) {
+  const nomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+  const dias = []
+  const d = new Date()
+  while (dias.length < qtd) {
+    if (d.getDay() !== 0) {
+      dias.push({
+        chave: d.toISOString().slice(0, 10),
+        semana: dias.length ? nomes[d.getDay()] : 'Hoje',
+        dia: d.getDate(),
+      })
+    }
+    d.setDate(d.getDate() + 1)
+  }
+  return dias
+}
+
+// Horário "ocupado" de mentira, mas sempre igual pra mesma combinação
+export const ocupado = (chave, pessoa, hora) =>
+  (hora.charCodeAt(1) + chave.charCodeAt(9) + pessoa.length) % 4 === 0
