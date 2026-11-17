@@ -33,11 +33,28 @@ export const projetos = [
         ],
       },
       {
-        tipo: 'destaque',
+        tipo: 'fluxo',
         rotulo: 'AGENDAMENTO',
         titulo: 'O cliente marca sozinho',
-        texto: 'Escolhe barbeiro, serviço e horário livre em poucos toques.',
-        imagem: rezenha('celular-agendamento'),
+        texto:
+          'Escolhe barbeiro, serviço, dia e horário livre. Confere o resumo e pronto.',
+        imagens: [
+          rezenha('celular-agenda-data'),
+          rezenha('celular-agenda-horario'),
+          rezenha('celular-agenda-resumo'),
+        ],
+      },
+      {
+        tipo: 'fluxo',
+        rotulo: 'PLANO AUTOMÁTICO',
+        titulo: 'Confirmação no WhatsApp, sem ninguém digitar',
+        texto:
+          'O cliente recebe a mensagem na hora, confirma com um toque e o horário fica garantido.',
+        imagens: [
+          rezenha('celular-agenda-confirme'),
+          rezenha('celular-whatsapp-mensagem'),
+          rezenha('celular-presenca-confirmada'),
+        ],
       },
       {
         tipo: 'destaque',
@@ -51,6 +68,7 @@ export const projetos = [
         tipo: 'navegador',
         url: 'barbeariarezenha.com.br',
         imagem: rezenha('desktop-servicos'),
+        video: video('rezenha', 'video-desktop'),
       },
     ],
   },

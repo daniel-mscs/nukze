@@ -42,6 +42,33 @@ function Slide({ slide, projeto, onAmpliar }) {
       </div>
     )
   }
+  if (slide.tipo === 'fluxo') {
+    return (
+      <div className="slide slide--fluxo">
+        <div className="slide__info">
+          <span className="slide__rotulo">{slide.rotulo}</span>
+          <h3>{slide.titulo}</h3>
+          <p>{slide.texto}</p>
+        </div>
+        <div className="slide__aparelhos">
+          {slide.imagens.map((src, i) => (
+            <div
+              key={src}
+              className={`slide__passo ${i === 2 ? 'so-desktop' : ''}`}
+            >
+              <span className="slide__num">{i + 1}</span>
+              <Celular
+                src={src}
+                alt={`${projeto.nome}: ${slide.titulo} (${i + 1})`}
+                onAmpliar={onAmpliar}
+                lento={i % 2}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
   if (slide.tipo === 'destaque') {
     return (
       <div className="slide">
@@ -65,8 +92,9 @@ function Slide({ slide, projeto, onAmpliar }) {
       <Navegador
         url={slide.url}
         src={slide.imagem}
+        video={slide.video}
         alt={`${projeto.nome} no computador`}
-        onClick={() => onAmpliar(slide.imagem)}
+        onClick={() => onAmpliar({ src: slide.imagem, video: slide.video })}
       />
     </div>
   )
@@ -93,7 +121,7 @@ export default function Projetos() {
       trilho.current.style.transform = `translateX(${-p * distancia}px)`
       fundo.current.style.transform = `translateX(${-p * distancia * 0.4}px)`
       pct.current.textContent = `${Math.round(p * 100)}%`
-      if (calmo) return
+      if (calmo || innerWidth < 800) return
       // Celulares giram conforme passam pelo centro da tela
       trilho.current.querySelectorAll('[data-gira]').forEach((el) => {
         const b = el.getBoundingClientRect()
@@ -165,10 +193,11 @@ export default function Projetos() {
                     </a>
                   </div>
                 </div>
-                <div className="slide__aparelhos so-desktop">
+                <div className="slide__aparelhos slide__aparelhos--abertura">
                   <Celular
                     src={projeto.slides[0].imagens?.[0]}
-                    alt={projeto.nome}
+                    video={projeto.videoCelular}
+                    alt={`${projeto.nome} no celular`}
                     onAmpliar={setAmpliada}
                   />
                 </div>
