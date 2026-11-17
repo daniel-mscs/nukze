@@ -15,11 +15,15 @@ export default function QuemFaz() {
   return (
     <section className="secao container" id="quem-faz">
       <Reveal className="quem">
-        <div className="quem__foto" aria-hidden="true">
-          {dono.nome
-            .split(' ')
-            .map((p) => p[0])
-            .join('')}
+        <div className="quem__foto">
+          <img
+            src={dono.foto}
+            alt={`Foto de ${dono.nome}`}
+            loading="lazy"
+            width="720"
+            height="960"
+          />
+          <span className="quem__selo">📍 {cidade}</span>
         </div>
         <div>
           <span className="tag">Quem faz</span>

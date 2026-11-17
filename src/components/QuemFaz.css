@@ -8,18 +8,49 @@
   background: radial-gradient(ellipse at top left, #2dd4bf14, transparent 55%), var(--sup);
 }
 
+/* Foto retangular: começa em preto e branco e ganha cor quando
+   o card aparece na tela (.on vem do Reveal) ou com o mouse em cima */
 .quem__foto {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-family: var(--fonte-titulo);
-  font-size: 2.4rem;
-  font-weight: 800;
+  position: relative;
+  width: min(100%, 300px);
+  aspect-ratio: 3 / 4;
+  margin: 0 auto;
+  padding: 2px;
+  border-radius: 24px;
   background: var(--grad);
-  color: var(--bg);
-  box-shadow: 0 0 0 6px var(--sup), 0 0 0 7px var(--borda), 0 0 50px #8b5cf655;
+  box-shadow: 0 30px 60px -30px #000, 0 0 60px -20px #8b5cf6;
+}
+
+.quem__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 22px;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 1.2s ease 0.6s, transform 0.6s ease;
+}
+
+.quem.on .quem__foto img,
+.quem__foto:hover img {
+  filter: grayscale(0);
+}
+
+.quem__foto:hover img {
+  transform: scale(1.02);
+}
+
+.quem__selo {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  background: var(--bg);
+  font-size: 0.78rem;
+  color: var(--suave);
 }
 
 .quem h2 { font-size: clamp(1.6rem, 5vw, 2.6rem); margin: 14px 0 6px; }
@@ -29,5 +60,6 @@
 .quem__links .btn { min-height: 42px; padding: 0 18px; font-size: 0.88rem; }
 
 @media (min-width: 800px) {
-  .quem { grid-template-columns: auto 1fr; padding: 48px; gap: 48px; }
+  .quem { grid-template-columns: 300px 1fr; padding: 48px; gap: 56px; }
+  .quem__foto { width: 100%; }
 }

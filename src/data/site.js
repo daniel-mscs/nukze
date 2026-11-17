@@ -8,6 +8,7 @@ export const site = {
   dono: {
     nome: 'Daniel Alves',
     cargo: 'Desenvolvedor web · Estudante de Engenharia de Software',
+    foto: '/sobre/daniel.webp',
   },
   // Deixe vazio ('') o que não quiser mostrar
   links: {
