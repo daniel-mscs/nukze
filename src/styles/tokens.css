@@ -1,0 +1,36 @@
+/* Tokens de design: cores, fontes e espaçamentos usados no site todo.
+   Mudou aqui, muda em tudo. */
+:root {
+  /* Cores - base escura (Navalha) */
+  --cor-fundo: #0f0f10;
+  --cor-superficie: #1a1a1c;
+  --cor-borda: #2a2a2e;
+  --cor-texto: #f5f3ee;
+  --cor-texto-suave: #a8a49c;
+
+  /* Destaque */
+  --cor-destaque: #ff6b2c;
+  --cor-destaque-hover: #ff8550;
+  --cor-sobre-destaque: #0f0f10;
+
+  /* Seções claras (toque do Balcão) */
+  --cor-claro-fundo: #faf7f2;
+  --cor-claro-texto: #1c1b19;
+  --cor-claro-suave: #5c5850;
+
+  /* Tipografia */
+  --fonte-titulo: 'Space Grotesk', system-ui, sans-serif;
+  --fonte-texto: 'DM Sans', system-ui, sans-serif;
+
+  /* Espaçamento e forma */
+  --gutter: 16px;
+  --largura-max: 1120px;
+  --raio: 14px;
+  --raio-pill: 999px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+  }
+}

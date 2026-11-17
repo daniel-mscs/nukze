@@ -1,10 +1,116 @@
+@import './styles/tokens.css';
+
+/* Reset básico */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* Tipografia (mobile first: tamanhos crescem com a tela via clamp) */
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  line-height: 1.1;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 7vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+/* Utilitários de layout */
+.container {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.secao {
+  padding: 64px 0;
+}
+
+.secao--clara {
+  background: var(--cor-claro-fundo);
+  color: var(--cor-claro-texto);
+}
+
+.destaque {
+  color: var(--cor-destaque);
+}
+
+/* Botões */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px; /* área de toque confortável no celular */
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--raio-pill);
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
+  font: 600 1rem var(--fonte-texto);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.botao:hover {
+  background: var(--cor-destaque-hover);
+}
+
+.botao:focus-visible {
+  outline: 3px solid var(--cor-texto);
+  outline-offset: 3px;
+}
+
+.botao--contorno {
+  background: transparent;
+  color: inherit;
+  border: 2px solid currentColor;
+}
+
+.botao--contorno:hover {
+  background: transparent;
+  color: var(--cor-destaque);
 }
