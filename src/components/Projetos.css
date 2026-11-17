@@ -126,7 +126,8 @@
   cursor: zoom-out;
   border: 0;
 }
-.zoom img { max-width: 100%; max-height: 100%; border-radius: 18px; }
+.zoom img,
+.zoom video { max-width: 100%; max-height: 100%; border-radius: 18px; }
 
 @media (max-width: 799px) {
   .slide { flex-direction: column; padding: 18px; }

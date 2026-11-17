@@ -4,6 +4,13 @@
 const pasta = (id) => (arquivo) => `/projetos/${id}/${arquivo}.webp`
 const rezenha = pasta('rezenha')
 
+// Vídeos: mp4 (funciona em tudo), webm (mais leve) e capa (aparece enquanto carrega)
+const video = (id, nome) => ({
+  mp4: `/projetos/${id}/${nome}.mp4`,
+  webm: `/projetos/${id}/${nome}.webm`,
+  capa: `/projetos/${id}/${nome}-capa.webp`,
+})
+
 export const projetos = [
   {
     id: 'rezenha',
@@ -13,6 +20,8 @@ export const projetos = [
       'Santa Maria/RS. Os clientes marcavam pelo WhatsApp e a agenda era feita na mão. Hoje tem site, agendamento online e painel pro dono, com confirmação automática no WhatsApp.',
     chips: ['Site', 'Agendamento', 'Painel', 'WhatsApp'],
     link: 'https://www.barbeariarezenha.com.br',
+    videoCelular: video('rezenha', 'video-celular'),
+    videoDesktop: video('rezenha', 'video-desktop'),
     // Cada item vira um "card" que passa pro lado
     slides: [
       {

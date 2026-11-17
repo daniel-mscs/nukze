@@ -1,8 +1,10 @@
+import VideoAuto from './VideoAuto'
 import './Iphone.css'
 
-// Moldura de iPhone. Pode receber uma imagem (src) ou qualquer conteúdo (children).
+// Moldura de iPhone. Pode receber uma imagem (src), um vídeo (video) ou qualquer conteúdo (children).
 export default function Iphone({
   src,
+  video,
   alt = '',
   children,
   className = '',
@@ -17,7 +19,13 @@ export default function Iphone({
       <div className="iphone__vidro">
         <span className="iphone__ilha" />
         <span className="iphone__reflexo" />
-        {src ? <img src={src} alt={alt} loading="lazy" /> : children}
+        {video ? (
+          <VideoAuto video={video} alt={alt} />
+        ) : src ? (
+          <img src={src} alt={alt} loading="lazy" />
+        ) : (
+          children
+        )}
       </div>
     </div>
   )

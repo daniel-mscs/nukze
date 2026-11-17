@@ -4,11 +4,16 @@ import Iphone from './Iphone'
 import Navegador from './Navegador'
 import './Projetos.css'
 
-function Celular({ src, alt, onAmpliar, lento }) {
+function Celular({ src, video, alt, onAmpliar, lento }) {
   return (
     <div className={`flutua ${lento ? 'flutua--lento' : ''}`}>
       <div className="tilt" data-gira>
-        <Iphone src={src} alt={alt} onClick={() => onAmpliar(src)} />
+        <Iphone
+          src={src}
+          video={video}
+          alt={alt}
+          onClick={() => onAmpliar({ src, video })}
+        />
       </div>
     </div>
   )
@@ -197,7 +202,18 @@ export default function Projetos() {
           onClick={() => setAmpliada(null)}
           aria-label="Fechar imagem ampliada"
         >
-          <img src={ampliada} alt="" />
+          {ampliada.video ? (
+            <video
+              src={ampliada.video.mp4}
+              poster={ampliada.video.capa}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img src={ampliada.src} alt="" />
+          )}
         </button>
       )}
     </section>

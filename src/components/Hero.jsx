@@ -1,5 +1,6 @@
 import Iphone from './Iphone'
 import Navegador from './Navegador'
+import { projetos } from '../data/projetos'
 import './Hero.css'
 
 // Quebra o texto em palavras pra cada uma entrar com um pequeno atraso
@@ -17,6 +18,7 @@ function Palavras({ texto, inicio = 0, className = '' }) {
 }
 
 export default function Hero() {
+  const rezenha = projetos[0]
   return (
     <header className="hero" id="topo">
       <div className="hero__aurora" aria-hidden="true">
@@ -62,23 +64,23 @@ export default function Hero() {
           <div className="tilt" style={{ '--forca': 6 }}>
             <Navegador
               url="barbeariarezenha.com.br"
-              src="/projetos/rezenha/desktop-inicio.webp"
+              video={rezenha.videoDesktop}
               alt="Site da Rezenha Barbearia no computador"
             />
           </div>
           <div className="hero__cel flutua">
             <div className="tilt" style={{ '--forca': 14 }}>
               <Iphone
-                src="/projetos/rezenha/celular-painel.webp"
-                alt="Painel do dono no celular"
+                video={rezenha.videoCelular}
+                alt="Site da Rezenha rolando no celular"
               />
             </div>
           </div>
           <div className="hero__cel hero__cel--2 flutua flutua--lento">
             <div className="tilt" style={{ '--forca': 14 }}>
               <Iphone
-                src="/projetos/rezenha/celular-agendamento.webp"
-                alt="Agendamento no celular"
+                src="/projetos/rezenha/celular-painel.webp"
+                alt="Painel do dono no celular"
               />
             </div>
           </div>

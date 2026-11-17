@@ -43,3 +43,8 @@
 .navegador img {
   width: 100%;
 }
+
+.navegador video {
+  width: 100%;
+  display: block;
+}
