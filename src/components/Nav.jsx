@@ -4,6 +4,7 @@ const links = [
   ['#demo', 'Demo'],
   ['#projetos', 'Projetos'],
   ['#como-funciona', 'Como funciona'],
+  ['#planos', 'Planos'],
   ['#quem-faz', 'Quem faz'],
   ['#devs', 'Pra devs'],
 ]
