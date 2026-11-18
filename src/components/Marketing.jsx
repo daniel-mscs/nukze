@@ -22,15 +22,19 @@ export default function Marketing() {
     <section className="secao container" id="marketing">
       <Reveal className="mkt">
         <div>
-          <span className="tag">Parceiro de marketing</span>
+          <span className="tag">Quem faz o marketing</span>
           <h2>
-            Site pronto. <span className="grad">Agora, clientes.</span>
+            Quem traz <span className="grad">os clientes.</span>
           </h2>
+          <div className="mkt__cargo">
+            {parceiro.nome} · {parceiro.cargo}
+          </div>
           <p className="muted">
-            Eu faço o site e a agenda. O {parceiro.nome.split(' ')[0]} cuida de
-            levar gente até eles. Dá pra contratar junto do plano Automático, e
-            o valor você combina direto com ele, conforme o que o seu negócio
-            precisa.
+            No marketing digital desde {parceiro.desde}, com foco em growth,
+            copywriting e tráfego pago. Cuida da estratégia de posicionamento e
+            crescimento da Nukze e faz o mesmo pelo seu negócio: o site deixa
+            tudo pronto, e ele leva gente até lá. Dá pra contratar junto do
+            plano Automático, com valor combinado conforme o que você precisa.
           </p>
           <ul className="mkt__lista">
             {servicos.map(([t, d]) => (
@@ -65,7 +69,7 @@ export default function Marketing() {
             )}
           </div>
           <b>{parceiro.nome}</b>
-          <small>{parceiro.cargo}</small>
+          <small>Marketing desde {parceiro.desde}</small>
           {parceiro.instagram && (
             <a
               className="btn"

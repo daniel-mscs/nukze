@@ -30,7 +30,8 @@ export function linkWhatsapp(mensagem = site.mensagemWhatsapp) {
 // Parceiro que cuida do marketing / tráfego pago (valor negociado com ele)
 export const parceiro = {
   nome: 'Guilherme Matos',
-  cargo: 'Marketing e tráfego pago',
+  cargo: 'Growth, copywriting e tráfego pago',
+  desde: 2021,
   foto: '', // ex.: '/sobre/guilherme.webp' (sem foto, mostra as iniciais)
   instagram: 'https://www.instagram.com/guimaatos/',
 }
