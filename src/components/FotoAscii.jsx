@@ -7,7 +7,7 @@ const COLUNAS = 64
 
 // Foto que vira arte em código (ASCII) quando o mouse passa por cima.
 // Onde o mouse está, abre uma "lente" mostrando a foto de verdade.
-export default function FotoAscii({ src, alt }) {
+export default function FotoAscii({ src, alt, rotulo = '<daniel />' }) {
   const caixa = useRef(null)
   const tela = useRef(null)
   const mapa = useRef(null) // grade de brilho (0..1) de cada célula
@@ -127,7 +127,7 @@ export default function FotoAscii({ src, alt }) {
       <img src={src} alt={alt} loading="lazy" width="720" height="960" />
       <canvas ref={tela} aria-hidden="true" />
       <span className="ascii__dica" aria-hidden="true">
-        {'<daniel />'}
+        {rotulo}
       </span>
     </div>
   )

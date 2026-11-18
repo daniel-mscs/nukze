@@ -1,5 +1,6 @@
 import { parceiro, linkWhatsapp } from '../data/site'
 import Reveal from './Reveal'
+import FotoAscii from './FotoAscii'
 import './Marketing.css'
 
 const servicos = [
@@ -12,12 +13,6 @@ const servicos = [
 ]
 
 export default function Marketing() {
-  const iniciais = parceiro.nome
-    .split(' ')
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join('')
-
   return (
     <section className="secao container" id="marketing">
       <Reveal className="mkt">
@@ -43,43 +38,38 @@ export default function Marketing() {
               </li>
             ))}
           </ul>
-          <a
-            className="btn btn--principal"
-            href={linkWhatsapp(
-              'Oi! Vi no site da Nukze e quero saber do marketing e tráfego pago.',
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Quero saber do marketing
-          </a>
-        </div>
-
-        <div className="mkt__cartao">
-          <div className="mkt__foto">
-            {parceiro.foto ? (
-              <img
-                src={parceiro.foto}
-                alt={`Foto de ${parceiro.nome}`}
-                loading="lazy"
-              />
-            ) : (
-              <span aria-hidden="true">{iniciais}</span>
-            )}
-          </div>
-          <b>{parceiro.nome}</b>
-          <small>Marketing desde {parceiro.desde}</small>
-          {parceiro.instagram && (
+          <div className="mkt__links">
             <a
-              className="btn"
-              href={parceiro.instagram}
+              className="btn btn--principal"
+              href={linkWhatsapp(
+                'Oi! Vi no site da Nukze e quero saber do marketing e tráfego pago.',
+              )}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Instagram ↗
+              Quero saber do marketing
             </a>
-          )}
-          <em>Valor a combinar</em>
+            {parceiro.instagram && (
+              <a
+                className="btn"
+                href={parceiro.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram ↗
+              </a>
+            )}
+          </div>
+          <small className="mkt__valor">Valor a combinar direto com ele.</small>
+        </div>
+
+        <div className="mkt__foto">
+          <FotoAscii
+            src={parceiro.foto}
+            alt={`Foto de ${parceiro.nome}`}
+            rotulo="<guilherme />"
+          />
+          <span className="mkt__selo">📣 Desde {parceiro.desde}</span>
         </div>
       </Reveal>
     </section>

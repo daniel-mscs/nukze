@@ -32,6 +32,6 @@ export const parceiro = {
   nome: 'Guilherme Matos',
   cargo: 'Growth, copywriting e tráfego pago',
   desde: 2021,
-  foto: '', // ex.: '/sobre/guilherme.webp' (sem foto, mostra as iniciais)
+  foto: '/sobre/guilherme.webp',
   instagram: 'https://www.instagram.com/guimaatos/',
 }
