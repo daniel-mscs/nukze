@@ -22,8 +22,8 @@ export default function Nav() {
           </a>
         ))}
       </div>
-      <a className="btn btn--principal" href="#orcamento">
-        Pedir orçamento
+      <a className="btn btn--principal" href="#monte-seu-plano">
+        Monte seu plano
       </a>
     </nav>
   )

@@ -1,0 +1,199 @@
+.mp {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+
+.mp__passos { display: grid; gap: 16px; }
+
+.mp__bloco {
+  margin: 0;
+  padding: 22px 20px;
+  border: 1px solid var(--borda);
+  border-radius: 24px;
+  background: var(--sup);
+  min-width: 0;
+}
+.mp__bloco legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+}
+.mp__bloco legend span {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--grad);
+  color: var(--bg);
+  font-size: 0.8rem;
+}
+.mp__bloco legend small { font-family: var(--fonte-texto); font-weight: 500; color: var(--suave); }
+
+/* Esconde o input nativo mas mantém acessível pelo teclado */
+.mp input[type='radio'],
+.mp input[type='checkbox']:not(.mp__aceite input) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.mp-plano,
+.mp-modulo,
+.mp__tipos label {
+  position: relative;
+}
+
+/* 1. Planos */
+.mp__planos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.mp-plano {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--borda);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.mp-plano b { font-size: 0.95rem; }
+.mp-plano span { font-size: 0.8rem; color: var(--suave); }
+.mp-plano i { position: absolute; top: -9px; right: 8px; font-style: normal; font-size: 0.6rem; font-weight: 800; padding: 2px 7px; border-radius: 999px; background: var(--grad); color: var(--bg); }
+.mp-plano.on { border-color: var(--a2); background: #2dd4bf12; box-shadow: 0 0 0 1px var(--a2); }
+.mp-plano:has(input:focus-visible) { outline: 2px solid var(--a2); outline-offset: 2px; }
+
+/* 2. Módulos com "chavinha" */
+.mp__modulos { display: grid; gap: 8px; margin-top: 8px; }
+.mp-modulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--borda);
+  cursor: pointer;
+  transition: 0.2s;
+}
+.mp-modulo__chave { position: relative; width: 38px; height: 22px; flex: none; border-radius: 999px; background: #2a2a3a; transition: 0.25s; }
+.mp-modulo__chave::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: 0.25s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.mp-modulo.on { border-color: #8b5cf688; background: #8b5cf610; }
+.mp-modulo.on .mp-modulo__chave { background: var(--a1); }
+.mp-modulo.on .mp-modulo__chave::after { left: 19px; }
+.mp-modulo:has(input:focus-visible) { outline: 2px solid var(--a2); outline-offset: 2px; }
+.mp-modulo__txt { flex: 1; min-width: 0; }
+.mp-modulo__txt b { display: block; font-size: 0.92rem; }
+.mp-modulo__txt small { color: var(--suave); font-size: 0.78rem; }
+.mp-modulo em { font-style: normal; font-weight: 800; color: var(--a2); white-space: nowrap; font-size: 0.88rem; }
+.mp__combo { margin: 10px 0 0; font-size: 0.82rem; color: var(--suave); transition: color 0.3s; }
+.mp__combo.on { color: var(--ok); font-weight: 700; }
+
+/* 3. Dados */
+.mp__campos { display: grid; gap: 12px; margin-top: 8px; }
+.mp-campo { display: grid; gap: 6px; }
+.mp-campo__rotulo { font-size: 0.8rem; color: var(--suave); font-weight: 600; }
+.mp-campo input:not([type='radio']) {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--borda);
+  background: var(--bg);
+  color: var(--txt);
+  font: inherit;
+  font-size: 16px; /* 16px evita o zoom automático do iPhone */
+  transition: border-color 0.2s;
+}
+.mp-campo input:not([type='radio']):focus { outline: 0; border-color: var(--a2); box-shadow: 0 0 0 3px #2dd4bf22; }
+.mp-campo.erro input { border-color: #f87171; }
+.mp__erro { color: #f87171; font-size: 0.78rem; }
+
+.mp__tipos { display: flex; flex-wrap: wrap; gap: 8px; }
+.mp__tipos label { padding: 10px 14px; border-radius: 999px; border: 1px solid var(--borda); cursor: pointer; font-size: 0.88rem; transition: 0.2s; }
+.mp__tipos label.on { border-color: var(--a2); background: #2dd4bf14; color: var(--txt); }
+.mp__tipos label:has(input:focus-visible) { outline: 2px solid var(--a2); outline-offset: 2px; }
+
+.mp__isca { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.mp__aceite { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 0.85rem; color: var(--suave); cursor: pointer; }
+.mp__aceite input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--a2); flex: none; }
+.mp__aceite a { color: var(--a2); }
+.mp__aceite.erro { color: #f87171; }
+
+/* Resumo */
+.mp__resumo {
+  position: sticky;
+  bottom: 10px;
+  z-index: 20;
+  padding: 18px 18px 14px;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0f0f18f2, #0f0f18f2) padding-box,
+    var(--grad) border-box;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px -20px #000, 0 0 40px -20px #8b5cf6;
+}
+.mp__resumo h4 { margin: 0 0 10px; font-family: var(--fonte-titulo); font-size: 0.9rem; }
+.mp__linha { display: flex; justify-content: space-between; gap: 10px; font-size: 0.9rem; padding: 3px 0; }
+.mp__linha--sub { font-size: 0.8rem; color: var(--suave); }
+.mp__linha--desc { font-size: 0.8rem; color: var(--ok); }
+.mp__linha s { opacity: 0.6; }
+.mp__total { display: flex; justify-content: space-between; align-items: baseline; margin: 8px 0 6px; padding-top: 10px; border-top: 1px dashed var(--borda); }
+.mp__total span { color: var(--suave); font-size: 0.85rem; }
+.mp__total b { font-family: var(--fonte-titulo); font-size: 1.9rem; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.mp__enviar { width: 100%; margin-top: 12px; }
+.mp__enviar:disabled { opacity: 0.6; cursor: wait; }
+.mp__obs { display: block; text-align: center; margin-top: 8px; font-size: 0.72rem; color: var(--suave); }
+
+/* No celular o resumo fica compacto (só total + botão) */
+@media (max-width: 899px) {
+  .mp__resumo h4, .mp__resumo .mp__linha, .mp__obs { display: none; }
+  .mp__resumo { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; padding: 12px 12px 12px 18px; }
+  .mp__total { margin: 0; padding: 0; border: 0; flex-direction: column; align-items: flex-start; }
+  .mp__total b { font-size: 1.5rem; }
+  .mp__enviar { margin: 0; width: auto; }
+  .mp__planos { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 900px) {
+  .mp { grid-template-columns: 1fr 340px; }
+  .mp__resumo { top: 90px; bottom: auto; }
+  .mp__campos { grid-template-columns: 1fr 1fr; }
+  .mp-campo.largo { grid-column: 1 / -1; }
+}
+
+/* Tela de "recebido" */
+.mp-ok { max-width: 640px; margin: 0 auto; text-align: center; }
+.mp-ok h2 { font-size: clamp(1.6rem, 5vw, 2.6rem); margin-top: 16px; }
+.mp-ok__icone {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--bg);
+  background: var(--grad);
+  box-shadow: 0 0 0 10px #2dd4bf18, 0 0 60px #2dd4bf66;
+  animation: mp-pop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes mp-pop { from { transform: scale(0) rotate(-30deg); } }
+.mp-ok__resumo {
+  text-align: left;
+  white-space: pre-wrap;
+  margin: 18px 0 0;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px dashed var(--borda);
+  background: var(--sup);
+  font: 0.85rem/1.6 var(--fonte-texto);
+  color: #cfcfe0;
+}
+.mp-ok__pix { margin-top: 14px; font-size: 0.8rem; color: var(--suave); }

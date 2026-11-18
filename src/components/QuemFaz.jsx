@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react'
 import { site, linkWhatsapp } from '../data/site'
 import Reveal from './Reveal'
+import FotoAscii from './FotoAscii'
 import './QuemFaz.css'
 
 export default function QuemFaz() {
@@ -13,44 +13,11 @@ export default function QuemFaz() {
     ['E-mail', links.email && `mailto:${links.email}`],
   ].filter(([, url]) => url) // só mostra o que estiver preenchido
 
-  // No celular não existe "mouse em cima": um toque dispara o glitch por um instante
-  const [glitch, setGlitch] = useState(false)
-  const timer = useRef(null)
-  function dispara() {
-    setGlitch(true)
-    clearTimeout(timer.current)
-    timer.current = setTimeout(() => setGlitch(false), 1600)
-  }
-
   return (
     <section className="secao container" id="quem-faz">
       <Reveal className="quem">
-        <div
-          className={`quem__foto ${glitch ? 'quem__foto--glitch' : ''}`}
-          onClick={dispara}
-        >
-          {/* As camadas repetem a foto com cores separadas e são "fatiadas" no CSS */}
-          <div className="glitch" style={{ '--foto': `url(${dono.foto})` }}>
-            <img
-              src={dono.foto}
-              alt={`Foto de ${dono.nome}`}
-              loading="lazy"
-              width="720"
-              height="960"
-            />
-            <span
-              className="glitch__camada glitch__camada--r"
-              aria-hidden="true"
-            />
-            <span
-              className="glitch__camada glitch__camada--c"
-              aria-hidden="true"
-            />
-            <span className="glitch__linhas" aria-hidden="true" />
-            <span className="glitch__txt" aria-hidden="true">
-              template_nao_encontrado.exe
-            </span>
-          </div>
+        <div className="quem__foto">
+          <FotoAscii src={dono.foto} alt={`Foto de ${dono.nome}`} />
           <span className="quem__selo">📍 {cidade}</span>
         </div>
         <div>

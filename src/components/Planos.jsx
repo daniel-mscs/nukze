@@ -6,11 +6,15 @@ import {
   provisorio,
   real,
 } from '../data/planos'
-import { linkWhatsapp } from '../data/site'
 import Reveal from './Reveal'
 import './Planos.css'
 
-export default function Planos() {
+export default function Planos({ onEscolher, escolhidos, setEscolhidos }) {
+  const alterna = (id) =>
+    setEscolhidos((l) =>
+      l.includes(id) ? l.filter((x) => x !== id) : [...l, id],
+    )
+
   return (
     <section className="secao container" id="planos">
       <div className="cabecalho">
@@ -52,12 +56,10 @@ export default function Planos() {
               ))}
             </ul>
             {p.nota && <p className="plano__nota">{p.nota}</p>}
-            {/* Na próxima etapa este botão abre o "Monte seu plano" já com o plano marcado */}
             <a
               className={`btn ${p.selo ? 'btn--principal' : ''}`}
-              href={linkWhatsapp(`Oi! Tenho interesse no plano ${p.nome}.`)}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#monte-seu-plano"
+              onClick={() => onEscolher(p.id)}
             >
               Quero o {p.nome}
             </a>
@@ -79,10 +81,29 @@ export default function Planos() {
                   <b>{m.nome}</b>
                   <span>{m.descricao}</span>
                 </div>
-                <em>+ {real(m.preco)}/mês</em>
+                <div className="extras__acao">
+                  <em>+ {real(m.preco)}/mês</em>
+                  <button
+                    type="button"
+                    className={escolhidos.includes(m.id) ? 'on' : ''}
+                    aria-pressed={escolhidos.includes(m.id)}
+                    onClick={() => alterna(m.id)}
+                  >
+                    {escolhidos.includes(m.id) ? '✓ Adicionado' : '+ Adicionar'}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
+          {escolhidos.length > 0 && (
+            <a
+              className="btn btn--principal extras__ir"
+              href="#monte-seu-plano"
+            >
+              Ver meu plano com {escolhidos.length} módulo
+              {escolhidos.length > 1 ? 's' : ''} →
+            </a>
+          )}
         </Reveal>
 
         <Reveal className="extras extras--taxa" atraso={0.1}>
