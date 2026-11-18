@@ -20,53 +20,54 @@
   font-family: 'Manrope', sans-serif;
 }
 
-/* Céu: entardecer → noite (mistura controlada por --noite) */
-.vp__ceu {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(#0b1026, #1e1b4b 55%, #3b1d4a);
-}
+/* Céu: entardecer → noite (controlado por --noite) */
+.vp__ceu { position: absolute; inset: 0; background: linear-gradient(#060914, #111a3a 60%, #1f1747); }
 .vp__ceu::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(#f59e0b55, #fb718566 45%, #7c3aed33 70%, transparent), radial-gradient(circle at 70% 70%, #fbbf24aa, transparent 25%);
+  background: linear-gradient(#f9731655, #fb718555 45%, #7c3aed33 70%, transparent), radial-gradient(circle at 75% 65%, #fbbf24aa, transparent 25%);
   opacity: calc(1 - var(--noite));
 }
 
-.vp__cidade { position: absolute; left: 0; right: -30%; bottom: 26%; height: 38%; }
-.vp__cidade i {
-  position: absolute;
-  bottom: 0;
-  width: 5%;
-  background: #0b0f1f;
-  border-radius: 3px 3px 0 0;
-  /* janelas acesas à noite */
-  background-image: radial-gradient(#fde68a 1.2px, transparent 1.5px);
-  background-size: 8px 10px;
-  background-color: #0b0f1f;
-  box-shadow: inset 0 0 0 999px rgb(11 15 31 / calc(1 - var(--noite) * 0.75));
-}
-
-.vp__estrada {
+/* Arquibancada com público (pontinhos) e torres de luz que acendem à noite */
+.vp__arquibancada {
   position: absolute;
   left: 0;
-  right: 0;
-  bottom: 0;
-  height: 27%;
-  background: linear-gradient(#111827, #030712);
+  right: -40%;
+  bottom: 27%;
+  height: 34%;
 }
-.vp__estrada::before {
+.vp__arquibancada::before {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 46%;
-  height: 4px;
-  background: repeating-linear-gradient(90deg, #fbbf24 0 60px, transparent 60px 120px);
-  background-position: var(--estrada) 0;
-  opacity: 0.8;
+  inset: 45% 0 0;
+  background:
+    radial-gradient(circle, #fca5a5 1.3px, transparent 1.7px) 0 0 / 9px 7px,
+    radial-gradient(circle, #93c5fd 1.3px, transparent 1.7px) 4px 3px / 9px 7px,
+    linear-gradient(#1e1b3a, #0b0f1f);
+  border-top: 4px solid #334155;
 }
+.vp__torre { position: absolute; bottom: 55%; width: 4px; height: 70%; background: #334155; }
+.vp__torre::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -14px;
+  width: 32px;
+  height: 10px;
+  border-radius: 3px;
+  background: #fef9c3;
+  opacity: calc(0.15 + var(--noite) * 0.85);
+  box-shadow: 0 0 calc(var(--noite) * 40px) calc(var(--noite) * 14px) #fef9c3aa;
+}
+
+/* Pista com zebra vermelha e branca e linha branca, andando com o scroll */
+.vp__pista { position: absolute; left: 0; right: 0; bottom: 0; height: 27%; background: linear-gradient(#1f2937, #030712); }
+.vp__pista::before,
+.vp__pista::after { content: ''; position: absolute; left: 0; right: 0; background-position: var(--pista) 0; }
+.vp__pista::before { top: 0; height: 10px; background-image: repeating-linear-gradient(90deg, #ef4444 0 40px, #f8fafc 40px 80px); }
+.vp__pista::after { top: 64%; height: 3px; background-image: repeating-linear-gradient(90deg, #f8fafc 0 90px, transparent 90px 140px); opacity: 0.45; }
 
 .vp__menu {
   position: absolute;
@@ -81,34 +82,54 @@
   font-size: 0.78rem;
   color: #cbd5e1;
 }
-.vp__menu b { font-family: 'Unbounded', sans-serif; letter-spacing: 0.2em; color: #fff; margin-right: auto; }
-.vp__menu em { font-style: normal; padding: 6px 12px; border-radius: 999px; border: 1px solid #ffffff55; color: #fff; }
+.vp__menu b { font-family: 'Unbounded', sans-serif; letter-spacing: 0.18em; color: #fff; margin-right: auto; }
+.vp__menu em { font-style: normal; padding: 6px 12px; border-radius: 999px; background: #f43f5e; color: #fff; font-weight: 700; }
 
 .vp__titulo { position: absolute; z-index: 4; top: 18%; left: 0; right: 0; text-align: center; }
-.vp__titulo small { letter-spacing: 0.35em; font-size: 0.72rem; color: #e2e8f0; }
-.vp__titulo h4 { margin: 6px 0 0; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 8vw, 5.5rem); letter-spacing: -0.03em; line-height: 1; }
-.vp__titulo h4 span { color: #38bdf8; text-shadow: 0 0 30px #38bdf8aa; }
+.vp__titulo small { letter-spacing: 0.3em; font-size: 0.72rem; color: #e2e8f0; }
+.vp__titulo h4 { margin: 6px 0 0; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 8vw, 5.5rem); letter-spacing: -0.03em; line-height: 1; font-style: italic; }
+.vp__titulo h4 span { color: #f43f5e; text-shadow: 0 0 30px #f43f5eaa; }
 
 .vp__info { position: absolute; z-index: 4; top: 20%; max-width: 46%; }
-.vp__info b { display: block; font-family: 'Unbounded', sans-serif; font-size: clamp(2rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.vp__info b { display: block; font-family: 'Unbounded', sans-serif; font-size: clamp(2rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; font-style: italic; }
 .vp__info span { color: #cbd5e1; font-size: 0.95rem; }
 .vp__info--esq { left: 6%; }
 .vp__info--dir { right: 6%; text-align: right; }
-.vp__bateria { height: 8px; margin: 12px 0 10px auto; width: 180px; max-width: 100%; border-radius: 999px; background: #ffffff22; overflow: hidden; }
-.vp__bateria i { display: block; height: 100%; background: linear-gradient(90deg, #22c55e, #a3e635); box-shadow: 0 0 12px #22c55e; }
+.vp__barra { height: 8px; margin: 12px 0 10px auto; width: 180px; max-width: 100%; border-radius: 999px; background: #ffffff22; overflow: hidden; }
+.vp__barra i { display: block; height: 100%; background: linear-gradient(90deg, #facc15, #f43f5e); box-shadow: 0 0 12px #f43f5e; }
 .vp__info small { font-size: 0.8rem; color: #cbd5e1; }
 .vp__info em { font-style: normal; font-weight: 800; }
 
 .vp__final { position: absolute; z-index: 4; top: 18%; left: 0; right: 0; text-align: center; }
-.vp__final h4 { margin: 0 0 14px; font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem, 4.5vw, 3rem); letter-spacing: -0.03em; }
-.vp__final span { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #fff; color: #0b1026; font-weight: 800; font-size: 0.9rem; }
+.vp__final h4 { margin: 0 0 14px; font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem, 4.5vw, 3rem); letter-spacing: -0.03em; font-style: italic; }
+.vp__final span { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #f43f5e; color: #fff; font-weight: 800; font-size: 0.9rem; box-shadow: 0 0 30px #f43f5e88; }
+
+/* Linhas de velocidade */
+.vp__vento { position: absolute; z-index: 2; left: 0; width: 40%; bottom: 12%; height: 22%; }
+.vp__vento i {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #ffffffaa);
+  animation: vp-vento 0.6s linear infinite;
+}
+.vp__vento i:nth-child(1) { top: 10%; width: 60%; }
+.vp__vento i:nth-child(2) { top: 40%; width: 85%; animation-delay: -0.2s; }
+.vp__vento i:nth-child(3) { top: 65%; width: 50%; animation-delay: -0.35s; }
+.vp__vento i:nth-child(4) { top: 90%; width: 75%; animation-delay: -0.1s; }
+@keyframes vp-vento {
+  from { transform: translateX(-30%); opacity: 0; }
+  50% { opacity: 1; }
+  to { transform: translateX(30%); opacity: 0; }
+}
 
 .vp__carro {
   position: absolute;
   z-index: 3;
-  left: 8%;
-  bottom: 9%;
-  width: min(84%, 640px);
+  left: 6%;
+  bottom: 6%;
+  width: min(90%, 820px);
   overflow: visible;
   filter: drop-shadow(0 10px 20px #0008);
 }
@@ -120,5 +141,5 @@
 @media (max-width: 700px) {
   .vp__menu span { display: none; }
   .vp__info { top: 16%; max-width: 70%; }
-  .vp__carro { left: 2%; width: 96%; bottom: 11%; }
+  .vp__carro { left: 2%; width: 96%; bottom: 10%; }
 }

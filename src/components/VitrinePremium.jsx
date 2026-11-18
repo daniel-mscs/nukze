@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import Navegador from './Navegador'
 import './VitrinePremium.css'
 
+// Pinturas do carro (nome, cor clara, cor escura)
 const CORES = [
-  ['Branco Polar', '#e8edf2', '#9aa7b4'],
-  ['Azul Volt', '#38bdf8', '#1d4ed8'],
-  ['Vermelho Brasa', '#fb7185', '#be123c'],
+  ['Prata Corrida', '#e5e7eb', '#6b7280'],
+  ['Azul Elétrico', '#38bdf8', '#1d4ed8'],
+  ['Vermelho Pista', '#f43f5e', '#9f1239'],
 ]
 
 // Converte o progresso geral (0..1) no progresso de um trecho [ini, fim] (0..1)
@@ -14,7 +15,7 @@ const trecho = (p, ini, fim) =>
 const suave = (t) => 1 - Math.pow(1 - t, 3)
 
 // Mockup de "site premium" que se monta conforme a página rola:
-// o scroll vira a "linha do tempo" de um vídeo (carro fictício VOLTA E1).
+// o scroll vira a "linha do tempo" de um vídeo (equipe fictícia VOLTA Racing).
 export default function VitrinePremium() {
   const area = useRef(null)
   const [p, setP] = useState(0)
@@ -43,49 +44,48 @@ export default function VitrinePremium() {
   // Cada cena ocupa um pedaço do scroll
   const t1 = suave(trecho(p, 0.02, 0.22)) // título + carro entrando
   const t2 = suave(trecho(p, 0.25, 0.45)) // aceleração
-  const t3 = trecho(p, 0.48, 0.72) // autonomia + cores
-  const t4 = suave(trecho(p, 0.75, 0.95)) // noite + reserva
+  const t3 = trecho(p, 0.48, 0.72) // velocidade + pinturas
+  const t4 = suave(trecho(p, 0.75, 0.95)) // corrida noturna + ingresso
   const cor =
     CORES[Math.min(CORES.length - 1, Math.floor(t3 * CORES.length * 0.999))]
-  const giro = p * 2400 // graus das rodas
-  const estrada = p * 3000 // px da faixa andando
+  const giro = p * 3600 // graus das rodas
+  const pista = p * 4000 // px da pista andando
+  const vel = Math.min(t3 * 1.5, 1)
 
   return (
     <div className="vp" ref={area}>
       <div className="vp__fixo">
-        <Navegador url="volta-e1.com.br" className="vp__nav">
+        <Navegador url="voltaracing.com.br" className="vp__nav">
           <div
             className="vp__cena"
             style={{
               '--noite': t4,
               '--carro': cor[1],
               '--carro2': cor[2],
-              '--estrada': `${-estrada}px`,
+              '--pista': `${-pista}px`,
             }}
           >
             <div className="vp__ceu" />
             <div
-              className="vp__cidade"
-              style={{ transform: `translateX(${-p * 18}%)` }}
+              className="vp__arquibancada"
+              style={{ transform: `translateX(${-p * 25}%)` }}
               aria-hidden="true"
             >
-              {Array.from({ length: 22 }, (_, i) => (
+              {Array.from({ length: 7 }, (_, i) => (
                 <i
                   key={i}
-                  style={{
-                    height: `${30 + ((i * 37) % 60)}%`,
-                    left: `${i * 6}%`,
-                  }}
+                  className="vp__torre"
+                  style={{ left: `${6 + i * 15}%` }}
                 />
               ))}
             </div>
-            <div className="vp__estrada" />
+            <div className="vp__pista" />
 
             <header className="vp__menu">
-              <b>VOLTA</b>
-              <span>Modelos</span>
-              <span>Tecnologia</span>
-              <em>Reservar</em>
+              <b>VOLTA RACING</b>
+              <span>Equipe</span>
+              <span>Calendário</span>
+              <em>Ingressos</em>
             </header>
 
             {/* Cena 1: título */}
@@ -96,13 +96,13 @@ export default function VitrinePremium() {
                 transform: `translateY(${(1 - t1) * 30}px)`,
               }}
             >
-              <small>NOVO 100% ELÉTRICO</small>
+              <small>GP DE SANTA MARIA · TEMPORADA 2027</small>
               <h4>
-                VOLTA <span>E1</span>
+                VOLTA <span>VR-07</span>
               </h4>
             </div>
 
-            {/* Cena 2: vem da esquerda */}
+            {/* Cena 2: entra pela esquerda */}
             <div
               className="vp__info vp__info--esq"
               style={{
@@ -110,11 +110,11 @@ export default function VitrinePremium() {
                 transform: `translateX(${(1 - t2) * -120}%)`,
               }}
             >
-              <b>{(3.8 + (1 - t2) * 6.2).toFixed(1)}s</b>
+              <b>{(2.6 + (1 - t2) * 5.4).toFixed(1)}s</b>
               <span>de 0 a 100 km/h</span>
             </div>
 
-            {/* Cena 3: vem da direita */}
+            {/* Cena 3: entra pela direita */}
             <div
               className="vp__info vp__info--dir"
               style={{
@@ -122,13 +122,13 @@ export default function VitrinePremium() {
                 transform: `translateX(${(1 - Math.min(t3 * 2, 1)) * 120}%)`,
               }}
             >
-              <b>{Math.round(520 * Math.min(t3 * 1.5, 1))} km</b>
-              <span>de autonomia</span>
-              <div className="vp__bateria">
-                <i style={{ width: `${Math.min(t3 * 1.5, 1) * 100}%` }} />
+              <b>{Math.round(350 * vel)} km/h</b>
+              <span>de velocidade máxima</span>
+              <div className="vp__barra">
+                <i style={{ width: `${vel * 100}%` }} />
               </div>
               <small>
-                Cor: <em style={{ color: cor[1] }}>{cor[0]}</em>
+                Pintura: <em style={{ color: cor[1] }}>{cor[0]}</em>
               </small>
             </div>
 
@@ -137,15 +137,27 @@ export default function VitrinePremium() {
               className="vp__final"
               style={{ opacity: t4, transform: `scale(${0.9 + t4 * 0.1})` }}
             >
-              <h4>A cidade à noite é sua.</h4>
-              <span>Reserve o seu →</span>
+              <h4>A próxima volta é sua.</h4>
+              <span>Garanta seu ingresso →</span>
             </div>
 
-            {/* O carro (SVG desenhado à mão, marca fictícia) */}
+            {/* Linhas de velocidade atrás do carro */}
+            <div
+              className="vp__vento"
+              style={{ opacity: Math.max(t2, vel) * (1 - t4 * 0.5) }}
+              aria-hidden="true"
+            >
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+
+            {/* Carro de corrida (SVG desenhado à mão, equipe fictícia) */}
             <svg
               className="vp__carro"
-              viewBox="0 0 600 200"
-              style={{ transform: `translateX(${(1 - t1) * 70 - t4 * 8}%)` }}
+              viewBox="0 0 640 170"
+              style={{ transform: `translateX(${(1 - t1) * 80 - t4 * 6}%)` }}
               aria-hidden="true"
             >
               <defs>
@@ -153,75 +165,148 @@ export default function VitrinePremium() {
                   <stop offset="0" stopColor="var(--carro)" />
                   <stop offset="1" stopColor="var(--carro2)" />
                 </linearGradient>
-                <radialGradient id="vp-farol">
-                  <stop offset="0" stopColor="#fff" />
-                  <stop offset="1" stopColor="#fff0" />
-                </radialGradient>
               </defs>
               <ellipse
-                cx="300"
-                cy="172"
-                rx="250"
-                ry="10"
+                cx="320"
+                cy="152"
+                rx="300"
+                ry="8"
                 fill="#000"
-                opacity="0.5"
+                opacity="0.55"
               />
-              {/* facho do farol, aparece à noite */}
-              <path
-                d="M560 112 L760 80 L760 160 Z"
-                fill="url(#vp-farol)"
-                opacity={t4 * 0.6}
+              {/* luz traseira (acende à noite) */}
+              <rect
+                x="20"
+                y="96"
+                width="10"
+                height="7"
+                rx="2"
+                fill="#ef4444"
+                opacity={0.4 + t4 * 0.6}
               />
-              <path
-                d="M40 140 C50 112 92 102 160 96 L240 62 C290 44 380 42 440 62 L520 96 C560 104 578 120 576 140 L572 152 L40 152 Z"
+              {/* assoalho */}
+              <rect
+                x="60"
+                y="126"
+                width="530"
+                height="7"
+                rx="3"
+                fill="#111827"
+              />
+              {/* asa traseira */}
+              <rect x="30" y="40" width="9" height="80" rx="2" fill="#111827" />
+              <rect
+                x="24"
+                y="38"
+                width="82"
+                height="12"
+                rx="3"
                 fill="url(#vp-lataria)"
               />
+              <rect x="30" y="55" width="68" height="7" rx="3" fill="#111827" />
+              <path d="M74 62 L96 106" stroke="#111827" strokeWidth="6" />
+              {/* carroceria, do motor até o bico */}
               <path
-                d="M250 70 C300 54 370 54 425 68 L470 96 L215 98 Z"
-                fill="#0b1220"
-                opacity="0.85"
+                d="M78 126 L78 98 C120 92 170 86 220 84 L268 80 C300 76 330 78 352 84 L470 104 C520 110 560 114 600 118 L606 126 Z"
+                fill="url(#vp-lataria)"
+              />
+              {/* sidepod */}
+              <path
+                d="M180 126 C190 104 230 98 300 98 C330 98 350 104 360 126 Z"
+                fill="var(--carro2)"
+                opacity="0.6"
+              />
+              {/* tomada de ar acima do piloto */}
+              <path
+                d="M206 86 C222 52 264 50 286 80 Z"
+                fill="url(#vp-lataria)"
+              />
+              <path d="M226 72 C236 62 252 62 262 72" fill="#0b0b0f" />
+              {/* capacete e halo */}
+              <circle cx="312" cy="72" r="13" fill="#fde047" />
+              <rect
+                x="314"
+                y="66"
+                width="12"
+                height="6"
+                rx="2"
+                fill="#0b0b0f"
               />
               <path
-                d="M340 58 L336 98"
-                stroke="var(--carro2)"
-                strokeWidth="5"
+                d="M286 82 Q314 52 352 84"
+                stroke="#111827"
+                strokeWidth="6"
+                fill="none"
+                strokeLinecap="round"
               />
-              <rect
-                x="548"
-                y="108"
-                width="26"
-                height="7"
-                rx="3.5"
-                fill="#fff"
-                opacity={0.5 + t4 * 0.5}
-              />
-              <rect
-                x="40"
+              {/* número e faixa */}
+              <text
+                x="140"
                 y="114"
-                width="16"
+                fontFamily="Unbounded, sans-serif"
+                fontWeight="800"
+                fontSize="22"
+                fill="#0b0b0f"
+                opacity="0.85"
+              >
+                07
+              </text>
+              <path
+                d="M360 100 L600 120"
+                stroke="#fff"
+                strokeWidth="2"
+                opacity="0.5"
+              />
+              {/* asa dianteira */}
+              <rect
+                x="540"
+                y="128"
+                width="96"
                 height="6"
                 rx="3"
-                fill="#f43f5e"
+                fill="#111827"
               />
-              <path d="M70 140 H540" stroke="#ffffff33" strokeWidth="1.5" />
-              {[150, 460].map((x) => (
-                <g key={x} transform={`translate(${x} 150)`}>
-                  <circle r="34" fill="#0b0b0f" />
+              <rect
+                x="630"
+                y="112"
+                width="6"
+                height="22"
+                rx="2"
+                fill="url(#vp-lataria)"
+              />
+              {/* rodas (traseira maior) com a faixa colorida do pneu de corrida */}
+              {[
+                [140, 40],
+                [500, 34],
+              ].map(([x, r]) => (
+                <g key={x} transform={`translate(${x} ${152 - r})`}>
+                  <circle r={r} fill="#0b0b0f" />
                   <circle
-                    r="22"
-                    fill="#1f2937"
-                    stroke="#9ca3af"
-                    strokeWidth="2"
+                    r={r - 7}
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="2.5"
                   />
+                  <circle r={r - 14} fill="#1f2937" />
                   <g
                     transform={`rotate(${giro})`}
-                    stroke="#d1d5db"
+                    stroke="#9ca3af"
                     strokeWidth="3"
                   >
-                    <line x1="-20" y1="0" x2="20" y2="0" />
-                    <line x1="0" y1="-20" x2="0" y2="20" />
-                    <line x1="-14" y1="-14" x2="14" y2="14" />
-                    <line x1="-14" y1="14" x2="14" y2="-14" />
+                    <line x1={-(r - 15)} y1="0" x2={r - 15} y2="0" />
+                    <line x1="0" y1={-(r - 15)} x2="0" y2={r - 15} />
+                    <line
+                      x1={-(r - 20)}
+                      y1={-(r - 20)}
+                      x2={r - 20}
+                      y2={r - 20}
+                    />
+                    <line
+                      x1={-(r - 20)}
+                      y1={r - 20}
+                      x2={r - 20}
+                      y2={-(r - 20)}
+                    />
                   </g>
                   <circle r="5" fill="#e5e7eb" />
                 </g>
