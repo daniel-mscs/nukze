@@ -511,7 +511,14 @@ export default function MontePlano({
               />
               <span>
                 Concordo em ser contatado pelo WhatsApp e com a{' '}
-                <a href="/privacidade">política de privacidade</a>.
+                <a
+                  href="/privacidade/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  política de privacidade
+                </a>
+                .
               </span>
             </label>
             {erros.aceite && <small className="mp__erro">{erros.aceite}</small>}

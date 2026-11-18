@@ -1,0 +1,26 @@
+.cookies {
+  position: fixed;
+  left: 16px;
+  right: 86px; /* espaço pro botão do WhatsApp */
+  bottom: 16px;
+  z-index: 70;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--borda);
+  background: #0f0f18f2;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 50px -20px #000;
+  animation: cookies-sobe 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 1.5s backwards;
+}
+.cookies p { margin: 0; font-size: 0.82rem; color: var(--suave); }
+.cookies a { color: var(--a2); }
+.cookies .btn { min-height: 38px; padding: 0 16px; font-size: 0.85rem; flex: none; }
+@keyframes cookies-sobe { from { opacity: 0; transform: translateY(20px); } }
+
+@media (max-width: 560px) {
+  .cookies { flex-direction: column; align-items: stretch; text-align: left; }
+}

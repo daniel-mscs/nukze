@@ -136,3 +136,8 @@
   .hero__sub { margin: 0; }
   .hero .botoes, .hero__provas { justify-content: flex-start; }
 }
+
+/* Sem animação: o título aparece direto (senão ficaria invisível) */
+@media (prefers-reduced-motion: reduce) {
+  .hero__palavra { opacity: 1; transform: none; filter: none; }
+}

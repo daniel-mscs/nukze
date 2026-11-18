@@ -24,6 +24,20 @@ export default function Rodape() {
             </p>
           </div>
           <div>
+            <h4>Site</h4>
+            <ul>
+              <li>
+                <a href="#planos">Planos</a>
+              </li>
+              <li>
+                <a href="#faq">Perguntas frequentes</a>
+              </li>
+              <li>
+                <a href="/privacidade/">Política de privacidade</a>
+              </li>
+            </ul>
+          </div>
+          <div>
             <h4>Contato</h4>
             <ul>
               <li>

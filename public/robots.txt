@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nukze.daniel-mth1996.workers.dev/sitemap.xml

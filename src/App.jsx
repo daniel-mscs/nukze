@@ -13,6 +13,8 @@ import BotaoZap from './components/BotaoZap'
 import QuemFaz from './components/QuemFaz'
 import ParaDevs from './components/ParaDevs'
 import Orcamento from './components/Orcamento'
+import Faq from './components/Faq'
+import BannerCookies from './components/BannerCookies'
 import Rodape from './components/Rodape'
 
 export default function App() {
@@ -50,10 +52,12 @@ export default function App() {
         />
         <QuemFaz />
         <ParaDevs />
+        <Faq />
         <Orcamento />
       </main>
       <Rodape />
       <BotaoZap />
+      <BannerCookies />
     </>
   )
 }

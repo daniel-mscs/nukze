@@ -1,0 +1,16 @@
+.pv-topo { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--borda); background: #07070ccc; backdrop-filter: blur(12px); }
+.pv-topo__barra { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; padding-bottom: 12px; }
+.pv-topo .btn { min-height: 40px; padding: 0 16px; font-size: 0.85rem; }
+.pv-logo { font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.1rem; color: var(--txt); text-decoration: none; letter-spacing: -0.04em; }
+.pv-logo span { color: var(--a2); }
+
+.pv { max-width: 760px; padding-top: 48px; padding-bottom: 80px; }
+.pv h1 { font-size: clamp(2rem, 6vw, 3rem); margin-top: 16px; }
+.pv h2 { font-size: 1.15rem; margin: 36px 0 10px; }
+.pv p, .pv li { color: #c9c9da; }
+.pv ul { padding-left: 20px; display: grid; gap: 6px; }
+.pv a { color: var(--a2); }
+.pv b { color: var(--txt); }
+.pv-data { font-size: 0.85rem; color: var(--suave) !important; }
+
+.pv-rodape { border-top: 1px solid var(--borda); padding: 28px 0; color: var(--suave); font-size: 0.85rem; }

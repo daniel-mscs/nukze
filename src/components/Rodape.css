@@ -38,5 +38,5 @@
 }
 
 @media (min-width: 800px) {
-  .rodape__grade { grid-template-columns: 2fr 1fr 1fr; }
+  .rodape__grade { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
