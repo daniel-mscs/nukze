@@ -23,8 +23,11 @@ export const site = {
 }
 
 // Monta o link do WhatsApp com a mensagem já escrita
-export function linkWhatsapp(mensagem = site.mensagemWhatsapp) {
-  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(mensagem)}`
+export function linkWhatsapp(
+  mensagem = site.mensagemWhatsapp,
+  numero = site.whatsapp,
+) {
+  return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
 }
 
 // Parceiro que cuida do marketing / tráfego pago (valor negociado com ele)
@@ -34,4 +37,6 @@ export const parceiro = {
   desde: 2021,
   foto: '/sobre/guilherme.webp',
   instagram: 'https://www.instagram.com/guimaatos/',
+  linkedin: 'https://www.linkedin.com/in/wilson-matos-49a8b7208/',
+  whatsapp: '5555997159944',
 }

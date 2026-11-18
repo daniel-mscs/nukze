@@ -43,22 +43,29 @@ export default function Marketing() {
               className="btn btn--principal"
               href={linkWhatsapp(
                 'Oi! Vi no site da Nukze e quero saber do marketing e tráfego pago.',
+                parceiro.whatsapp,
               )}
               target="_blank"
               rel="noopener noreferrer"
             >
               Quero saber do marketing
             </a>
-            {parceiro.instagram && (
-              <a
-                className="btn"
-                href={parceiro.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Instagram ↗
-              </a>
-            )}
+            {[
+              ['Instagram', parceiro.instagram],
+              ['LinkedIn', parceiro.linkedin],
+            ]
+              .filter(([, url]) => url)
+              .map(([nome, url]) => (
+                <a
+                  key={nome}
+                  className="btn"
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {nome} ↗
+                </a>
+              ))}
           </div>
           <small className="mkt__valor">Valor a combinar direto com ele.</small>
         </div>
