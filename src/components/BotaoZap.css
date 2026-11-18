@@ -79,4 +79,15 @@ body:has(.demo--cheia) .zap { display: none; }
   /* sobe pra não cobrir a barra do total no "Monte seu plano" */
   .zap--subir { bottom: 96px; }
   .zap__botao { width: 54px; height: 54px; }
+  /* balão menor pra não tapar a tela */
+  .zap { gap: 6px; }
+  .zap__balao {
+    max-width: 165px;
+    margin-bottom: 6px;
+    padding: 8px 26px 8px 10px;
+    border-radius: 12px 12px 4px 12px;
+    font-size: 0.74rem;
+    line-height: 1.3;
+  }
+  .zap__balao button { top: 4px; right: 4px; width: 18px; height: 18px; font-size: 0.6rem; }
 }
