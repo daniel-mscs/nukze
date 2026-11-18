@@ -120,9 +120,15 @@ export default function Projetos() {
       trilho.current.style.transform = `translateX(${-p * distancia}px)`
       fundo.current.style.transform = `translateX(${-p * distancia * 0.4}px)`
       pct.current.textContent = `${Math.round(p * 100)}%`
-      if (calmo || innerWidth < 800) return
+      const aparelhos = trilho.current.querySelectorAll('[data-gira]')
+      if (calmo || innerWidth < 800) {
+        // Tela estreita: tira o giro (senão, ao diminuir a janela, ele fica
+        // "travado" e o celular aparece de lado, fininho)
+        aparelhos.forEach((el) => (el.style.transform = ''))
+        return
+      }
       // Celulares giram conforme passam pelo centro da tela
-      trilho.current.querySelectorAll('[data-gira]').forEach((el) => {
+      aparelhos.forEach((el) => {
         const b = el.getBoundingClientRect()
         const c = (b.left + b.width / 2 - innerWidth / 2) / innerWidth
         el.style.transform = `perspective(900px) rotateY(${c * -28}deg) rotateZ(${c * 6}deg) translateY(${Math.abs(c) * 30}px)`
