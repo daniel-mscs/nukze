@@ -118,7 +118,7 @@ export default function MontePlano({
       whatsapp: normalizaWhatsapp(dados.whatsapp),
     }
     const r = await enviarSolicitacao(novo)
-    setPedido({ ...novo, salvo: r.ok })
+    setPedido({ ...novo, salvo: r.ok, motivo: r.motivo })
     setEnviando(false)
     document
       .getElementById('monte-seu-plano')
@@ -138,7 +138,9 @@ export default function MontePlano({
           <p className="muted">
             {pedido.salvo
               ? 'Seu pedido já chegou aqui. Se quiser adiantar, me manda o resumo agora:'
-              : 'Não consegui salvar seu pedido agora, mas sem problema: me manda o resumo pelo WhatsApp que eu já vejo.'}
+              : pedido.motivo === 'repetido'
+                ? 'Seu pedido já tinha chegado há pouco, não precisa enviar de novo. Se quiser, me manda o resumo:'
+                : 'Não consegui salvar seu pedido agora, mas sem problema: me manda o resumo pelo WhatsApp que eu já vejo.'}
           </p>
           <pre className="mp-ok__resumo">{mensagem(pedido)}</pre>
           <div className="botoes">
