@@ -41,7 +41,6 @@ export default function App() {
             setModo('sistema')
           }}
         />
-        <SitesPremium onPedir={() => setModo('premium')} />
         <MontePlano
           plano={plano}
           setPlano={setPlano}
@@ -50,6 +49,7 @@ export default function App() {
           modo={modo}
           setModo={setModo}
         />
+        <SitesPremium onPedir={() => setModo('premium')} />
         <QuemFaz />
         <ParaDevs />
         <Faq />

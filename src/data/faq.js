@@ -18,7 +18,7 @@ export const faq = [
   },
   {
     p: 'O domínio (seunegocio.com.br) está incluso?',
-    r: 'O registro do domínio custa em média R$ 40 por ano e fica no seu nome. Eu cuido de toda a configuração.',
+    r: 'O domínio fica registrado no seu nome, e eu cuido de toda a configuração pra ele funcionar com o site.',
   },
   {
     p: 'Quem paga as mensagens do WhatsApp automático?',
