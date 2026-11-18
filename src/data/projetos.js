@@ -66,6 +66,10 @@ export const projetos = [
       },
       {
         tipo: 'navegador',
+        rotulo: 'NO COMPUTADOR',
+        titulo: 'Bonito em qualquer tela',
+        texto:
+          'O mesmo site se ajusta sozinho ao computador, tablet e celular.',
         url: 'barbeariarezenha.com.br',
         imagem: rezenha('desktop-servicos'),
         video: video('rezenha', 'video-desktop'),

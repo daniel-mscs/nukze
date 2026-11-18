@@ -23,20 +23,15 @@ function Slide({ slide, projeto, onAmpliar }) {
   if (slide.tipo === 'celulares') {
     return (
       <div className="slide">
-        <div className="slide__aparelhos">
+        <div className="slide__aparelhos slide__aparelhos--leque">
           {slide.imagens.map((src, i) => (
-            <div
+            <Celular
               key={src}
-              className={i === 2 ? 'so-desktop' : ''}
-              style={{ height: '100%', display: 'contents' }}
-            >
-              <Celular
-                src={src}
-                alt={`${projeto.nome}: tela ${i + 1}`}
-                onAmpliar={onAmpliar}
-                lento={i % 2}
-              />
-            </div>
+              src={src}
+              alt={`${projeto.nome}: tela ${i + 1}`}
+              onAmpliar={onAmpliar}
+              lento={i % 2}
+            />
           ))}
         </div>
       </div>
@@ -50,12 +45,9 @@ function Slide({ slide, projeto, onAmpliar }) {
           <h3>{slide.titulo}</h3>
           <p>{slide.texto}</p>
         </div>
-        <div className="slide__aparelhos">
+        <div className="slide__aparelhos slide__aparelhos--leque">
           {slide.imagens.map((src, i) => (
-            <div
-              key={src}
-              className={`slide__passo ${i === 2 ? 'so-desktop' : ''}`}
-            >
+            <div key={src} className="slide__passo">
               <span className="slide__num">{i + 1}</span>
               <Celular
                 src={src}
@@ -88,7 +80,14 @@ function Slide({ slide, projeto, onAmpliar }) {
     )
   }
   return (
-    <div className="slide">
+    <div className="slide slide--navegador">
+      {slide.titulo && (
+        <div className="slide__info">
+          <span className="slide__rotulo">{slide.rotulo}</span>
+          <h3>{slide.titulo}</h3>
+          <p>{slide.texto}</p>
+        </div>
+      )}
       <Navegador
         url={slide.url}
         src={slide.imagem}

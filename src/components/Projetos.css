@@ -151,14 +151,29 @@
   box-shadow: 0 0 20px #2dd4bf66;
 }
 
+/* Card do computador: título em cima, navegador centralizado */
+.slide--navegador { flex-direction: column; justify-content: center; }
+.slide--navegador .slide__info { max-width: 560px; }
+.slide--navegador .slide__info p { margin: 0; }
+.slide--navegador .navegador { flex: none; width: 100%; max-height: 70%; overflow: hidden; }
+
 @media (max-width: 799px) {
   .slide { flex-direction: column; padding: 18px; }
-  .so-desktop { display: none !important; }
+  /* Leque: as 3 telas sobrepostas e inclinadas, igual cartas na mão */
+  .slide__aparelhos--leque { gap: 0; }
+  .slide__aparelhos--leque > * { flex: none; }
+  .slide__aparelhos--leque > *:not(:first-child) { margin-left: -9vw; }
+  .slide__aparelhos--leque > *:nth-child(1) { transform: rotate(-7deg) translateY(10px); z-index: 1; }
+  .slide__aparelhos--leque > *:nth-child(2) { z-index: 2; }
+  .slide__aparelhos--leque > *:nth-child(3) { transform: rotate(7deg) translateY(10px); z-index: 1; }
+  .slide__aparelhos--leque .iphone { width: min(33vw, 140px); }
+  .slide__aparelhos--leque .flutua { animation: none; }
+  .slide__num { left: 4px; }
+  .slide--navegador { justify-content: center; gap: 18px; }
   .slide__aparelhos .iphone { height: auto; width: min(42vw, 180px); }
   .slide__aparelhos .flutua, .slide__aparelhos .tilt { height: auto; }
   .slide__info p { font-size: 0.88rem; }
   .slide--fluxo h3 { font-size: 1.15rem; }
-  .slide--fluxo .slide__aparelhos .iphone { width: min(30vw, 130px); }
   .slide__passo { height: auto; }
   /* Abertura no celular: texto mais curto e o vídeo do lado */
   /* Abertura no celular: o vídeo fica no canto, atrás do texto */
