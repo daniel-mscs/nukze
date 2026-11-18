@@ -181,9 +181,6 @@ export default function MontePlano({
               Montar outro
             </button>
           </div>
-          <p className="mp-ok__pix">
-            O pagamento é combinado comigo por lá (Pix).
-          </p>
         </div>
       </section>
     )

@@ -198,7 +198,6 @@
   font: 0.85rem/1.6 var(--fonte-texto);
   color: #cfcfe0;
 }
-.mp-ok__pix { margin-top: 14px; font-size: 0.8rem; color: var(--suave); }
 
 .mp-campo textarea { resize: vertical; min-height: 80px; }
 
