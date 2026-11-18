@@ -17,7 +17,8 @@
   transition: filter 1.2s ease 0.6s;
 }
 /* ganha cor quando a seção aparece */
-.quem.on .ascii img { filter: grayscale(0); }
+.quem.on .ascii img,
+.mkt.on .ascii img { filter: grayscale(0); }
 
 /* A camada de código, com um "buraco" redondo (a lente) onde está o mouse */
 .ascii canvas {
