@@ -151,36 +151,113 @@ export default function MontePlano({
   }
 
   if (pedido) {
+    // "chegou" = salvou agora ou já tinha salvo há pouco (anti-spam)
+    const chegou = pedido.salvo || pedido.motivo === 'repetido'
+    const curta = `Oi ${site.dono.nome.split(' ')[0]}! Acabei de enviar o pedido #${pedido.id.slice(0, 8)} pelo site da ${site.nome}.`
+    const passos = [
+      ['Pedido recebido', 'Já está comigo, com todos os seus dados.'],
+      [
+        'Te chamo no WhatsApp',
+        `${site.prazoResposta}, no número que você informou.`,
+      ],
+      ['Alinhamos os detalhes', 'Entendo seu negócio e te mando a proposta.'],
+      ['Seu site no ar', 'Com a sua cara, pronto pra receber clientes.'],
+    ]
+
     return (
       <section className="secao container" id="monte-seu-plano">
         <div className="mp-ok">
-          <div className="mp-ok__icone">✓</div>
-          <span className="tag">Pedido #{pedido.id.slice(0, 8)}</span>
-          <h2>
-            Recebido, {pedido.nome.split(' ')[0]}!{' '}
-            <span className="grad">Vou te chamar no WhatsApp.</span>
-          </h2>
-          <p className="muted">
-            {pedido.salvo
-              ? 'Seu pedido já chegou aqui. Se quiser adiantar, me manda o resumo agora:'
-              : pedido.motivo === 'repetido'
-                ? 'Seu pedido já tinha chegado há pouco, não precisa enviar de novo. Se quiser, me manda o resumo:'
-                : 'Não consegui salvar seu pedido agora, mas sem problema: me manda o resumo pelo WhatsApp que eu já vejo.'}
-          </p>
-          <pre className="mp-ok__resumo">{mensagem(pedido)}</pre>
-          <div className="botoes">
-            <a
-              className="btn btn--principal"
-              href={linkWhatsapp(mensagem(pedido))}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💬 Mandar no WhatsApp
-            </a>
-            <button className="btn" onClick={() => setPedido(null)}>
-              Montar outro
-            </button>
+          <div
+            className={`mp-ok__icone ${chegou ? '' : 'mp-ok__icone--alerta'}`}
+          >
+            {chegou ? '✓' : '!'}
           </div>
+          <span className="tag">Pedido #{pedido.id.slice(0, 8)}</span>
+
+          {chegou ? (
+            <>
+              <h2>
+                Tudo certo, {pedido.nome.split(' ')[0]}!{' '}
+                <span className="grad">Seu pedido chegou.</span>
+              </h2>
+
+              <div className="mp-ok__card">
+                <div>
+                  <small>
+                    {pedido.plano === 'premium' ? 'Nicho' : 'Plano'}
+                  </small>
+                  <b>
+                    {pedido.plano === 'premium'
+                      ? pedido.nicho
+                      : pedido.planoNome}
+                  </b>
+                </div>
+                {pedido.plano === 'premium' ? (
+                  <div>
+                    <small>Investimento</small>
+                    <b>Sob medida</b>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <small>Mensal</small>
+                      <b>{real(pedido.valorMensal)}</b>
+                    </div>
+                    <div>
+                      <small>Criação</small>
+                      <b>{real(pedido.taxaCriacao)}</b>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <ol className="mp-ok__passos">
+                {passos.map(([t, d], i) => (
+                  <li key={t} className={i === 0 ? 'feito' : ''}>
+                    <b>{t}</b>
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ol>
+
+              <p className="mp-ok__adiantar">
+                Quer adiantar?{' '}
+                <a
+                  href={linkWhatsapp(curta)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Me chama no WhatsApp →
+                </a>
+              </p>
+            </>
+          ) : (
+            <>
+              {/* Não salvou: aí o WhatsApp é o único jeito de eu receber os dados */}
+              <h2>
+                Quase lá, {pedido.nome.split(' ')[0]}!{' '}
+                <span className="grad">Falta um toque.</span>
+              </h2>
+              <p className="muted">
+                Não consegui registrar seu pedido agora. Toca no botão abaixo
+                que ele vai pronto pro meu WhatsApp.
+              </p>
+              <div className="botoes">
+                <a
+                  className="btn btn--principal"
+                  href={linkWhatsapp(mensagem(pedido))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Enviar pedido pelo WhatsApp
+                </a>
+              </div>
+            </>
+          )}
+
+          <button className="mp-ok__outro" onClick={() => setPedido(null)}>
+            Montar outro pedido
+          </button>
         </div>
       </section>
     )

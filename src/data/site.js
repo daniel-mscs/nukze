@@ -5,6 +5,8 @@ export const site = {
   // Formato: 55 + DDD + número, só dígitos
   whatsapp: '5555991975065',
   mensagemWhatsapp: 'Oi! Vi o site da Nukze e quero um orçamento.',
+  // Aparece depois que alguém envia o "Monte seu plano"
+  prazoResposta: 'Em até 24h úteis',
   dono: {
     nome: 'Daniel Alves',
     cargo: 'Desenvolvedor web · Estudante de Engenharia de Software',
