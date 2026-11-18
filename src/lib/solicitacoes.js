@@ -23,6 +23,8 @@ export async function enviarSolicitacao(pedido) {
     tipo: pedido.tipo,
     cidade: pedido.cidade,
     whatsapp: pedido.whatsapp,
+    nicho: pedido.nicho,
+    descricao: pedido.descricao,
     aceite_privacidade: true,
   })
 

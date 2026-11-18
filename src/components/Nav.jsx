@@ -5,8 +5,8 @@ const links = [
   ['#projetos', 'Projetos'],
   ['#como-funciona', 'Como funciona'],
   ['#planos', 'Planos'],
+  ['#premium', 'Sites premium'],
   ['#quem-faz', 'Quem faz'],
-  ['#devs', 'Pra devs'],
 ]
 
 export default function Nav() {

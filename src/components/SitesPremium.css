@@ -1,0 +1,55 @@
+.premium {
+  display: grid;
+  gap: 36px;
+  align-items: center;
+  padding: 32px 22px;
+  border-radius: 32px;
+  border: 1px solid transparent;
+  background:
+    radial-gradient(ellipse at 80% 20%, #8b5cf622, transparent 55%) padding-box,
+    linear-gradient(var(--sup), var(--sup)) padding-box,
+    var(--grad) border-box;
+}
+
+.premium h2 { font-size: clamp(1.7rem, 5vw, 2.8rem); margin-top: 14px; }
+.premium ul { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+.premium li { display: flex; gap: 10px; }
+.premium li::before { content: '✦'; color: var(--a2); }
+
+.premium__tela {
+  aspect-ratio: 16 / 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 8%;
+  background:
+    radial-gradient(circle at 85% 15%, #2dd4bf33, transparent 45%),
+    radial-gradient(circle at 10% 90%, #8b5cf633, transparent 45%),
+    #0b0b14;
+}
+.premium__tela b { font-family: var(--fonte-titulo); font-size: clamp(1rem, 3vw, 1.7rem); line-height: 1.1; letter-spacing: -0.03em; }
+.premium__nicho {
+  align-self: flex-start;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #2dd4bf66;
+  color: var(--a2);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: premium-troca 0.4s;
+}
+@keyframes premium-troca { from { opacity: 0; transform: translateY(6px); } }
+.premium__blocos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+.premium__blocos i { aspect-ratio: 4 / 3; border-radius: 10px; background: linear-gradient(160deg, #ffffff12, #ffffff05); border: 1px solid #ffffff10; }
+
+.premium__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; justify-content: center; }
+.premium__chips span { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--borda); font-size: 0.75rem; color: var(--suave); transition: 0.3s; }
+.premium__chips span.on { border-color: var(--a2); color: var(--txt); background: #2dd4bf18; }
+
+@media (min-width: 900px) {
+  .premium { grid-template-columns: 1fr 1.1fr; padding: 48px; gap: 48px; }
+}

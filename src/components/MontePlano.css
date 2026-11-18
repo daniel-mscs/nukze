@@ -97,7 +97,8 @@
 .mp__campos { display: grid; gap: 12px; margin-top: 8px; }
 .mp-campo { display: grid; gap: 6px; }
 .mp-campo__rotulo { font-size: 0.8rem; color: var(--suave); font-weight: 600; }
-.mp-campo input:not([type='radio']) {
+.mp-campo input:not([type='radio']),
+.mp-campo textarea {
   width: 100%;
   padding: 13px 14px;
   border-radius: 14px;
@@ -108,7 +109,8 @@
   font-size: 16px; /* 16px evita o zoom automático do iPhone */
   transition: border-color 0.2s;
 }
-.mp-campo input:not([type='radio']):focus { outline: 0; border-color: var(--a2); box-shadow: 0 0 0 3px #2dd4bf22; }
+.mp-campo input:not([type='radio']):focus,
+.mp-campo textarea:focus { outline: 0; border-color: var(--a2); box-shadow: 0 0 0 3px #2dd4bf22; }
 .mp-campo.erro input { border-color: #f87171; }
 .mp__erro { color: #f87171; font-size: 0.78rem; }
 
@@ -197,3 +199,37 @@
   color: #cfcfe0;
 }
 .mp-ok__pix { margin-top: 14px; font-size: 0.8rem; color: var(--suave); }
+
+.mp-campo textarea { resize: vertical; min-height: 80px; }
+
+/* Seletor "Site + sistema" x "Só um site premium" */
+.mp__modo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 620px;
+  margin: 0 auto 22px;
+  padding: 6px;
+  border-radius: 22px;
+  border: 1px solid var(--borda);
+  background: var(--sup);
+}
+.mp__modo button {
+  padding: 12px 10px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--suave);
+  transition: 0.25s;
+}
+.mp__modo b { display: block; font-size: 0.95rem; color: var(--txt); }
+.mp__modo small { font-size: 0.75rem; }
+.mp__modo button[aria-pressed='true'] { background: var(--txt); color: #555; }
+.mp__modo button[aria-pressed='true'] b { color: var(--bg); }
+
+.mp__sugestoes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.mp__sugestoes button { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--borda); background: transparent; color: var(--suave); font-size: 0.8rem; transition: 0.2s; }
+.mp__sugestoes button:hover { color: var(--txt); }
+.mp__sugestoes button.on { border-color: var(--a2); color: var(--txt); background: #2dd4bf14; }
+
+.mp__total--txt { font-size: 1.4rem !important; }

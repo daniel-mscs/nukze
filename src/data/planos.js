@@ -97,3 +97,26 @@ export function calcularMensal(planoId, modulosIds = []) {
 }
 
 export const real = (v) => `R$ ${v.toLocaleString('pt-BR')}`
+
+// Site premium: só o site sob medida (sem agenda/painel), pra qualquer negócio
+export const premium = {
+  titulo: 'Site premium',
+  preco: 'Orçamento personalizado',
+  inclui: [
+    'Design exclusivo, feito do zero pro seu negócio',
+    'Animações e efeitos que prendem a atenção',
+    'Rápido e perfeito no celular',
+    'Pronto pro Google (SEO) e redes sociais',
+    'Seu domínio, hospedagem e suporte comigo',
+  ],
+  nichos: [
+    'Restaurante',
+    'Clínica',
+    'Advocacia',
+    'Academia',
+    'Estética',
+    'Loja',
+    'Imobiliária',
+    'Fotografia',
+  ],
+}

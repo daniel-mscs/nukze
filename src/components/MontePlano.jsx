@@ -5,6 +5,7 @@ import {
   comboModulos,
   taxaCriacao,
   calcularMensal,
+  premium,
   real,
 } from '../data/planos'
 import { site, linkWhatsapp } from '../data/site'
@@ -25,11 +26,14 @@ const TIPOS = [
 ]
 
 // Regras de validação (o banco vai repetir as mesmas, por segurança)
-function valida(d) {
+function valida(d, modo) {
   const e = {}
   if (d.nome.trim().length < 2) e.nome = 'Coloca seu nome'
   if (d.negocio.trim().length < 2) e.negocio = 'Coloca o nome do negócio'
-  if (!d.tipo) e.tipo = 'Escolhe o tipo'
+  if (modo === 'sistema' && !d.tipo) e.tipo = 'Escolhe o tipo'
+  const precisaNicho = modo === 'premium' || d.tipo === 'outro'
+  if (precisaNicho && d.nicho.trim().length < 2)
+    e.nicho = 'Conta qual é o nicho'
   if (d.cidade.trim().length < 2) e.cidade = 'Coloca a cidade'
   const w = d.whatsapp.replace(/\D/g, '')
   if (w.length < 10 || w.length > 11)
@@ -40,18 +44,32 @@ function valida(d) {
 
 // Texto que vai pronto pro meu WhatsApp
 function mensagem(p) {
+  const oi = `Oi ${site.dono.nome.split(' ')[0]}!`
+  if (p.plano === 'premium') {
+    return [
+      `${oi} Quero um orçamento de site premium:`,
+      `• Nicho: ${p.nicho}`,
+      p.descricao && `• O que preciso: ${p.descricao}`,
+      '',
+      `Nome: ${p.nome}`,
+      `Negócio: ${p.negocio}, ${p.cidade}`,
+      `Pedido: #${p.id.slice(0, 8)}`,
+    ]
+      .filter((l) => l !== null && l !== undefined && l !== false)
+      .join('\n')
+  }
   const nomesModulos = modulos
     .filter((m) => p.modulos.includes(m.id))
     .map((m) => m.nome)
   return [
-    `Oi ${site.dono.nome.split(' ')[0]}! Montei meu plano no site da ${site.nome}:`,
+    `${oi} Montei meu plano no site da ${site.nome}:`,
     `• Plano: ${p.planoNome} (${real(p.valorPlano)}/mês)`,
     `• Módulos: ${nomesModulos.length ? nomesModulos.join(', ') : 'nenhum'}`,
     `• Total mensal: ${real(p.valorMensal)}`,
     `• Criação do site: ${real(p.taxaCriacao)}`,
     '',
     `Nome: ${p.nome}`,
-    `Negócio: ${p.negocio} (${p.tipo}), ${p.cidade}`,
+    `Negócio: ${p.negocio} (${p.nicho || p.tipo}), ${p.cidade}`,
     `Pedido: #${p.id.slice(0, 8)}`,
   ].join('\n')
 }
@@ -61,11 +79,16 @@ export default function MontePlano({
   setPlano,
   escolhidos,
   setEscolhidos,
+  modo,
+  setModo,
 }) {
+  const ehPremium = modo === 'premium'
   const [dados, setDados] = useState({
     nome: '',
     negocio: '',
     tipo: '',
+    nicho: '',
+    descricao: '',
     cidade: '',
     whatsapp: '',
     aceite: false,
@@ -96,7 +119,7 @@ export default function MontePlano({
     e.preventDefault()
     if (enviando) return
     if (isca) return // robô: ignora em silêncio
-    const er = valida(dados)
+    const er = valida(dados, modo)
     setErros(er)
     if (Object.keys(er).length) {
       document.querySelector(`[name="${Object.keys(er)[0]}"]`)?.focus()
@@ -105,15 +128,17 @@ export default function MontePlano({
     setEnviando(true)
     const novo = {
       id: crypto.randomUUID(), // gerado aqui, então não preciso ler do banco depois
-      plano,
-      planoNome: planoAtual.nome,
-      modulos: escolhidos,
-      valorPlano: conta.plano,
-      valorMensal: conta.total,
-      taxaCriacao: taxaCriacao.preco,
+      plano: ehPremium ? 'premium' : plano,
+      planoNome: ehPremium ? premium.titulo : planoAtual.nome,
+      modulos: ehPremium ? [] : escolhidos,
+      valorPlano: ehPremium ? 0 : conta.plano,
+      valorMensal: ehPremium ? 0 : conta.total,
+      taxaCriacao: ehPremium ? 0 : taxaCriacao.preco,
       nome: dados.nome.trim(),
       negocio: dados.negocio.trim(),
-      tipo: dados.tipo,
+      tipo: ehPremium ? 'outro' : dados.tipo,
+      nicho: ehPremium || dados.tipo === 'outro' ? dados.nicho.trim() : null,
+      descricao: ehPremium ? dados.descricao.trim() || null : null,
       cidade: dados.cidade.trim(),
       whatsapp: normalizaWhatsapp(dados.whatsapp),
     }
@@ -171,7 +196,15 @@ export default function MontePlano({
           Monte seu plano
         </Reveal>
         <Reveal as="h2">
-          Escolhe, soma e <span className="grad">pronto.</span>
+          {ehPremium ? (
+            <>
+              Conta a ideia e <span className="grad">eu faço o orçamento.</span>
+            </>
+          ) : (
+            <>
+              Escolhe, soma e <span className="grad">pronto.</span>
+            </>
+          )}
         </Reveal>
         <Reveal as="p" className="muted">
           Sem compromisso: depois de enviar eu te chamo no WhatsApp pra acertar
@@ -179,67 +212,135 @@ export default function MontePlano({
         </Reveal>
       </div>
 
+      <div className="mp__modo" role="group" aria-label="O que você procura">
+        <button
+          type="button"
+          aria-pressed={!ehPremium}
+          onClick={() => setModo('sistema')}
+        >
+          <b>Site + sistema</b>
+          <small>Agenda, painel e WhatsApp</small>
+        </button>
+        <button
+          type="button"
+          aria-pressed={ehPremium}
+          onClick={() => setModo('premium')}
+        >
+          <b>Só um site premium</b>
+          <small>Pra qualquer tipo de negócio</small>
+        </button>
+      </div>
+
       <form className="mp" onSubmit={enviar} noValidate>
         <div className="mp__passos">
-          <fieldset className="mp__bloco">
-            <legend>
-              <span>1</span> Plano
-            </legend>
-            <div className="mp__planos">
-              {planos.map((p) => (
-                <label
-                  key={p.id}
-                  className={`mp-plano ${plano === p.id ? 'on' : ''}`}
+          {ehPremium ? (
+            <fieldset className="mp__bloco">
+              <legend>
+                <span>1</span> Sobre o site
+              </legend>
+              <div className="mp__campos">
+                <Campo
+                  rotulo="Qual o nicho do seu negócio?"
+                  erro={erros.nicho}
+                  largo
                 >
                   <input
-                    type="radio"
-                    name="plano"
-                    value={p.id}
-                    checked={plano === p.id}
-                    onChange={() => setPlano(p.id)}
+                    name="nicho"
+                    value={dados.nicho}
+                    onChange={muda('nicho')}
+                    maxLength={60}
+                    placeholder="Ex: restaurante, clínica, advocacia…"
+                    className="mp__input"
                   />
-                  <b>{p.nome}</b>
-                  <span>{real(p.preco)}/mês</span>
-                  {p.selo && <i>{p.selo}</i>}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+                  <div className="mp__sugestoes">
+                    {premium.nichos.map((n) => (
+                      <button
+                        type="button"
+                        key={n}
+                        className={dados.nicho === n ? 'on' : ''}
+                        onClick={() => setDados((d) => ({ ...d, nicho: n }))}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </Campo>
+                <Campo rotulo="O que você precisa? (opcional)" largo>
+                  <textarea
+                    name="descricao"
+                    value={dados.descricao}
+                    onChange={muda('descricao')}
+                    maxLength={500}
+                    rows={3}
+                    placeholder="Ex: site com cardápio, fotos do ambiente e botão de reserva"
+                    className="mp__input"
+                  />
+                </Campo>
+              </div>
+            </fieldset>
+          ) : (
+            <>
+              <fieldset className="mp__bloco">
+                <legend>
+                  <span>1</span> Plano
+                </legend>
+                <div className="mp__planos">
+                  {planos.map((p) => (
+                    <label
+                      key={p.id}
+                      className={`mp-plano ${plano === p.id ? 'on' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name="plano"
+                        value={p.id}
+                        checked={plano === p.id}
+                        onChange={() => setPlano(p.id)}
+                      />
+                      <b>{p.nome}</b>
+                      <span>{real(p.preco)}/mês</span>
+                      {p.selo && <i>{p.selo}</i>}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset className="mp__bloco">
+                <legend>
+                  <span>2</span> Módulos extras <small>(opcional)</small>
+                </legend>
+                <div className="mp__modulos">
+                  {modulos.map((m) => (
+                    <label
+                      key={m.id}
+                      className={`mp-modulo ${escolhidos.includes(m.id) ? 'on' : ''}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={escolhidos.includes(m.id)}
+                        onChange={() => alternaModulo(m.id)}
+                      />
+                      <span className="mp-modulo__chave" aria-hidden="true" />
+                      <span className="mp-modulo__txt">
+                        <b>{m.nome}</b>
+                        <small>{m.descricao}</small>
+                      </span>
+                      <em>+ {real(m.preco)}</em>
+                    </label>
+                  ))}
+                </div>
+                <p className={`mp__combo ${conta.economia > 0 ? 'on' : ''}`}>
+                  {conta.economia > 0
+                    ? `🎉 Combo dos 3 aplicado: você economiza ${real(conta.economia)}/mês`
+                    : `Dica: levando os 3 módulos, sai por ${real(comboModulos)}/mês.`}
+                </p>
+              </fieldset>
+            </>
+          )}
 
           <fieldset className="mp__bloco">
             <legend>
-              <span>2</span> Módulos extras <small>(opcional)</small>
-            </legend>
-            <div className="mp__modulos">
-              {modulos.map((m) => (
-                <label
-                  key={m.id}
-                  className={`mp-modulo ${escolhidos.includes(m.id) ? 'on' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={escolhidos.includes(m.id)}
-                    onChange={() => alternaModulo(m.id)}
-                  />
-                  <span className="mp-modulo__chave" aria-hidden="true" />
-                  <span className="mp-modulo__txt">
-                    <b>{m.nome}</b>
-                    <small>{m.descricao}</small>
-                  </span>
-                  <em>+ {real(m.preco)}</em>
-                </label>
-              ))}
-            </div>
-            <p className={`mp__combo ${conta.economia > 0 ? 'on' : ''}`}>
-              {conta.economia > 0
-                ? `🎉 Combo dos 3 aplicado: você economiza ${real(conta.economia)}/mês`
-                : `Dica: levando os 3 módulos, sai por ${real(comboModulos)}/mês.`}
-            </p>
-          </fieldset>
-
-          <fieldset className="mp__bloco">
-            <legend>
-              <span>3</span> Seus dados
+              <span>{ehPremium ? 2 : 3}</span> Seus dados
             </legend>
             <div className="mp__campos">
               <Campo rotulo="Seu nome" erro={erros.nome}>
@@ -260,22 +361,41 @@ export default function MontePlano({
                   autoComplete="organization"
                 />
               </Campo>
-              <Campo rotulo="Tipo de negócio" erro={erros.tipo} largo>
-                <div className="mp__tipos">
-                  {TIPOS.map(([id, t]) => (
-                    <label key={id} className={dados.tipo === id ? 'on' : ''}>
-                      <input
-                        type="radio"
-                        name="tipo"
-                        value={id}
-                        checked={dados.tipo === id}
-                        onChange={muda('tipo')}
-                      />
-                      {t}
-                    </label>
-                  ))}
-                </div>
-              </Campo>
+              {!ehPremium && (
+                <Campo rotulo="Tipo de negócio" erro={erros.tipo} largo>
+                  <div className="mp__tipos">
+                    {TIPOS.map(([id, t]) => (
+                      <label key={id} className={dados.tipo === id ? 'on' : ''}>
+                        <input
+                          type="radio"
+                          name="tipo"
+                          value={id}
+                          checked={dados.tipo === id}
+                          onChange={muda('tipo')}
+                        />
+                        {t}
+                      </label>
+                    ))}
+                  </div>
+                </Campo>
+              )}
+              {!ehPremium && dados.tipo === 'outro' && (
+                <Campo
+                  rotulo="Qual o nicho do seu negócio?"
+                  erro={erros.nicho}
+                  largo
+                >
+                  <input
+                    name="nicho"
+                    value={dados.nicho}
+                    onChange={muda('nicho')}
+                    maxLength={60}
+                    placeholder="Ex: estúdio de sobrancelha, pet shop…"
+                    className="mp__input"
+                    autoFocus
+                  />
+                </Campo>
+              )}
               <Campo rotulo="Cidade" erro={erros.cidade}>
                 <input
                   name="cidade"
@@ -325,47 +445,72 @@ export default function MontePlano({
         </div>
 
         {/* Resumo: fixo do lado no PC, barra embaixo no celular */}
-        <aside className="mp__resumo" aria-live="polite">
-          <h4>Seu plano</h4>
-          <div className="mp__linha">
-            <span>{planoAtual.nome}</span>
-            <span>{real(conta.plano)}</span>
-          </div>
-          {modulos
-            .filter((m) => escolhidos.includes(m.id))
-            .map((m) => (
-              <div key={m.id} className="mp__linha mp__linha--sub">
-                <span>+ {m.nome}</span>
-                <span>{real(m.preco)}</span>
+        {ehPremium ? (
+          <aside className="mp__resumo" aria-live="polite">
+            <h4>{premium.titulo}</h4>
+            {premium.inclui.slice(0, 3).map((i) => (
+              <div key={i} className="mp__linha mp__linha--sub">
+                <span>✦ {i}</span>
               </div>
             ))}
-          {conta.economia > 0 && (
-            <div className="mp__linha mp__linha--desc">
-              <span>Desconto combo</span>
-              <span>− {real(conta.economia)}</span>
+            <div className="mp__total">
+              <span>Investimento</span>
+              <b className="mp__total--txt">Sob medida</b>
             </div>
-          )}
-          <div className="mp__total">
-            <span>Total mensal</span>
-            <b>{real(totalAnimado)}</b>
-          </div>
-          <div className="mp__linha mp__linha--sub">
-            <span>Criação do site (única)</span>
-            <span>
-              <s>{real(taxaCriacao.de)}</s> {real(taxaCriacao.preco)}
-            </span>
-          </div>
-          <button
-            type="submit"
-            className="btn btn--principal mp__enviar"
-            disabled={enviando}
-          >
-            {enviando ? 'Enviando…' : 'Enviar pedido'}
-          </button>
-          <small className="mp__obs">
-            Sem cobrança agora. Pagamento só depois de combinar comigo.
-          </small>
-        </aside>
+            <button
+              type="submit"
+              className="btn btn--principal mp__enviar"
+              disabled={enviando}
+            >
+              {enviando ? 'Enviando…' : 'Pedir orçamento'}
+            </button>
+            <small className="mp__obs">
+              Te mando o orçamento no WhatsApp, sem compromisso.
+            </small>
+          </aside>
+        ) : (
+          <aside className="mp__resumo" aria-live="polite">
+            <h4>Seu plano</h4>
+            <div className="mp__linha">
+              <span>{planoAtual.nome}</span>
+              <span>{real(conta.plano)}</span>
+            </div>
+            {modulos
+              .filter((m) => escolhidos.includes(m.id))
+              .map((m) => (
+                <div key={m.id} className="mp__linha mp__linha--sub">
+                  <span>+ {m.nome}</span>
+                  <span>{real(m.preco)}</span>
+                </div>
+              ))}
+            {conta.economia > 0 && (
+              <div className="mp__linha mp__linha--desc">
+                <span>Desconto combo</span>
+                <span>− {real(conta.economia)}</span>
+              </div>
+            )}
+            <div className="mp__total">
+              <span>Total mensal</span>
+              <b>{real(totalAnimado)}</b>
+            </div>
+            <div className="mp__linha mp__linha--sub">
+              <span>Criação do site (única)</span>
+              <span>
+                <s>{real(taxaCriacao.de)}</s> {real(taxaCriacao.preco)}
+              </span>
+            </div>
+            <button
+              type="submit"
+              className="btn btn--principal mp__enviar"
+              disabled={enviando}
+            >
+              {enviando ? 'Enviando…' : 'Enviar pedido'}
+            </button>
+            <small className="mp__obs">
+              Sem cobrança agora. Pagamento só depois de combinar comigo.
+            </small>
+          </aside>
+        )}
       </form>
     </section>
   )
