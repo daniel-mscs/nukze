@@ -1,6 +1,6 @@
 /* A área é alta; o navegador fica grudado (sticky) enquanto o scroll
    "toca o vídeo" da cena. */
-.vp { position: relative; height: 340vh; margin-top: 36px; }
+.vp { position: relative; height: 300vh; }
 .vp__fixo {
   position: sticky;
   top: 80px;
@@ -18,6 +18,8 @@
   overflow: hidden;
   color: #fff;
   font-family: 'Manrope', sans-serif;
+  /* vira um "container": os textos usam cqw (% da largura da cena) */
+  container-type: inline-size;
 }
 
 /* Céu: entardecer → noite (controlado por --noite) */
@@ -86,12 +88,12 @@
 .vp__menu em { font-style: normal; padding: 6px 12px; border-radius: 999px; background: #f43f5e; color: #fff; font-weight: 700; }
 
 .vp__titulo { position: absolute; z-index: 4; top: 18%; left: 0; right: 0; text-align: center; }
-.vp__titulo small { letter-spacing: 0.3em; font-size: 0.72rem; color: #e2e8f0; }
-.vp__titulo h4 { margin: 6px 0 0; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 8vw, 5.5rem); letter-spacing: -0.03em; line-height: 1; font-style: italic; }
+.vp__titulo small { letter-spacing: 0.3em; font-size: clamp(0.55rem, 1.8cqw, 0.72rem); color: #e2e8f0; }
+.vp__titulo h4 { margin: 6px 0 0; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 11cqw, 5.5rem); letter-spacing: -0.03em; line-height: 1; font-style: italic; white-space: nowrap; }
 .vp__titulo h4 span { color: #f43f5e; text-shadow: 0 0 30px #f43f5eaa; }
 
 .vp__info { position: absolute; z-index: 4; top: 20%; max-width: 46%; }
-.vp__info b { display: block; font-family: 'Unbounded', sans-serif; font-size: clamp(2rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; font-style: italic; }
+.vp__info b { display: block; font-family: 'Unbounded', sans-serif; font-size: clamp(1.6rem, 9cqw, 4rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; font-style: italic; white-space: nowrap; }
 .vp__info span { color: #cbd5e1; font-size: 0.95rem; }
 .vp__info--esq { left: 6%; }
 .vp__info--dir { right: 6%; text-align: right; }
@@ -101,7 +103,7 @@
 .vp__info em { font-style: normal; font-weight: 800; }
 
 .vp__final { position: absolute; z-index: 4; top: 18%; left: 0; right: 0; text-align: center; }
-.vp__final h4 { margin: 0 0 14px; font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem, 4.5vw, 3rem); letter-spacing: -0.03em; font-style: italic; }
+.vp__final h4 { margin: 0 0 14px; font-family: 'Unbounded', sans-serif; font-size: clamp(1.1rem, 6cqw, 3rem); letter-spacing: -0.03em; font-style: italic; }
 .vp__final span { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #f43f5e; color: #fff; font-weight: 800; font-size: 0.9rem; box-shadow: 0 0 30px #f43f5e88; }
 
 /* Linhas de velocidade */
@@ -137,6 +139,13 @@
 .vp__selo { position: absolute; z-index: 6; left: 12px; bottom: 12px; font-size: 0.68rem; color: #cbd5e1; background: #0008; padding: 4px 10px; border-radius: 999px; }
 .vp__progresso { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; height: 3px; background: #ffffff14; }
 .vp__progresso i { display: block; height: 100%; background: var(--grad); }
+
+/* No PC o mockup não tem trilho próprio: quem gruda é o card da seção */
+@media (min-width: 900px) {
+  .vp { height: auto; margin: 0; }
+  .vp__fixo { position: static; height: auto; }
+  .vp__cena { height: min(calc(100svh - 190px), 560px); min-height: 380px; }
+}
 
 @media (max-width: 700px) {
   .vp__menu span { display: none; }

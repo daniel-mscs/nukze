@@ -1,8 +1,7 @@
 .premium {
   display: grid;
-  gap: 36px;
-  align-items: center;
-  padding: 32px 22px;
+  gap: 28px;
+  padding: 24px 18px;
   border-radius: 32px;
   border: 1px solid transparent;
   background:
@@ -11,20 +10,34 @@
     var(--grad) border-box;
 }
 
-.premium h2 { font-size: clamp(1.7rem, 5vw, 2.8rem); margin-top: 14px; }
-.premium ul { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
-.premium li { display: flex; gap: 10px; }
+.premium h2 { font-size: clamp(1.7rem, 5vw, 2.6rem); margin-top: 14px; }
+.premium ul { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+.premium li { display: flex; gap: 10px; font-size: 0.95rem; }
 .premium li::before { content: '✦'; color: var(--a2); }
 
-.premium__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; justify-content: center; }
-.premium__chips span { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--borda); font-size: 0.75rem; color: var(--suave); transition: 0.3s; }
-.premium__chips span.on { border-color: var(--a2); color: var(--txt); background: #2dd4bf18; }
-
-@media (min-width: 900px) {
-  .premium { grid-template-columns: 1fr 1.1fr; padding: 48px; gap: 48px; }
-}
-
-.premium__nichos-titulo { margin: 0 0 10px; font-weight: 700; }
-.premium__lado .premium__chips { justify-content: flex-start; margin: 0; }
+.premium__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.premium__chips span { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--borda); font-size: 0.72rem; color: var(--suave); }
 .premium__chips span:last-child { border-style: dashed; color: var(--a2); }
-.premium__dica { margin: 18px 0 0; font-size: 0.85rem; color: var(--suave); }
+.premium .botoes { margin-top: 22px; }
+
+/* Celular: texto em cima, mockup embaixo */
+.premium__mockup { order: 2; }
+.premium__texto { order: 1; }
+
+/* PC: a seção vira um "trilho" alto e o card fica grudado na tela */
+@media (min-width: 900px) {
+  .premium-trilho { height: 320vh; }
+  .premium {
+    position: sticky;
+    top: 84px;
+    grid-template-columns: 1.25fr 1fr;
+    align-items: center;
+    gap: 36px;
+    padding: 28px;
+    height: calc(100svh - 104px);
+    max-height: 680px;
+  }
+  .premium__mockup { order: 1; min-width: 0; }
+  .premium__texto { order: 2; }
+  .premium h2 { font-size: clamp(1.6rem, 2.6vw, 2.3rem); }
+}

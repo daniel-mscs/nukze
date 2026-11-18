@@ -16,7 +16,9 @@ const suave = (t) => 1 - Math.pow(1 - t, 3)
 
 // Mockup de "site premium" que se monta conforme a página rola:
 // o scroll vira a "linha do tempo" de um vídeo (equipe fictícia VOLTA Racing).
-export default function VitrinePremium() {
+// medirDe: no PC, o progresso vem da seção inteira (o card todo fica grudado);
+// no celular, vem da própria área alta do mockup.
+export default function VitrinePremium({ medirDe }) {
   const area = useRef(null)
   const [p, setP] = useState(0)
 
@@ -24,7 +26,9 @@ export default function VitrinePremium() {
     let quadro = 0
     const mede = () => {
       quadro = 0
-      const r = area.current.getBoundingClientRect()
+      const pc = matchMedia('(min-width: 900px)').matches
+      const alvo = (pc && medirDe?.current) || area.current
+      const r = alvo.getBoundingClientRect()
       const total = r.height - innerHeight
       setP(Math.min(Math.max(-r.top / total, 0), 1))
     }
@@ -39,7 +43,7 @@ export default function VitrinePremium() {
       removeEventListener('resize', pede)
       cancelAnimationFrame(quadro)
     }
-  }, [])
+  }, [medirDe])
 
   // Cada cena ocupa um pedaço do scroll
   const t1 = suave(trecho(p, 0.02, 0.22)) // título + carro entrando
