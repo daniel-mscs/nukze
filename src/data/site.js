@@ -32,5 +32,5 @@ export const parceiro = {
   nome: 'Guilherme Matos',
   cargo: 'Marketing e tráfego pago',
   foto: '', // ex.: '/sobre/guilherme.webp' (sem foto, mostra as iniciais)
-  instagram: '',
+  instagram: 'https://www.instagram.com/guimaatos/',
 }
