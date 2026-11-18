@@ -30,11 +30,10 @@ export default function Marketing() {
             {parceiro.nome} · {parceiro.cargo}
           </div>
           <p className="muted">
-            No marketing digital desde {parceiro.desde}, com foco em growth,
-            copywriting e tráfego pago. Cuida da estratégia de posicionamento e
-            crescimento da Nukze e faz o mesmo pelo seu negócio: o site deixa
-            tudo pronto, e ele leva gente até lá. Dá pra contratar junto do
-            plano Automático, com valor combinado conforme o que você precisa.
+            No marketing digital desde 2021, com foco em growth, copywriting e
+            tráfego pago. Responsável pela estratégia de posicionamento e
+            crescimento da Nukze, conectando negócios e profissionais de
+            serviços a uma gestão de agendamentos simples e lucrativa.
           </p>
           <ul className="mkt__lista">
             {servicos.map(([t, d]) => (
