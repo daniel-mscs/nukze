@@ -171,7 +171,7 @@ export default function Projetos() {
         <div className="projetos__trilho" ref={trilho}>
           {projetos.map((projeto) => (
             <div key={projeto.id} style={{ display: 'contents' }}>
-              <div className="slide">
+              <div className="slide slide--abertura">
                 <div className="slide__info">
                   <span className="slide__rotulo">{projeto.rotulo}</span>
                   <h3>{projeto.nome}</h3>
@@ -181,16 +181,17 @@ export default function Projetos() {
                       <span key={c}>{c}</span>
                     ))}
                   </div>
-                  <div>
-                    <a
-                      className="btn btn--principal"
-                      href={projeto.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Ver ao vivo ↗
-                    </a>
-                  </div>
+                </div>
+                {/* fora do bloco de texto pra, no celular, ficar do lado do aparelho */}
+                <div className="slide__acao">
+                  <a
+                    className="btn btn--principal"
+                    href={projeto.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Ver ao vivo ↗
+                  </a>
                 </div>
                 <div className="slide__aparelhos slide__aparelhos--abertura">
                   <Celular

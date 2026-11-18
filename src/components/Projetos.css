@@ -157,35 +157,65 @@
 .slide--navegador .slide__info p { margin: 0; }
 .slide--navegador .navegador { flex: none; width: 100%; max-height: 70%; overflow: hidden; }
 
+/* Abertura: grade com texto, botão e aparelho */
+.slide--abertura {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'info aparelho'
+    'acao aparelho';
+  align-content: center;
+  column-gap: 28px;
+}
+.slide--abertura .slide__info { grid-area: info; }
+.slide--abertura .slide__acao { grid-area: acao; align-self: start; }
+.slide--abertura .slide__aparelhos { grid-area: aparelho; height: 100%; }
+
 @media (max-width: 799px) {
-  .slide { flex-direction: column; padding: 18px; }
+  .slide { flex-direction: column; padding: 18px; gap: 14px; }
+  .slide h3 { font-size: 1.15rem; margin: 6px 0 4px; }
+  .slide p { font-size: 0.85rem; margin: 0; line-height: 1.5; }
+
+  /* Os aparelhos ocupam SÓ o espaço que sobrou no card (container de altura):
+     a largura de cada um é calculada pela altura disponível (cqh). */
+  .slide__aparelhos {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    container-type: size;
+  }
+  .slide__aparelhos .flutua,
+  .slide__aparelhos .tilt,
+  .slide__passo { height: auto; }
+  .slide__aparelhos .iphone { height: auto; width: min(52vw, 44cqh); }
+
   /* Leque: as 3 telas sobrepostas e inclinadas, igual cartas na mão */
   .slide__aparelhos--leque { gap: 0; }
   .slide__aparelhos--leque > * { flex: none; }
-  .slide__aparelhos--leque > *:not(:first-child) { margin-left: -9vw; }
-  .slide__aparelhos--leque > *:nth-child(1) { transform: rotate(-7deg) translateY(10px); z-index: 1; }
+  .slide__aparelhos--leque > *:not(:first-child) { margin-left: -7%; }
+  .slide__aparelhos--leque > *:nth-child(1) { transform: rotate(-7deg); z-index: 1; }
   .slide__aparelhos--leque > *:nth-child(2) { z-index: 2; }
-  .slide__aparelhos--leque > *:nth-child(3) { transform: rotate(7deg) translateY(10px); z-index: 1; }
-  .slide__aparelhos--leque .iphone { width: min(33vw, 140px); }
+  .slide__aparelhos--leque > *:nth-child(3) { transform: rotate(7deg); z-index: 1; }
+  .slide__aparelhos--leque .iphone { width: min(31vw, 40cqh); }
   .slide__aparelhos--leque .flutua { animation: none; }
-  .slide__num { left: 4px; }
-  .slide--navegador { justify-content: center; gap: 18px; }
-  .slide__aparelhos .iphone { height: auto; width: min(42vw, 180px); }
-  .slide__aparelhos .flutua, .slide__aparelhos .tilt { height: auto; }
-  .slide__info p { font-size: 0.88rem; }
-  .slide--fluxo h3 { font-size: 1.15rem; }
-  .slide__passo { height: auto; }
-  /* Abertura no celular: texto mais curto e o vídeo do lado */
-  /* Abertura no celular: o vídeo fica no canto, atrás do texto */
-  .slide__aparelhos--abertura {
-    position: absolute;
-    right: -12px;
-    bottom: -30px;
-    z-index: 0;
-    pointer-events: none;
+  .slide__num { left: 2px; top: 2%; width: 22px; height: 22px; font-size: 0.65rem; }
+
+  /* Abertura: texto inteiro em cima; embaixo, botão à esquerda e celular à direita */
+  .slide--abertura {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'info info'
+      'acao aparelho';
+    gap: 14px;
+    align-content: stretch;
   }
-  .slide__aparelhos--abertura .iphone { width: min(38vw, 160px); transform: rotate(-8deg); }
-  .slide:has(.slide__aparelhos--abertura) .slide__info { position: relative; z-index: 1; max-width: 62%; justify-content: flex-start; }
-  .slide:has(.slide__aparelhos--abertura) .slide__info p { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
-  .slide:has(.slide__aparelhos--abertura) .slide__chips { display: none; }
+  .slide--abertura .slide__chips { display: none; }
+  .slide--abertura .slide__acao { align-self: center; }
+  .slide--abertura .slide__acao .btn { padding: 0 16px; min-height: 44px; font-size: 0.85rem; white-space: nowrap; }
+  /* container de tamanho precisa de largura definida */
+  .slide--abertura .slide__aparelhos { width: 40vw; }
+  .slide--abertura .slide__aparelhos .iphone { width: 42cqh; transform: rotate(4deg); }
+
+  .slide--navegador { justify-content: center; gap: 18px; }
 }
