@@ -69,7 +69,9 @@ export default function Marketing() {
             alt={`Foto de ${parceiro.nome}`}
             rotulo="<guilherme />"
           />
-          <span className="mkt__selo">📣 Desde {parceiro.desde}</span>
+          <span className="mkt__selo">
+            📣 No marketing desde {parceiro.desde}
+          </span>
         </div>
       </Reveal>
     </section>
