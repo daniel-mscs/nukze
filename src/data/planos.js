@@ -44,6 +44,12 @@ export const planos = [
       'Número oficial da API da Meta',
     ],
     nota: 'As mensagens do WhatsApp são cobradas pela Meta direto no seu cartão (em média R$ 0,04 cada).',
+    // Oferta do parceiro de marketing: aparece só neste plano
+    bonus: {
+      titulo: 'Opcional: tráfego pago',
+      texto: 'Anúncios no Instagram e Facebook pra trazer mais clientes.',
+      preco: 'Valor a combinar',
+    },
   },
 ]
 

@@ -11,6 +11,7 @@ import MontePlano from './components/MontePlano'
 import SitesPremium from './components/SitesPremium'
 import BotaoZap from './components/BotaoZap'
 import QuemFaz from './components/QuemFaz'
+import Marketing from './components/Marketing'
 import ParaDevs from './components/ParaDevs'
 import Orcamento from './components/Orcamento'
 import Faq from './components/Faq'
@@ -51,6 +52,7 @@ export default function App() {
         />
         <SitesPremium onPedir={() => setModo('premium')} />
         <QuemFaz />
+        <Marketing />
         <ParaDevs />
         <Faq />
         <Orcamento />

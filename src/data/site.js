@@ -26,3 +26,11 @@ export const site = {
 export function linkWhatsapp(mensagem = site.mensagemWhatsapp) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(mensagem)}`
 }
+
+// Parceiro que cuida do marketing / tráfego pago (valor negociado com ele)
+export const parceiro = {
+  nome: 'Guilherme Matos',
+  cargo: 'Marketing e tráfego pago',
+  foto: '', // ex.: '/sobre/guilherme.webp' (sem foto, mostra as iniciais)
+  instagram: '',
+}

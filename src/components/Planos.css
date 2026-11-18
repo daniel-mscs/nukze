@@ -53,6 +53,12 @@
 
 .plano__nota { font-size: 0.75rem; color: var(--suave); margin: -8px 0 18px; padding: 10px 12px; border-radius: 12px; background: #ffffff06; border: 1px dashed var(--borda); }
 
+.plano__bonus { display: grid; gap: 2px; margin: 0 0 18px; padding: 12px 14px; border-radius: 14px; border: 1px solid #2dd4bf55; background: #2dd4bf0d; color: inherit; text-decoration: none; transition: border-color 0.3s; }
+.plano__bonus:hover { border-color: var(--a2); }
+.plano__bonus b { font-size: 0.88rem; }
+.plano__bonus span { font-size: 0.8rem; color: var(--suave); }
+.plano__bonus em { font-style: normal; font-size: 0.8rem; font-weight: 800; color: var(--a2); }
+
 .plano .btn { width: 100%; }
 
 /* Extras: módulos + taxa */

@@ -56,6 +56,13 @@ export default function Planos({ onEscolher, escolhidos, setEscolhidos }) {
               ))}
             </ul>
             {p.nota && <p className="plano__nota">{p.nota}</p>}
+            {p.bonus && (
+              <a className="plano__bonus" href="#marketing">
+                <b>📣 {p.bonus.titulo}</b>
+                <span>{p.bonus.texto}</span>
+                <em>{p.bonus.preco} →</em>
+              </a>
+            )}
             <a
               className={`btn ${p.selo ? 'btn--principal' : ''}`}
               href="#monte-seu-plano"
