@@ -1,4 +1,4 @@
-import { linkWhatsapp } from '../data/site'
+import { site, linkWhatsapp } from '../data/site'
 import Reveal from './Reveal'
 import './Orcamento.css'
 
@@ -26,6 +26,14 @@ export default function Orcamento() {
             rel="noopener noreferrer"
           >
             Chamar no WhatsApp
+          </a>
+          <a
+            className="btn"
+            href={site.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Seguir @nukze.empresas ↗
           </a>
         </Reveal>
       </section>

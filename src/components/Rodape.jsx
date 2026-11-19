@@ -4,8 +4,9 @@ import './Rodape.css'
 export default function Rodape() {
   const { links } = site
   const redes = [
+    ['Instagram @nukze.empresas', site.instagram],
     ['Portfólio', links.portfolio],
-    ['Instagram', links.instagram],
+    ['Instagram do Daniel', links.instagram],
     ['LinkedIn', links.linkedin],
     ['GitHub', links.github],
   ].filter(([, url]) => url)

@@ -13,6 +13,8 @@ export const site = {
     foto: '/sobre/daniel.webp',
   },
   // Deixe vazio ('') o que não quiser mostrar
+  // Instagram da empresa
+  instagram: 'https://www.instagram.com/nukze.empresas/',
   links: {
     portfolio: 'https://www.daniel-alvesdev.com.br',
     github: 'https://github.com/daniel-mscs',
