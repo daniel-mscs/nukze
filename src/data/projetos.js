@@ -26,6 +26,10 @@ export const projetos = [
     slides: [
       {
         tipo: 'celulares',
+        rotulo: 'O SITE',
+        titulo: 'A cara da barbearia',
+        texto:
+          'Início, serviços com preço e a equipe com foto. Tudo feito sob medida, sem template.',
         imagens: [
           rezenha('celular-inicio'),
           rezenha('celular-servicos'),

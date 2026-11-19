@@ -22,7 +22,14 @@ function Celular({ src, video, alt, onAmpliar, lento }) {
 function Slide({ slide, projeto, onAmpliar }) {
   if (slide.tipo === 'celulares') {
     return (
-      <div className="slide">
+      <div className="slide slide--fluxo">
+        {slide.titulo && (
+          <div className="slide__info">
+            <span className="slide__rotulo">{slide.rotulo}</span>
+            <h3>{slide.titulo}</h3>
+            <p>{slide.texto}</p>
+          </div>
+        )}
         <div className="slide__aparelhos slide__aparelhos--leque">
           {slide.imagens.map((src, i) => (
             <Celular
