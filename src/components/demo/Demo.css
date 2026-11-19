@@ -111,6 +111,53 @@
 .demo--cheia .demo__cel { width: min(390px, 94vw, calc((100svh - 150px) * 0.46)); }
 .demo--cheia .demo__rodape { margin-top: 10px; }
 
+/* Celular deitado (versão computador): só o essencial nos controles */
+.demo--deitado { padding: 6px 10px; justify-content: flex-start; }
+.demo--deitado .demo__controles { margin-bottom: 6px; gap: 6px; }
+.demo--deitado .demo__controles > .seg:nth-child(1),
+.demo--deitado .demo__controles > .seg:nth-child(2),
+.demo--deitado .demo__rodape { display: none; }
+
+/* Aviso "vira o celular" */
+.demo-virar {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(100%, 340px);
+  padding: 36px 24px;
+  border-radius: 28px;
+  border: 1px dashed var(--borda);
+  background: #ffffff05;
+  text-align: center;
+}
+.demo-virar b { font-family: var(--fonte-titulo); font-size: 1.3rem; }
+.demo-virar p { margin: 0; color: var(--suave); font-size: 0.9rem; }
+.demo-virar button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  background: none;
+  color: var(--suave);
+  font: inherit;
+  font-size: 0.8rem;
+}
+/* celularzinho desenhado em CSS que gira */
+.demo-virar__cel {
+  width: 46px;
+  height: 80px;
+  margin-bottom: 14px;
+  border: 3px solid var(--a2);
+  border-radius: 10px;
+  box-shadow: 0 0 30px -6px var(--a2);
+  animation: demo-gira 2.4s ease-in-out infinite;
+}
+@keyframes demo-gira {
+  0%, 20% { transform: rotate(0); }
+  50%, 80% { transform: rotate(-90deg); }
+  100% { transform: rotate(0); }
+}
+
 /* Notificação push dentro do aparelho */
 .demo-push {
   position: absolute;

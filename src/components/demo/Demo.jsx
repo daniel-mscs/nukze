@@ -42,22 +42,40 @@ function reducer(estado, acao) {
   }
 }
 
+// Acompanha uma media query (ex.: celular em pé ou deitado)
+function useMidia(q) {
+  const [ok, setOk] = useState(() => matchMedia(q).matches)
+  useEffect(() => {
+    const m = matchMedia(q)
+    const f = () => setOk(m.matches)
+    m.addEventListener('change', f)
+    return () => m.removeEventListener('change', f)
+  }, [q])
+  return ok
+}
+const CEL_EM_PE = '(max-width: 799px) and (orientation: portrait)'
+const CEL_DEITADO = '(max-height: 520px) and (orientation: landscape)'
+
 // Escala o "computador" pra caber na tela sem quebrar o layout
-function useEscala(ativo, cheia) {
+function useEscala(ativo, cheia, deitado) {
   const caixa = useRef(null)
   const [k, setK] = useState(1)
   useLayoutEffect(() => {
     if (!ativo) return
     const mede = () => {
       const largura = caixa.current.clientWidth
-      const porAltura = cheia ? (innerHeight - 170) / 680 : 1
+      const porAltura = deitado
+        ? (innerHeight - 64) / 680
+        : cheia
+          ? (innerHeight - 170) / 680
+          : 1
       setK(Math.min(1, largura / 1060, porAltura))
     }
     mede()
     const ro = new ResizeObserver(mede)
     ro.observe(caixa.current)
     return () => ro.disconnect()
-  }, [ativo, cheia])
+  }, [ativo, cheia, deitado])
   return [caixa, k]
 }
 
@@ -69,7 +87,27 @@ export default function Demo() {
   const [estado, dispatch] = useReducer(reducer, 'barbearia', inicial)
   const [push, setPush] = useState(null)
   const [rodada, setRodada] = useState(0) // muda pra "recomeçar" o site do cliente
-  const [caixa, k] = useEscala(aparelho === 'computador', cheia)
+  const emPe = useMidia(CEL_EM_PE)
+  const deitado = useMidia(CEL_DEITADO) && aparelho === 'computador'
+  const [assimMesmo, setAssimMesmo] = useState(false)
+  const pedeVirar = aparelho === 'computador' && emPe && !assimMesmo
+  const [caixa, k] = useEscala(
+    aparelho === 'computador' && !pedeVirar,
+    cheia,
+    deitado,
+  )
+
+  // Celular deitado na versão de computador: abre em tela cheia sozinho
+  useEffect(() => {
+    if (deitado) setCheia(true)
+  }, [deitado])
+  // Voltou a ficar em pé: sai da tela cheia e mostra o aviso de novo
+  useEffect(() => {
+    if (emPe && aparelho === 'computador') {
+      setCheia(false)
+      setAssimMesmo(false)
+    }
+  }, [emPe, aparelho])
   const cfg = nichos[nicho]
   const Site = sites[nicho]
 
@@ -188,7 +226,9 @@ export default function Demo() {
         </Reveal>
       </div>
 
-      <div className={`demo ${cheia ? 'demo--cheia' : ''}`}>
+      <div
+        className={`demo ${cheia ? 'demo--cheia' : ''} ${deitado ? 'demo--deitado' : ''}`}
+      >
         <div className="demo__controles">
           <Segmentado
             rotulo="Tipo de negócio"
@@ -228,7 +268,16 @@ export default function Demo() {
         </div>
 
         <div className="demo__palco" style={temaPainel}>
-          {aparelho === 'celular' ? (
+          {pedeVirar ? (
+            <div className="demo-virar">
+              <span className="demo-virar__cel" aria-hidden="true" />
+              <b>Vira o celular</b>
+              <p>Deita o celular pra ver a versão de computador do site.</p>
+              <button onClick={() => setAssimMesmo(true)}>
+                Ver assim mesmo
+              </button>
+            </div>
+          ) : aparelho === 'celular' ? (
             <div className="demo__cel">
               <Iphone>
                 <div className="demo__tela">
