@@ -50,6 +50,13 @@
 }
 
 /* 1. Planos */
+.mp-inclui { margin-top: 12px; padding: 14px 16px; border-radius: 16px; border: 1px dashed var(--borda); background: #ffffff04; animation: mp-inclui 0.35s ease-out; }
+.mp-inclui small { color: var(--suave); font-size: 0.78rem; }
+.mp-inclui ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 16px; }
+.mp-inclui li { display: flex; gap: 8px; font-size: 0.86rem; }
+.mp-inclui li::before { content: '✓'; color: var(--a2); font-weight: 800; }
+.mp-inclui__bonus { margin: 10px 0 0; font-size: 0.8rem; color: var(--a2); font-weight: 700; }
+@keyframes mp-inclui { from { opacity: 0; transform: translateY(6px); } }
 .mp__planos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
 .mp-plano {
   position: relative;

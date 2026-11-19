@@ -46,7 +46,7 @@
 .plano__preco b { font-family: var(--fonte-titulo); font-size: 2.6rem; letter-spacing: -0.04em; line-height: 1; }
 .plano__preco small { color: var(--suave); }
 
-.plano ul { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 10px; flex: 1; }
+.plano ul { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 10px; flex: 1; align-content: start; }
 .plano li { display: flex; gap: 10px; font-size: 0.92rem; }
 .plano li::before { content: '✓'; color: var(--a2); font-weight: 800; }
 

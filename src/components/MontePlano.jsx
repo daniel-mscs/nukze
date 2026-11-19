@@ -377,6 +377,25 @@ export default function MontePlano({
                     </label>
                   ))}
                 </div>
+                {/* o que vem no plano escolhido (troca junto com a escolha) */}
+                {(() => {
+                  const p = planos.find((x) => x.id === plano)
+                  return (
+                    <div className="mp-inclui" key={plano}>
+                      <small>O que vem no {p.nome}:</small>
+                      <ul>
+                        {p.inclui.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                      {p.bonus && (
+                        <p className="mp-inclui__bonus">
+                          📣 {p.bonus.titulo} · {p.bonus.preco}
+                        </p>
+                      )}
+                    </div>
+                  )
+                })()}
               </fieldset>
 
               <fieldset className="mp__bloco">
