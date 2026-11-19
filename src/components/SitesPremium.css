@@ -16,6 +16,7 @@
 .premium li { display: flex; gap: 10px; }
 .premium li::before { content: '✦'; color: var(--a2); }
 
+.premium__lado { display: grid; gap: 32px; }
 .premium__nichos-titulo { margin: 0 0 10px; font-weight: 700; }
 .premium__chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .premium__chips span { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--borda); font-size: 0.75rem; color: var(--suave); }
@@ -24,4 +25,6 @@
 
 @media (min-width: 900px) {
   .premium { grid-template-columns: 1fr 1.1fr; padding: 48px; gap: 48px; }
+  .premium__lado { grid-template-columns: auto 1fr; align-items: center; }
+  .premium__lado .tour { width: 240px; }
 }

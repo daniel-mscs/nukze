@@ -1,5 +1,6 @@
 import { premium } from '../data/planos'
 import Reveal from './Reveal'
+import TourImovel from './TourImovel'
 import './SitesPremium.css'
 
 export default function SitesPremium({ onPedir }) {
@@ -33,16 +34,19 @@ export default function SitesPremium({ onPedir }) {
         </Reveal>
 
         <Reveal className="premium__lado" atraso={0.15}>
-          <p className="premium__nichos-titulo">Faço pra qualquer área:</p>
-          <div className="premium__chips">
-            {premium.nichos.map((n) => (
-              <span key={n}>{n}</span>
-            ))}
-            <span>e o seu</span>
+          <TourImovel />
+          <div>
+            <p className="premium__nichos-titulo">Faço pra qualquer área:</p>
+            <div className="premium__chips">
+              {premium.nichos.map((n) => (
+                <span key={n}>{n}</span>
+              ))}
+              <span>e o seu</span>
+            </div>
+            <p className="premium__dica">
+              Orçamento sob medida e sem compromisso, direto comigo no WhatsApp.
+            </p>
           </div>
-          <p className="premium__dica">
-            Orçamento sob medida e sem compromisso, direto comigo no WhatsApp.
-          </p>
         </Reveal>
       </div>
     </section>

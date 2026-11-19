@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 // - Só toca quando está visível na tela (economiza bateria e dados).
 // - Quem ativou "reduzir movimento" no celular vê só a imagem de capa.
 // video = { mp4, webm, capa }
-export default function VideoAuto({ video, alt = '' }) {
+export default function VideoAuto({ video, alt = '', onTimeUpdate }) {
   const ref = useRef(null)
   const [calmo] = useState(
     () => matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -34,6 +34,7 @@ export default function VideoAuto({ video, alt = '' }) {
       preload="metadata"
       poster={video.capa}
       aria-label={alt}
+      onTimeUpdate={onTimeUpdate}
     >
       <source src={video.webm} type="video/webm" />
       <source src={video.mp4} type="video/mp4" />
