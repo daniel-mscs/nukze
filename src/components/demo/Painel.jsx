@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 
 // Painel do dono: é o MESMO sistema pra todo negócio (o produto Nukze),
 // só muda a cor (tema) e os botões de cada status (fluxo).
+const reais = (v) => `R$ ${v.toLocaleString('pt-BR')}`
+
 export default function Painel({ cfg, pedidos, novos, onAcao }) {
   const [aba, setAba] = useState('pedidos')
   const lista = useRef(null)
@@ -83,7 +85,7 @@ export default function Painel({ cfg, pedidos, novos, onAcao }) {
               <div>
                 <small>Previsto</small>
                 <b key={'v' + ativos.length}>
-                  R$ {ativos.reduce((t, p) => t + p.valor, 0)}
+                  {reais(ativos.reduce((t, p) => t + p.valor, 0))}
                 </b>
               </div>
             </div>
@@ -103,7 +105,7 @@ export default function Painel({ cfg, pedidos, novos, onAcao }) {
                 <span className={`pd-st pd-st--${p.st}`}>
                   {cfg.status[p.st] || p.st}
                 </span>
-                <b className="pd-card__valor">R$ {p.valor}</b>
+                <b className="pd-card__valor">{reais(p.valor)}</b>
                 {cfg.fluxo[p.st] && (
                   <div className="pd-card__acoes">
                     {cfg.fluxo[p.st].map((a) => (
@@ -139,7 +141,7 @@ export default function Painel({ cfg, pedidos, novos, onAcao }) {
           <>
             <div className="pd-total">
               <span>Entradas</span>
-              <b>R$ {pago.reduce((t, p) => t + cfg.caixa(p), 0)}</b>
+              <b>{reais(pago.reduce((t, p) => t + cfg.caixa(p), 0))}</b>
             </div>
             {pago.map((p) => (
               <div key={p.id} className="pd-linha">
@@ -147,7 +149,7 @@ export default function Painel({ cfg, pedidos, novos, onAcao }) {
                   <b>{p.titulo}</b>
                   <span>{p.nome}</span>
                 </div>
-                <em>+ R$ {cfg.caixa(p)}</em>
+                <em>+ {reais(cfg.caixa(p))}</em>
               </div>
             ))}
             {!pago.length && <p className="pd-vazio">Nenhuma entrada ainda.</p>}

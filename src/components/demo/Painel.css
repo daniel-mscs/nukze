@@ -28,6 +28,8 @@
 .pd-st--pendente, .pd-st--novo { background: #eab30826; color: #ca8a04; }
 .pd-st--confirmado, .pd-st--orcado { background: #06b6d426; color: #0891b2; }
 .pd-st--atendido, .pd-st--agendado { background: #22c55e26; color: #16a34a; }
+.pd-st--visitado { background: #8b5cf626; color: #7c3aed; }
+.pd-st--fechado { background: #22c55e26; color: #16a34a; }
 .pd-st--recusado { background: #ef444426; color: #dc2626; }
 .pd-card__acoes { grid-column: 1 / -1; display: flex; gap: 6px; margin-top: 6px; }
 .pd-card__acoes button { flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--line); background: transparent; font-size: 11.5px; font-weight: 700; }

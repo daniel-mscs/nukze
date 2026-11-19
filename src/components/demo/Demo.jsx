@@ -8,10 +8,16 @@ import Painel from './Painel'
 import Barbearia from './Barbearia'
 import Tattoo from './Tattoo'
 import Massagem from './Massagem'
+import Imobiliaria from './Imobiliaria'
 import './Demo.css'
 import './Painel.css'
 
-const sites = { barbearia: Barbearia, tattoo: Tattoo, massagem: Massagem }
+const sites = {
+  barbearia: Barbearia,
+  tattoo: Tattoo,
+  massagem: Massagem,
+  imobiliaria: Imobiliaria,
+}
 
 // useReducer: guarda os pedidos e decide como cada "ação" muda a lista.
 // É como um useState, mas com as regras de mudança num lugar só.
@@ -221,7 +227,7 @@ export default function Demo() {
           Testa aí, <span className="grad">sem compromisso.</span>
         </Reveal>
         <Reveal as="p" className="muted">
-          Três negócios fictícios, três sites totalmente diferentes. Faça um
+          Quatro negócios fictícios, quatro sites totalmente diferentes. Faça um
           pedido como cliente e veja chegar no painel do dono.
         </Reveal>
       </div>
