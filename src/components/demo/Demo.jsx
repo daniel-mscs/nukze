@@ -21,12 +21,46 @@ const sites = {
 
 // Site pronto (arquivo HTML) mostrado dentro da moldura
 function SiteIframe({ cfg }) {
+  const caixa = useRef(null)
+  const [k, setK] = useState(1)
+  // No celular, o site é desenhado com 390px (largura de um iPhone)
+  // e encolhido pra caber na moldura. Assim ele fica igual num celular de verdade.
+  useLayoutEffect(() => {
+    const el = caixa.current
+    const mede = () => {
+      const w = el.clientWidth
+      setK(w < 600 ? Math.min(1, w / 390) : 1)
+    }
+    mede()
+    const ro = new ResizeObserver(mede)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  // Esconde as barras de rolagem do site dentro da moldura
+  const carregou = (e) => {
+    try {
+      const d = e.currentTarget.contentDocument
+      const st = d.createElement('style')
+      st.textContent =
+        'html{scrollbar-width:none;overflow-x:hidden}body{overflow-x:hidden}::-webkit-scrollbar{display:none}'
+      d.head.append(st)
+    } catch {
+      // se não der pra mexer no site, deixa como está
+    }
+  }
   return (
-    <iframe
-      className="demo-iframe"
-      src={cfg.iframe}
-      title={`Site ${cfg.nome}`}
-    />
+    <div className="demo-iframe" ref={caixa}>
+      <iframe
+        src={cfg.iframe}
+        title={`Site ${cfg.nome}`}
+        onLoad={carregou}
+        style={{
+          width: `${100 / k}%`,
+          height: `${100 / k}%`,
+          transform: `scale(${k})`,
+        }}
+      />
+    </div>
   )
 }
 
