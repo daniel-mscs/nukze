@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /demo/oficina/
 
-Sitemap: https://nukze.daniel-mth1996.workers.dev/sitemap.xml
+Sitemap: https://nukze.com.br/sitemap.xml
