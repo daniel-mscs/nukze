@@ -19,6 +19,24 @@ const sites = {
   imobiliaria: Imobiliaria,
 }
 
+// Site pronto (arquivo HTML) mostrado dentro da moldura
+function SiteIframe({ cfg }) {
+  return (
+    <iframe
+      className="demo-iframe"
+      src={cfg.iframe}
+      title={`Site ${cfg.nome}`}
+    />
+  )
+}
+
+// Nicho privado só aparece com o link ?demo=<id> (ex.: pra mostrar a um cliente)
+const pedido = new URLSearchParams(location.search).get('demo')
+const visiveis = Object.entries(nichos).filter(
+  ([id, n]) => !n.privado || id === pedido,
+)
+const nichoInicial = nichos[pedido] ? pedido : 'barbearia'
+
 // useReducer: guarda os pedidos e decide como cada "ação" muda a lista.
 // É como um useState, mas com as regras de mudança num lugar só.
 function inicial(nicho) {
@@ -86,11 +104,11 @@ function useEscala(ativo, cheia, deitado) {
 }
 
 export default function Demo() {
-  const [nicho, setNicho] = useState('barbearia')
+  const [nicho, setNicho] = useState(nichoInicial)
   const [aparelho, setAparelho] = useState('celular')
   const [visao, setVisao] = useState('cliente')
   const [cheia, setCheia] = useState(false)
-  const [estado, dispatch] = useReducer(reducer, 'barbearia', inicial)
+  const [estado, dispatch] = useReducer(reducer, nichoInicial, inicial)
   const [push, setPush] = useState(null)
   const [rodada, setRodada] = useState(0) // muda pra "recomeçar" o site do cliente
   const emPe = useMidia(CEL_EM_PE)
@@ -100,7 +118,7 @@ export default function Demo() {
   const [caixa, k] = useEscala(
     aparelho === 'computador' && !pedeVirar,
     cheia,
-    deitado,
+    deitado && cheia,
   )
 
   // Celular deitado na versão de computador: abre em tela cheia sozinho
@@ -115,7 +133,13 @@ export default function Demo() {
     }
   }, [emPe, aparelho])
   const cfg = nichos[nicho]
-  const Site = sites[nicho]
+  const Site = cfg.iframe ? SiteIframe : sites[nicho]
+
+  // Veio pelo link ?demo=...: já abre na demo
+  useEffect(() => {
+    if (nichos[pedido])
+      setTimeout(() => document.getElementById('demo')?.scrollIntoView(), 300)
+  }, [])
 
   // Notificação some sozinha depois de alguns segundos
   useEffect(() => {
@@ -233,14 +257,14 @@ export default function Demo() {
       </div>
 
       <div
-        className={`demo ${cheia ? 'demo--cheia' : ''} ${deitado ? 'demo--deitado' : ''}`}
+        className={`demo ${cheia ? 'demo--cheia' : ''} ${deitado && cheia ? 'demo--deitado' : ''}`}
       >
         <div className="demo__controles">
           <Segmentado
             rotulo="Tipo de negócio"
             valor={nicho}
             onChange={trocaNicho}
-            opcoes={Object.entries(nichos).map(([id, n]) => [id, n.rotulo])}
+            opcoes={visiveis.map(([id, n]) => [id, n.rotulo])}
           />
           <Segmentado
             rotulo="Aparelho"

@@ -386,6 +386,87 @@ export const nichos = {
     pago: 'fechado',
     caixa: (p) => p.valor,
   },
+
+  // Site real feito pra um cliente (Michael), mostrado dentro da demo.
+  // privado: só aparece com o link ?demo=oficina
+  oficina: {
+    nome: 'Michael Mecânico',
+    rotulo: '🔧 Oficina',
+    url: 'michaelmecanico.com.br',
+    icone: '🔧',
+    privado: true,
+    iframe: '/demo/oficina/',
+    tema: {
+      bg: '#0b0e13',
+      card: '#141922',
+      line: '#232a36',
+      tx: '#eef2f7',
+      tx2: '#8a94a6',
+      o: '#f59e0b',
+      ink: '#111111',
+    },
+    seed: [
+      {
+        nome: 'Jorge',
+        titulo: 'Troca de pastilhas',
+        detalhe: 'Gol 2015',
+        quando: 'Hoje 08:30',
+        valor: 280,
+        st: 'atendido',
+      },
+      {
+        nome: 'Sandra',
+        titulo: 'Revisão + óleo',
+        detalhe: 'Onix 2019',
+        quando: 'Hoje 13:00',
+        valor: 350,
+        st: 'confirmado',
+      },
+      {
+        nome: 'Leandro',
+        titulo: 'Diagnóstico de injeção',
+        detalhe: 'HB20 2020',
+        quando: 'Amanhã 09:00',
+        valor: 150,
+        st: 'pendente',
+      },
+    ],
+    status: {
+      pendente: 'pendente',
+      confirmado: 'confirmado',
+      atendido: 'pronto',
+      recusado: 'recusado',
+    },
+    fluxo: {
+      pendente: [
+        { rotulo: 'Recusar', para: 'recusado' },
+        {
+          rotulo: '✓ Confirmar',
+          para: 'confirmado',
+          pri: true,
+          push: [
+            '💬',
+            'WhatsApp enviado',
+            (p) => `Horário confirmado pro ${p.nome}`,
+          ],
+        },
+      ],
+      confirmado: [
+        {
+          rotulo: 'Carro pronto',
+          para: 'atendido',
+          pri: true,
+          push: [
+            '💰',
+            'Entrou no caixa',
+            (p) => `+ R$ ${p.valor} · ${p.titulo}`,
+          ],
+        },
+      ],
+    },
+    pago: 'atendido',
+    caixa: (p) => p.valor,
+  },
 }
 
 // Próximos dias úteis (sem domingo), usados nas agendas
