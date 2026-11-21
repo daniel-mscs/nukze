@@ -28,7 +28,7 @@ export default function Config() {
         atualizado_em: new Date().toISOString(),
       })
       .eq('id', 1)
-    setMsg(error ? 'Não deu pra salvar.' : 'Salvo ✓')
+    setMsg(error ? 'Não deu pra salvar.' : 'Salvo')
   }
 
   if (!f) return <p className="pn-carregando">Carregando…</p>

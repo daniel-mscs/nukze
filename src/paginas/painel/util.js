@@ -168,9 +168,9 @@ export function mensagemCobranca(c, cliente, config) {
 }
 
 export const tipoChamado = {
-  erro: '🐞 Erro',
-  mudanca: '✏️ Mudança',
-  duvida: '❓ Dúvida',
+  erro: 'Erro',
+  mudanca: 'Mudança',
+  duvida: 'Dúvida',
 }
 export const statusChamado = {
   aberto: 'Aberto',

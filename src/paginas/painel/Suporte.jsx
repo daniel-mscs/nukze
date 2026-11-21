@@ -1,3 +1,11 @@
+import {
+  Bug,
+  HelpCircle,
+  MessageCircle,
+  PencilLine,
+  Siren,
+  StickyNote,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { db, dataHora, fone, zap, tipoChamado, statusChamado } from './util'
 
@@ -73,7 +81,7 @@ export default function Suporte({ dono }) {
         ))}
       </div>
 
-      {!visiveis.length && <p className="pn-vazio">Nenhum chamado aqui. 🎉</p>}
+      {!visiveis.length && <p className="pn-vazio">Nenhum chamado aqui.</p>}
 
       <div className="pn-grade">
         {visiveis.map((c) => (
@@ -93,8 +101,22 @@ export default function Suporte({ dono }) {
               </span>
             </div>
             <div className="pn-chamado__tags">
-              <span>{tipoChamado[c.tipo]}</span>
-              {c.urgente && <span className="er">🚨 Urgente</span>}
+              <span>
+                {(() => {
+                  const I = {
+                    erro: Bug,
+                    mudanca: PencilLine,
+                    duvida: HelpCircle,
+                  }[c.tipo]
+                  return I && <I size={13} strokeWidth={2} aria-hidden="true" />
+                })()}{' '}
+                {tipoChamado[c.tipo]}
+              </span>
+              {c.urgente && (
+                <span className="er">
+                  <Siren size={13} strokeWidth={2} aria-hidden="true" /> Urgente
+                </span>
+              )}
             </div>
             <p className="pn-chamado__txt">{c.descricao}</p>
             {c.pagina && (
@@ -118,7 +140,8 @@ export default function Suporte({ dono }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              💬 {fone(c.whatsapp)}
+              <MessageCircle size={16} strokeWidth={1.8} aria-hidden="true" />{' '}
+              {fone(c.whatsapp)}
             </a>
             {dono ? (
               <div className="pn-pedido__acoes">
@@ -147,7 +170,12 @@ export default function Suporte({ dono }) {
                 />
               </div>
             ) : (
-              c.observacao && <p className="pn-obs">📝 {c.observacao}</p>
+              c.observacao && (
+                <p className="pn-obs">
+                  <StickyNote size={14} strokeWidth={1.8} aria-hidden="true" />{' '}
+                  {c.observacao}
+                </p>
+              )
             )}
           </article>
         ))}

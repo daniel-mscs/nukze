@@ -1,3 +1,4 @@
+import { Instagram, MessageCircle, PhoneCall } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { db, data, fone, zap, hoje, diasAte } from './util'
 import { FormCliente, FormClienteSimples } from './Clientes'
@@ -84,7 +85,8 @@ export default function Leads({ dono }) {
 
       {paraHoje > 0 && (
         <p className="pn-alerta pn-alerta--am">
-          📞 {paraHoje} contato(s) marcado(s) pra hoje ou atrasado(s).
+          <PhoneCall size={16} strokeWidth={1.8} aria-hidden="true" />{' '}
+          {paraHoje} contato(s) marcado(s) pra hoje ou atrasado(s).
         </p>
       )}
 
@@ -174,7 +176,12 @@ export default function Leads({ dono }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    💬 {fone(l.whatsapp)}
+                    <MessageCircle
+                      size={16}
+                      strokeWidth={1.8}
+                      aria-hidden="true"
+                    />{' '}
+                    {fone(l.whatsapp)}
                   </a>
                 )}
                 {l.instagram && (
@@ -184,7 +191,8 @@ export default function Leads({ dono }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    📸 Instagram
+                    <Instagram size={16} strokeWidth={1.8} aria-hidden="true" />{' '}
+                    Instagram
                   </a>
                 )}
               </div>

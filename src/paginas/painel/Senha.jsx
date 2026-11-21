@@ -1,3 +1,4 @@
+import { CheckCircle2, KeyRound } from 'lucide-react'
 import { useState } from 'react'
 import { db } from './util'
 
@@ -27,10 +28,16 @@ export default function Senha({ onFechar }) {
         onClick={(e) => e.stopPropagation()}
         onSubmit={salvar}
       >
-        <h2>🔑 Trocar minha senha</h2>
+        <h2 className="pn-tit-ic">
+          <KeyRound size={18} strokeWidth={1.8} aria-hidden="true" /> Trocar
+          minha senha
+        </h2>
         {ok ? (
           <>
-            <p>Senha trocada ✓ Use a nova no próximo login.</p>
+            <p className="pn-ok-msg">
+              <CheckCircle2 size={18} strokeWidth={1.8} aria-hidden="true" />{' '}
+              Senha trocada. Use a nova no próximo login.
+            </p>
             <div className="pn-form__bts">
               <button
                 type="button"

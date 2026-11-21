@@ -1,3 +1,15 @@
+import {
+  Activity,
+  Inbox,
+  KeyRound,
+  LayoutDashboard,
+  LifeBuoy,
+  LogOut,
+  Settings,
+  Target,
+  Users,
+  Wallet,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { db } from './util'
 import Login from './Login'
@@ -15,13 +27,13 @@ import './painel.css'
 // Abas: 'dono' vê tudo; 'leitor' (Guilherme) vê pedidos, prospecção, clientes,
 // suporte e sites, sem dinheiro (e pode cadastrar possíveis clientes e clientes)
 const ABAS = [
-  ['resumo', '📊', 'Resumo', ['dono']],
-  ['pedidos', '📥', 'Pedidos', ['dono', 'leitor']],
-  ['leads', '🎯', 'Prospecção', ['dono', 'leitor']],
-  ['clientes', '👥', 'Clientes', ['dono', 'leitor']],
-  ['cobrancas', '💰', 'Cobranças', ['dono']],
-  ['suporte', '🛟', 'Suporte', ['dono', 'leitor']],
-  ['sites', '🟢', 'Sites', ['dono', 'leitor']],
+  ['resumo', LayoutDashboard, 'Resumo', ['dono']],
+  ['pedidos', Inbox, 'Pedidos', ['dono', 'leitor']],
+  ['leads', Target, 'Prospecção', ['dono', 'leitor']],
+  ['clientes', Users, 'Clientes', ['dono', 'leitor']],
+  ['cobrancas', Wallet, 'Cobranças', ['dono']],
+  ['suporte', LifeBuoy, 'Suporte', ['dono', 'leitor']],
+  ['sites', Activity, 'Sites', ['dono', 'leitor']],
 ]
 
 export default function Painel() {
@@ -83,13 +95,13 @@ export default function Painel() {
           nukze<span>.</span>
         </a>
         <nav className="pn-abas">
-          {abas.map(([id, ic, nome]) => (
+          {abas.map(([id, Ic, nome]) => (
             <button
               key={id}
               className={aba === id ? 'on' : ''}
               onClick={() => setAba(id)}
             >
-              <span>{ic}</span>
+              <Ic size={20} strokeWidth={1.8} aria-hidden="true" />
               {nome}
             </button>
           ))}
@@ -101,11 +113,18 @@ export default function Painel() {
               className={aba === 'config' ? 'on' : ''}
               onClick={() => setAba('config')}
             >
-              ⚙️ Ajustes
+              <Settings size={15} strokeWidth={1.8} aria-hidden="true" />
+              <span>Ajustes</span>
             </button>
           )}
-          <button onClick={() => setTrocaSenha(true)}>🔑 Senha</button>
-          <button onClick={() => db.auth.signOut()}>Sair</button>
+          <button onClick={() => setTrocaSenha(true)}>
+            <KeyRound size={15} strokeWidth={1.8} aria-hidden="true" />
+            <span>Senha</span>
+          </button>
+          <button onClick={() => db.auth.signOut()}>
+            <LogOut size={15} strokeWidth={1.8} aria-hidden="true" />
+            <span>Sair</span>
+          </button>
         </div>
       </aside>
 

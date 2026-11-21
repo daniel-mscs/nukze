@@ -46,13 +46,14 @@ input[type='checkbox'] { width: 18px; min-height: 18px; height: 18px; accent-col
 .pn-lado { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg); border-bottom: 1px solid var(--borda); }
 .pn-abas { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); background: #0b0b12f2; backdrop-filter: blur(10px); border-top: 1px solid var(--borda); }
 .pn-abas button { flex: 1 1 0; min-width: 0; display: grid; justify-items: center; gap: 2px; padding: 6px 0; border: 0; border-radius: 12px; background: none; color: var(--suave); font-size: 0.6rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pn-abas button span { font-size: 1.15rem; }
+.pn-abas button svg { opacity: 0.85; }
+.pn-abas button.on svg { opacity: 1; color: var(--a2); }
 .pn-abas button.on { color: var(--txt); background: var(--sup2); }
 .pn-quem { display: flex; align-items: center; gap: 6px; }
 .pn-quem b { margin-right: 4px; }
 .pn-quem b { font-size: 0.85rem; }
 .pn-quem button.on { color: var(--txt); border-color: var(--txt); }
-.pn-quem button { padding: 6px 10px; white-space: nowrap; border-radius: 999px; border: 1px solid var(--borda); background: none; color: var(--suave); font-size: 0.78rem; }
+.pn-quem button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; white-space: nowrap; border-radius: 999px; border: 1px solid var(--borda); background: none; color: var(--suave); font-size: 0.78rem; }
 .pn-main { padding: 18px 16px 100px; max-width: 1100px; }
 
 .pn-cab { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-bottom: 16px; }
@@ -73,7 +74,7 @@ input[type='checkbox'] { width: 18px; min-height: 18px; height: 18px; accent-col
 .pn-kpis--3 > div { padding: 12px 10px; }
 .pn-kpis--3 b { font-size: 0.85rem; overflow-wrap: anywhere; }
 
-.pn-alerta { display: block; width: 100%; margin-bottom: 16px; padding: 14px; border-radius: 14px; border: 1px solid #2dd4bf55; background: #2dd4bf14; color: #99f6e4; font-weight: 700; text-align: left; font-size: 0.9rem; }
+.pn-alerta { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 16px; padding: 14px; border-radius: 14px; border: 1px solid #2dd4bf55; background: #2dd4bf14; color: #99f6e4; font-weight: 700; text-align: left; font-size: 0.9rem; }
 .pn-alerta--er { border-color: #f8717166; background: #f8717118; color: #fecaca; }
 .pn-alerta--am { border-color: #fbbf2455; background: #fbbf2414; color: #fde68a; }
 
@@ -201,7 +202,17 @@ em.er { color: #f87171; }
 /* Topo no celular: só ícones nos botões */
 @media (max-width: 899px) {
   .pn-quem b { display: none; }
+  .pn-quem button { width: 36px; height: 36px; padding: 0; justify-content: center; }
+  .pn-quem button span { display: none; }
 }
+.pn-obs { display: flex; gap: 6px; align-items: flex-start; }
+.pn-obs svg { flex: none; margin-top: 2px; }
+.pn-chamado__tags span { display: inline-flex; align-items: center; gap: 4px; }
+.pn-tit-ic, .pn-ok-msg { display: flex; align-items: center; gap: 8px; }
+.pn-ok-msg svg { color: var(--ok); }
+.pn-gira { animation: pn-gira 0.9s linear infinite; }
+@keyframes pn-gira { to { transform: rotate(360deg); } }
+.pn-linha em svg { vertical-align: middle; color: #fbbf24; }
 
 /* Computador: menu na lateral */
 @media (min-width: 900px) {
@@ -209,7 +220,6 @@ em.er { color: #f87171; }
   .pn-lado { position: sticky; top: 0; height: 100svh; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 26px; padding: 24px 16px; border-bottom: 0; border-right: 1px solid var(--borda); }
   .pn-abas { position: static; flex-direction: column; gap: 4px; padding: 0; background: none; border: 0; backdrop-filter: none; }
   .pn-abas button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 0.9rem; text-align: left; }
-  .pn-abas button span { font-size: 1rem; }
   .pn-quem { margin-top: auto; flex-wrap: wrap; gap: 4px 10px; }
   .pn-quem b { flex-basis: 100%; }
   .pn-main { padding: 32px 36px 48px; }

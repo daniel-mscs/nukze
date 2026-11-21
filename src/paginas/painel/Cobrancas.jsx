@@ -1,3 +1,4 @@
+import { AlertTriangle, MessageCircle, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   db,
@@ -137,7 +138,8 @@ export default function Cobrancas() {
 
       {config && !config.chave_pix && (
         <p className="pn-alerta pn-alerta--am">
-          ⚠️ Cadastra a chave Pix em Ajustes pra ela ir na mensagem de cobrança.
+          <AlertTriangle size={16} strokeWidth={1.8} aria-hidden="true" />{' '}
+          Cadastra a chave Pix em Ajustes pra ela ir na mensagem de cobrança.
         </p>
       )}
 
@@ -228,7 +230,7 @@ export default function Cobrancas() {
                             onClick={() => apagaPagamento(p)}
                             aria-label="Apagar pagamento"
                           >
-                            ✕
+                            <X size={14} strokeWidth={2} />
                           </button>
                         </li>
                       ))}
@@ -246,7 +248,12 @@ export default function Cobrancas() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        💬 Cobrar
+                        <MessageCircle
+                          size={16}
+                          strokeWidth={1.8}
+                          aria-hidden="true"
+                        />{' '}
+                        Cobrar
                       </a>
                       <button
                         className="pn-bt pn-bt--pri"

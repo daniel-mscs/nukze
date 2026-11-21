@@ -1,3 +1,4 @@
+import { MessageCircle, StickyNote } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { db, reais, dataHora, fone, zap, nomePlano, statusPedido } from './util'
 import { FormCliente } from './Clientes'
@@ -124,7 +125,8 @@ export default function Pedidos({ dono }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              💬 {fone(p.whatsapp)}
+              <MessageCircle size={16} strokeWidth={1.8} aria-hidden="true" />{' '}
+              {fone(p.whatsapp)}
             </a>
 
             {dono && (
@@ -161,7 +163,10 @@ export default function Pedidos({ dono }) {
               </div>
             )}
             {!dono && p.observacao && (
-              <p className="pn-obs">📝 {p.observacao}</p>
+              <p className="pn-obs">
+                <StickyNote size={14} strokeWidth={1.8} aria-hidden="true" />{' '}
+                {p.observacao}
+              </p>
             )}
           </article>
         ))}

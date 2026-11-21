@@ -1,3 +1,4 @@
+import { MessageCircle, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   db,
@@ -133,7 +134,7 @@ function LinhaServico({ s, onSalva, onApaga }) {
           Editar
         </button>
         <button type="button" className="x" onClick={() => onApaga(s)}>
-          ✕
+          <X size={14} strokeWidth={2} />
         </button>
       </div>
     </div>
@@ -674,7 +675,7 @@ export default function Clientes({ dono }) {
                       {c.dominio_vence && ` · vence ${data(c.dominio_vence)}`}
                       {dDom != null &&
                         dDom <= 30 &&
-                        (dDom < 0 ? ' ⚠️ vencido' : ` ⚠️ em ${dDom} dia(s)`)}
+                        (dDom < 0 ? ' · vencido' : ` · faltam ${dDom} dia(s)`)}
                     </dd>
                   </>
                 )}
@@ -711,7 +712,12 @@ export default function Clientes({ dono }) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  💬 {fone(c.whatsapp)}
+                  <MessageCircle
+                    size={16}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                  />{' '}
+                  {fone(c.whatsapp)}
                 </a>
                 {dono && (
                   <button className="pn-bt" onClick={() => setEditando(c)}>

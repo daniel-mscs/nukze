@@ -1,3 +1,4 @@
+import { RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { db, data, diasAte } from './util'
 
@@ -74,7 +75,13 @@ export function QuadroSites({ itens, verifica, verificando, compacto }) {
       <div className="pn-servicos__cab">
         <h2>Sites no ar</h2>
         <button className="pn-bt" onClick={verifica} disabled={verificando}>
-          {verificando ? 'Verificando…' : '↻ Verificar agora'}
+          <RefreshCw
+            size={15}
+            strokeWidth={1.8}
+            className={verificando ? 'pn-gira' : ''}
+            aria-hidden="true"
+          />
+          {verificando ? 'Verificando…' : 'Verificar agora'}
         </button>
       </div>
       {!itens ? (
@@ -100,7 +107,8 @@ export function QuadroSites({ itens, verifica, verificando, compacto }) {
                     <em className={d <= 30 ? 'pn-am' : ''}>
                       {' '}
                       · domínio vence {data(x.dominio_vence)}
-                      {d <= 30 && (d < 0 ? ' ⚠️ vencido' : ` ⚠️ ${d} dia(s)`)}
+                      {d <= 30 &&
+                        (d < 0 ? ' · vencido' : ` · faltam ${d} dia(s)`)}
                     </em>
                   )}
                 </span>

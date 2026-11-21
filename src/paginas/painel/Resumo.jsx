@@ -1,3 +1,4 @@
+import { Globe, Inbox, LifeBuoy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   db,
@@ -149,13 +150,15 @@ export default function Resumo({ irPara }) {
           className={`pn-alerta ${urgentes ? 'pn-alerta--er' : ''}`}
           onClick={() => irPara('suporte')}
         >
-          🛟 {d.chamados.length} chamado(s) de suporte aberto(s)
+          <LifeBuoy size={17} strokeWidth={1.8} aria-hidden="true" />{' '}
+          {d.chamados.length} chamado(s) de suporte aberto(s)
           {urgentes > 0 && ` · ${urgentes} urgente(s)`} →
         </button>
       )}
       {d.novos > 0 && (
         <button className="pn-alerta" onClick={() => irPara('pedidos')}>
-          📥 {d.novos} pedido(s) novo(s) esperando contato →
+          <Inbox size={17} strokeWidth={1.8} aria-hidden="true" /> {d.novos}{' '}
+          pedido(s) novo(s) esperando contato →
         </button>
       )}
 
@@ -175,7 +178,7 @@ export default function Resumo({ irPara }) {
               </div>
             ))
           ) : (
-            <p className="pn-vazio">Ninguém atrasado. 🎉</p>
+            <p className="pn-vazio">Ninguém atrasado.</p>
           )}
           {d.atrasadas.length > 0 && (
             <button className="pn-bt" onClick={() => irPara('cobrancas')}>
@@ -196,7 +199,11 @@ export default function Resumo({ irPara }) {
                   </span>
                 </div>
                 <em className={x.dominio ? 'pn-am' : ''}>
-                  {x.dominio ? '🌐' : reais(x.valor)}
+                  {x.dominio ? (
+                    <Globe size={16} strokeWidth={1.8} aria-label="Domínio" />
+                  ) : (
+                    reais(x.valor)
+                  )}
                 </em>
               </div>
             ))
