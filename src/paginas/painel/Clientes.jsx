@@ -472,10 +472,114 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
   )
 }
 
+// Cadastro de cliente pelo Guilherme: só os dados básicos (os valores ficam com o Daniel)
+export function FormClienteSimples({ inicial, onFechar, onSalvo }) {
+  const [f, setF] = useState({
+    nome: inicial?.nome || '',
+    negocio: inicial?.negocio || '',
+    whatsapp: (inicial?.whatsapp || '').replace(/^55/, ''),
+    plano: 'agenda',
+    site_url: '',
+  })
+  const [erro, setErro] = useState('')
+  const muda = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }))
+
+  async function salvar(e) {
+    e.preventDefault()
+    const whatsapp =
+      '55' + f.whatsapp.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '')
+    if (!/^55\d{10,11}$/.test(whatsapp))
+      return setErro('WhatsApp precisa ter DDD + número.')
+    const { error } = await db.rpc('nukze_cadastra_cliente', {
+      p_nome: f.nome.trim(),
+      p_negocio: f.negocio.trim(),
+      p_whatsapp: whatsapp,
+      p_plano: f.plano,
+      p_site_url: f.site_url.trim() || null,
+    })
+    if (error) return setErro('Não deu pra salvar. Confere os campos.')
+    onSalvo()
+  }
+
+  return (
+    <div className="pn-modal" onClick={onFechar}>
+      <form
+        className="pn-cartao pn-form"
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={salvar}
+      >
+        <h2>Novo cliente</h2>
+        <p className="pn-suave">
+          Os valores e as cobranças o Daniel completa depois.
+        </p>
+        <div className="pn-campos">
+          <label>
+            Nome
+            <input
+              value={f.nome}
+              onChange={muda('nome')}
+              minLength={2}
+              maxLength={60}
+              required
+            />
+          </label>
+          <label>
+            Negócio
+            <input
+              value={f.negocio}
+              onChange={muda('negocio')}
+              minLength={2}
+              maxLength={80}
+              required
+            />
+          </label>
+          <label>
+            WhatsApp
+            <input
+              value={f.whatsapp}
+              onChange={muda('whatsapp')}
+              inputMode="tel"
+              placeholder="55999999999"
+              required
+            />
+          </label>
+          <label>
+            Plano
+            <select value={f.plano} onChange={muda('plano')}>
+              {Object.entries(nomePlano).map(([id, n]) => (
+                <option key={id} value={id}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Site (se já tiver)
+            <input
+              value={f.site_url}
+              onChange={muda('site_url')}
+              maxLength={200}
+              placeholder="https://"
+            />
+          </label>
+        </div>
+        {erro && <p className="pn-erro">{erro}</p>}
+        <div className="pn-form__bts">
+          <button type="button" className="pn-bt" onClick={onFechar}>
+            Cancelar
+          </button>
+          <button className="pn-bt pn-bt--pri">Salvar</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
 export default function Clientes({ dono }) {
   const [lista, setLista] = useState(null)
   const [editando, setEditando] = useState(null) // {} = novo
   const [busca, setBusca] = useState('')
+  const [simples, setSimples] = useState(false) // cadastro rápido do leitor
 
   // O leitor (Guilherme) lê a "visão" sem valores; o dono vê os serviços
   const carrega = () =>
@@ -502,11 +606,12 @@ export default function Clientes({ dono }) {
         <p>
           {lista.filter((c) => c.ativo).length} ativo(s) de {lista.length}
         </p>
-        {dono && (
-          <button className="pn-bt pn-bt--pri" onClick={() => setEditando({})}>
-            + Novo cliente
-          </button>
-        )}
+        <button
+          className="pn-bt pn-bt--pri"
+          onClick={() => (dono ? setEditando({}) : setSimples(true))}
+        >
+          + Novo cliente
+        </button>
       </header>
 
       <input
@@ -619,6 +724,15 @@ export default function Clientes({ dono }) {
         })}
       </div>
 
+      {simples && (
+        <FormClienteSimples
+          onFechar={() => setSimples(false)}
+          onSalvo={() => {
+            setSimples(false)
+            carrega()
+          }}
+        />
+      )}
       {editando && (
         <FormCliente
           cliente={editando.id ? editando : null}

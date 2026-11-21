@@ -9,17 +9,19 @@ import Config from './Config'
 import Sites from './Sites'
 import Suporte from './Suporte'
 import Senha from './Senha'
+import Leads from './Leads'
 import './painel.css'
 
-// Abas: 'dono' vê tudo; 'leitor' (Guilherme) vê pedidos, clientes, suporte e sites, sem dinheiro
+// Abas: 'dono' vê tudo; 'leitor' (Guilherme) vê pedidos, prospecção, clientes,
+// suporte e sites, sem dinheiro (e pode cadastrar possíveis clientes e clientes)
 const ABAS = [
   ['resumo', '📊', 'Resumo', ['dono']],
   ['pedidos', '📥', 'Pedidos', ['dono', 'leitor']],
+  ['leads', '🎯', 'Prospecção', ['dono', 'leitor']],
   ['clientes', '👥', 'Clientes', ['dono', 'leitor']],
   ['cobrancas', '💰', 'Cobranças', ['dono']],
   ['suporte', '🛟', 'Suporte', ['dono', 'leitor']],
   ['sites', '🟢', 'Sites', ['dono', 'leitor']],
-  ['config', '⚙️', 'Ajustes', ['dono']],
 ]
 
 export default function Painel() {
@@ -94,7 +96,14 @@ export default function Painel() {
         </nav>
         <div className="pn-quem">
           <b>{membro.nome}</b>
-          <small>{dono ? 'Acesso total' : 'Só leitura'}</small>
+          {dono && (
+            <button
+              className={aba === 'config' ? 'on' : ''}
+              onClick={() => setAba('config')}
+            >
+              ⚙️ Ajustes
+            </button>
+          )}
           <button onClick={() => setTrocaSenha(true)}>🔑 Senha</button>
           <button onClick={() => db.auth.signOut()}>Sair</button>
         </div>
@@ -103,6 +112,7 @@ export default function Painel() {
       <main className="pn-main">
         {aba === 'resumo' && <Resumo irPara={setAba} />}
         {aba === 'pedidos' && <Pedidos dono={dono} />}
+        {aba === 'leads' && <Leads dono={dono} />}
         {aba === 'clientes' && <Clientes dono={dono} />}
         {aba === 'cobrancas' && <Cobrancas />}
         {aba === 'suporte' && <Suporte dono={dono} />}
