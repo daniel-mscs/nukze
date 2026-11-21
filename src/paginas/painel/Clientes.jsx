@@ -12,6 +12,7 @@ import {
   proximoVencimento,
   porMes,
   diasAte,
+  urlSite,
 } from './util'
 
 const MODULOS = [
@@ -255,7 +256,7 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
       plano: f.plano,
       modulos: f.modulos,
       ativo: f.ativo,
-      site_url: f.site_url.trim() || null,
+      site_url: urlSite(f.site_url),
       dominio: f.dominio.trim() || null,
       dominio_vence: f.dominio_vence || null,
       cliente_desde: f.cliente_desde || null,
@@ -496,7 +497,7 @@ export function FormClienteSimples({ inicial, onFechar, onSalvo }) {
       p_negocio: f.negocio.trim(),
       p_whatsapp: whatsapp,
       p_plano: f.plano,
-      p_site_url: f.site_url.trim() || null,
+      p_site_url: urlSite(f.site_url),
     })
     if (error) return setErro('Não deu pra salvar. Confere os campos.')
     onSalvo()
@@ -658,7 +659,7 @@ export default function Clientes({ dono }) {
                     <dt>Site</dt>
                     <dd>
                       <a
-                        href={c.site_url}
+                        href={urlSite(c.site_url)}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

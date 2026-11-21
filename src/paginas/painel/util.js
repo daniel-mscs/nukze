@@ -43,6 +43,16 @@ export const fone = (w = '') => {
       : w
 }
 
+// Completa o endereço do site: "exemplo.com.br" -> "https://exemplo.com.br"
+export const urlSite = (u) => {
+  const t = (u || '').trim()
+  return !t
+    ? null
+    : /^https?:\/\//i.test(t)
+      ? t
+      : `https://${t.replace(/^\/+/, '')}`
+}
+
 export const zap = (numero, texto = '') =>
   `https://wa.me/${numero}${texto ? `?text=${encodeURIComponent(texto)}` : ''}`
 

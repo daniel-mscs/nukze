@@ -1,6 +1,6 @@
 import { RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { db, data, diasAte } from './util'
+import { db, data, diasAte, urlSite } from './util'
 
 // Confere se um site abre, olhando do navegador de quem está no painel.
 // "no-cors": não lê o conteúdo, só descobre se o servidor respondeu.
@@ -49,10 +49,10 @@ export function useSites() {
         .filter((c) => c.site_url || c.dominio_vence)
         .map((c) => ({
           nome: c.negocio,
-          url: c.site_url,
+          url: urlSite(c.site_url),
           dominio: c.dominio,
           dominio_vence: c.dominio_vence,
-          teste: c.site_url ? () => testa(c.site_url) : null,
+          teste: c.site_url ? () => testa(urlSite(c.site_url)) : null,
         })),
     ]
     setItens(lista.map((x) => ({ ...x, r: null })))
