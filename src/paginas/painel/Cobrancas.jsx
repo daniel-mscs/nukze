@@ -329,7 +329,7 @@ function FormPagamento({ c, onFechar, onSalvo }) {
     onSalvo()
   }
   return (
-    <div className="pn-modal" onClick={onFechar}>
+    <div className="pn-modal">
       <form
         className="pn-cartao pn-form"
         onClick={(e) => e.stopPropagation()}
@@ -427,7 +427,7 @@ function FormCobranca({ c, clientes, mes, onFechar, onSalvo }) {
 
   if (!clientes.length)
     return (
-      <div className="pn-modal" onClick={onFechar}>
+      <div className="pn-modal">
         <div className="pn-cartao pn-form">
           <p>Cadastra um cliente primeiro.</p>
           <button className="pn-bt" onClick={onFechar}>
@@ -438,7 +438,7 @@ function FormCobranca({ c, clientes, mes, onFechar, onSalvo }) {
     )
 
   return (
-    <div className="pn-modal" onClick={onFechar}>
+    <div className="pn-modal">
       <form
         className="pn-cartao pn-form"
         onClick={(e) => e.stopPropagation()}

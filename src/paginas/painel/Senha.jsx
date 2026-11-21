@@ -22,7 +22,7 @@ export default function Senha({ onFechar }) {
   }
 
   return (
-    <div className="pn-modal" onClick={onFechar}>
+    <div className="pn-modal">
       <form
         className="pn-cartao pn-form"
         onClick={(e) => e.stopPropagation()}
