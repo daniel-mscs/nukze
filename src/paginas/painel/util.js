@@ -83,23 +83,97 @@ export const somaMes = (aaaamm, n) => {
   return d.toISOString().slice(0, 7)
 }
 
+export const nomeCiclo = { mensal: 'Mensal', anual: 'Anual', unico: 'Único' }
+
+// Quanto já foi pago de uma cobrança (soma dos pagamentos)
+export const pago = (c) =>
+  (c.pagamentos || []).reduce((t, p) => t + Number(p.valor), 0)
+export const saldo = (c) => Math.max(0, Number(c.valor) - pago(c))
+
 // Situação de uma cobrança
 export const situacao = (c) =>
-  c.pago_em ? 'pago' : c.vencimento < hoje() ? 'atrasado' : 'pendente'
+  saldo(c) <= 0
+    ? 'pago'
+    : c.vencimento < hoje()
+      ? 'atrasado'
+      : pago(c) > 0
+        ? 'parcial'
+        : 'pendente'
 
-// Mensagem pronta de cobrança pro WhatsApp
+export const NOME_SIT = {
+  pago: 'Pago',
+  parcial: 'Parcial',
+  atrasado: 'Atrasado',
+  pendente: 'Pendente',
+}
+
+const ultimoDia = (a, m) => new Date(Date.UTC(a, m, 0)).getUTCDate()
+
+// Data de vencimento de um serviço num mês (AAAA-MM), ou null se não vence nele
+export function vencimentoNoMes(s, aaaamm) {
+  const [a, m] = aaaamm.split('-').map(Number)
+  const [pa, pm, pd] = s.primeiro_vencimento.split('-').map(Number)
+  const dia = (d) =>
+    `${aaaamm}-${String(Math.min(d, ultimoDia(a, m))).padStart(2, '0')}`
+  if (aaaamm < s.primeiro_vencimento.slice(0, 7)) return null
+  if (s.ciclo === 'mensal') return dia(pd)
+  if (s.ciclo === 'anual') return pm === m && a >= pa ? dia(pd) : null
+  return s.primeiro_vencimento.slice(0, 7) === aaaamm
+    ? s.primeiro_vencimento
+    : null
+}
+
+// Próximo vencimento de um serviço a partir de hoje
+export function proximoVencimento(s) {
+  let mes = mesAtual()
+  for (let i = 0; i < 24; i++) {
+    const v = vencimentoNoMes(s, mes)
+    if (v && v >= hoje()) return v
+    mes = somaMes(mes, 1)
+  }
+  return s.ciclo === 'unico' ? null : s.primeiro_vencimento
+}
+
+// Valor por mês de um serviço (anual dividido por 12; único não conta)
+export const porMes = (s) =>
+  s.ciclo === 'mensal'
+    ? Number(s.valor)
+    : s.ciclo === 'anual'
+      ? Number(s.valor) / 12
+      : 0
+
+export const diasAte = (d) =>
+  Math.round(
+    (new Date(d + 'T12:00:00Z') - new Date(hoje() + 'T12:00:00Z')) / 864e5,
+  )
+
+// Mensagem pronta de cobrança pro WhatsApp (cobra só o que falta)
 export function mensagemCobranca(c, cliente, config) {
   const primeiro = (cliente?.nome || '').split(' ')[0]
   const atrasada = situacao(c) === 'atrasado'
+  const falta = saldo(c)
+  const parcial =
+    pago(c) > 0 ? ` (já recebi ${reais(pago(c))}, falta ${reais(falta)})` : ''
   const pix = config?.chave_pix
     ? `\n\nChave Pix: ${config.chave_pix}${config.nome_recebedor ? ` (${config.nome_recebedor})` : ''}`
     : ''
   return (
     `Oi, ${primeiro}! Tudo certo? 😊\n\n` +
     (atrasada
-      ? `A cobrança "${c.descricao}" de ${reais(c.valor)}, que venceu em ${data(c.vencimento)}, ficou em aberto.`
-      : `Passando pra lembrar da cobrança "${c.descricao}" de ${reais(c.valor)}, com vencimento em ${data(c.vencimento)}.`) +
+      ? `A cobrança "${c.descricao}" de ${reais(c.valor)}, que venceu em ${data(c.vencimento)}, ficou em aberto${parcial}.`
+      : `Passando pra lembrar da cobrança "${c.descricao}" de ${reais(c.valor)}, com vencimento em ${data(c.vencimento)}${parcial}.`) +
     pix +
     `\n\nQualquer dúvida, é só me chamar. Obrigado!`
   )
+}
+
+export const tipoChamado = {
+  erro: '🐞 Erro',
+  mudanca: '✏️ Mudança',
+  duvida: '❓ Dúvida',
+}
+export const statusChamado = {
+  aberto: 'Aberto',
+  andamento: 'Em andamento',
+  resolvido: 'Resolvido',
 }

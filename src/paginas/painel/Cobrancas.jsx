@@ -8,24 +8,35 @@ import {
   nomeMes,
   somaMes,
   situacao,
+  NOME_SIT,
   mensagemCobranca,
   hoje,
+  pago,
+  saldo,
+  vencimentoNoMes,
 } from './util'
 
-const NOME_SIT = { pago: 'Pago', atrasado: 'Atrasado', pendente: 'Pendente' }
+const FORMAS = {
+  pix: 'Pix',
+  dinheiro: 'Dinheiro',
+  cartao: 'Cartão',
+  outro: 'Outro',
+}
 
 export default function Cobrancas() {
   const [mes, setMes] = useState(mesAtual())
   const [lista, setLista] = useState(null)
   const [clientes, setClientes] = useState([])
   const [config, setConfig] = useState(null)
-  const [avulsa, setAvulsa] = useState(false)
+  const [janela, setJanela] = useState(null) // {tipo:'avulsa'|'editar'|'pagar', c}
   const [msg, setMsg] = useState('')
 
   const carrega = () => {
     setLista(null)
     db.from('nukze_cobrancas')
-      .select('*, cliente:nukze_clientes(nome, negocio, whatsapp)')
+      .select(
+        '*, cliente:nukze_clientes(nome, negocio, whatsapp), pagamentos:nukze_pagamentos(*)',
+      )
       .eq('referencia', `${mes}-01`)
       .order('vencimento')
       .then(({ data }) => setLista(data || []))
@@ -33,7 +44,7 @@ export default function Cobrancas() {
   useEffect(carrega, [mes])
   useEffect(() => {
     db.from('nukze_clientes')
-      .select('id, nome, negocio, valor_mensal, dia_vencimento, ativo')
+      .select('id, nome, negocio, ativo')
       .order('negocio')
       .then(({ data }) => setClientes(data || []))
     db.from('nukze_config')
@@ -43,17 +54,28 @@ export default function Cobrancas() {
       .then(({ data }) => setConfig(data))
   }, [])
 
-  // Cria a mensalidade do mês pra cada cliente ativo (se ainda não existir)
+  // Cria as cobranças do mês a partir dos serviços ativos (mensal todo mês,
+  // anual no mês de aniversário, único no mês dele). Não duplica.
   async function gerar() {
-    const ativos = clientes.filter((c) => c.ativo && Number(c.valor_mensal) > 0)
-    if (!ativos.length) return setMsg('Nenhum cliente ativo com valor mensal.')
-    const linhas = ativos.map((c) => ({
-      cliente_id: c.id,
-      referencia: `${mes}-01`,
-      descricao: 'Mensalidade',
-      valor: c.valor_mensal,
-      vencimento: `${mes}-${String(c.dia_vencimento).padStart(2, '0')}`,
-    }))
+    setMsg('')
+    const { data: servicos, error: e1 } = await db
+      .from('nukze_servicos')
+      .select('*, cliente:nukze_clientes(ativo)')
+      .eq('ativo', true)
+    if (e1) return setMsg('Não deu pra ler os serviços.')
+    const linhas = (servicos || [])
+      .filter((s) => s.cliente?.ativo)
+      .map((s) => ({ s, venc: vencimentoNoMes(s, mes) }))
+      .filter((x) => x.venc)
+      .map(({ s, venc }) => ({
+        cliente_id: s.cliente_id,
+        servico_id: s.id,
+        referencia: `${mes}-01`,
+        descricao: s.nome,
+        valor: s.valor,
+        vencimento: venc,
+      }))
+    if (!linhas.length) return setMsg('Nenhum serviço vence nesse mês.')
     const { data, error } = await db
       .from('nukze_cobrancas')
       .upsert(linhas, {
@@ -64,35 +86,33 @@ export default function Cobrancas() {
     if (error) return setMsg('Não deu pra gerar. Tenta de novo.')
     setMsg(
       data?.length
-        ? `${data.length} mensalidade(s) criada(s).`
-        : 'As mensalidades desse mês já existiam.',
+        ? `${data.length} cobrança(s) criada(s).`
+        : 'As cobranças desse mês já existiam.',
     )
     carrega()
   }
 
-  async function pagar(c, pago) {
-    const campos = pago
-      ? { pago_em: new Date().toISOString(), forma: 'pix' }
-      : { pago_em: null, forma: null }
-    const { error } = await db
-      .from('nukze_cobrancas')
-      .update(campos)
-      .eq('id', c.id)
-    if (error) return alert('Não deu pra salvar.')
-    setLista((l) => l.map((x) => (x.id === c.id ? { ...x, ...campos } : x)))
-  }
-
   async function apagar(c) {
     if (
-      !confirm(`Apagar a cobrança "${c.descricao}" de ${c.cliente?.negocio}?`)
+      !confirm(
+        `Apagar a cobrança "${c.descricao}" de ${c.cliente?.negocio}? Os pagamentos dela também somem.`,
+      )
     )
       return
     await db.from('nukze_cobrancas').delete().eq('id', c.id)
     setLista((l) => l.filter((x) => x.id !== c.id))
   }
 
-  const total = (f) =>
-    (lista || []).filter(f).reduce((t, c) => t + Number(c.valor), 0)
+  async function apagaPagamento(p) {
+    if (
+      !confirm(`Apagar o pagamento de ${reais(p.valor)} de ${data(p.pago_em)}?`)
+    )
+      return
+    await db.from('nukze_pagamentos').delete().eq('id', p.id)
+    carrega()
+  }
+
+  const soma = (f) => (lista || []).reduce((t, c) => t + f(c), 0)
 
   return (
     <>
@@ -115,7 +135,7 @@ export default function Cobrancas() {
         </div>
       </header>
 
-      {!config?.chave_pix && (
+      {config && !config.chave_pix && (
         <p className="pn-alerta pn-alerta--am">
           ⚠️ Cadastra a chave Pix em Ajustes pra ela ir na mensagem de cobrança.
         </p>
@@ -123,9 +143,9 @@ export default function Cobrancas() {
 
       <div className="pn-barra">
         <button className="pn-bt pn-bt--pri" onClick={gerar}>
-          Gerar mensalidades do mês
+          Gerar cobranças do mês
         </button>
-        <button className="pn-bt" onClick={() => setAvulsa(true)}>
+        <button className="pn-bt" onClick={() => setJanela({ tipo: 'avulsa' })}>
           + Cobrança avulsa
         </button>
         {msg && <span className="pn-msg">{msg}</span>}
@@ -135,15 +155,19 @@ export default function Cobrancas() {
         <div className="pn-kpis pn-kpis--3">
           <div className="ok">
             <small>Recebido</small>
-            <b>{reais(total((c) => c.pago_em))}</b>
+            <b>{reais(soma(pago))}</b>
           </div>
           <div className="am">
-            <small>Pendente</small>
-            <b>{reais(total((c) => situacao(c) === 'pendente'))}</b>
+            <small>Falta</small>
+            <b>
+              {reais(soma((c) => (situacao(c) === 'atrasado' ? 0 : saldo(c))))}
+            </b>
           </div>
           <div className="er">
             <small>Atrasado</small>
-            <b>{reais(total((c) => situacao(c) === 'atrasado'))}</b>
+            <b>
+              {reais(soma((c) => (situacao(c) === 'atrasado' ? saldo(c) : 0)))}
+            </b>
           </div>
         </div>
       )}
@@ -152,12 +176,13 @@ export default function Cobrancas() {
         <p className="pn-carregando">Carregando…</p>
       ) : !lista.length ? (
         <p className="pn-vazio">
-          Nenhuma cobrança nesse mês. Clica em "Gerar mensalidades do mês".
+          Nenhuma cobrança nesse mês. Clica em "Gerar cobranças do mês".
         </p>
       ) : (
         <div className="pn-grade">
           {lista.map((c) => {
             const sit = situacao(c)
+            const pg = pago(c)
             return (
               <article key={c.id} className={`pn-cartao pn-cob pn-cob--${sit}`}>
                 <div className="pn-pedido__topo">
@@ -170,13 +195,47 @@ export default function Cobrancas() {
                   <span className={`pn-st pn-st--${sit}`}>{NOME_SIT[sit]}</span>
                 </div>
                 <div className="pn-cob__valor">{reais(c.valor)}</div>
-                {c.pago_em && (
+                {pg > 0 && (
+                  <div
+                    className="pn-cob__barra"
+                    title={`${Math.round((pg / c.valor) * 100)}% pago`}
+                  >
+                    <i
+                      style={{
+                        width: `${Math.min(100, (pg / c.valor) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                )}
+                {pg > 0 && sit !== 'pago' && (
                   <small className="pn-cob__pago">
-                    Pago em {new Date(c.pago_em).toLocaleDateString('pt-BR')}
+                    Pago {reais(pg)} · falta {reais(saldo(c))}
                   </small>
                 )}
+                {(c.pagamentos || []).length > 0 && (
+                  <ul className="pn-pags">
+                    {c.pagamentos
+                      .slice()
+                      .sort((a, b) => a.pago_em.localeCompare(b.pago_em))
+                      .map((p) => (
+                        <li key={p.id}>
+                          <span>
+                            {data(p.pago_em)} · {FORMAS[p.forma]}
+                            {p.observacao && ` · ${p.observacao}`}
+                          </span>
+                          <b>{reais(p.valor)}</b>
+                          <button
+                            onClick={() => apagaPagamento(p)}
+                            aria-label="Apagar pagamento"
+                          >
+                            ✕
+                          </button>
+                        </li>
+                      ))}
+                  </ul>
+                )}
                 <div className="pn-pedido__acoes">
-                  {!c.pago_em ? (
+                  {sit !== 'pago' && (
                     <>
                       <a
                         className="pn-bt pn-bt--zap"
@@ -191,16 +250,18 @@ export default function Cobrancas() {
                       </a>
                       <button
                         className="pn-bt pn-bt--pri"
-                        onClick={() => pagar(c, true)}
+                        onClick={() => setJanela({ tipo: 'pagar', c })}
                       >
-                        ✓ Marcar pago
+                        + Pagamento
                       </button>
                     </>
-                  ) : (
-                    <button className="pn-bt" onClick={() => pagar(c, false)}>
-                      Desfazer pagamento
-                    </button>
                   )}
+                  <button
+                    className="pn-bt"
+                    onClick={() => setJanela({ tipo: 'editar', c })}
+                  >
+                    Editar
+                  </button>
                   <button className="pn-bt pn-bt--x" onClick={() => apagar(c)}>
                     Apagar
                   </button>
@@ -211,13 +272,24 @@ export default function Cobrancas() {
         </div>
       )}
 
-      {avulsa && (
-        <FormAvulsa
+      {janela?.tipo === 'pagar' && (
+        <FormPagamento
+          c={janela.c}
+          onFechar={() => setJanela(null)}
+          onSalvo={() => {
+            setJanela(null)
+            carrega()
+          }}
+        />
+      )}
+      {(janela?.tipo === 'avulsa' || janela?.tipo === 'editar') && (
+        <FormCobranca
+          c={janela.c}
           clientes={clientes}
           mes={mes}
-          onFechar={() => setAvulsa(false)}
+          onFechar={() => setJanela(null)}
           onSalvo={(m) => {
-            setAvulsa(false)
+            setJanela(null)
             if (m === mes) carrega()
             else setMes(m)
           }}
@@ -227,25 +299,116 @@ export default function Cobrancas() {
   )
 }
 
-// Cobrança fora da mensalidade (ex.: parcela da criação, um serviço extra)
-function FormAvulsa({ clientes, mes, onFechar, onSalvo }) {
+// Registrar um pagamento (total ou parcial)
+function FormPagamento({ c, onFechar, onSalvo }) {
   const [f, setF] = useState({
-    cliente_id: clientes[0]?.id || '',
-    descricao: 'Criação do site',
-    valor: '',
-    vencimento: mes === mesAtual() ? hoje() : `${mes}-10`,
+    valor: saldo(c),
+    pago_em: hoje(),
+    forma: 'pix',
+    observacao: '',
+  })
+  const [erro, setErro] = useState('')
+  const muda = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }))
+  async function salvar(e) {
+    e.preventDefault()
+    const { error } = await db.from('nukze_pagamentos').insert({
+      cobranca_id: c.id,
+      valor: Number(f.valor),
+      pago_em: f.pago_em,
+      forma: f.forma,
+      observacao: f.observacao.trim() || null,
+    })
+    if (error) return setErro('Não deu pra salvar. Confere o valor.')
+    onSalvo()
+  }
+  return (
+    <div className="pn-modal" onClick={onFechar}>
+      <form
+        className="pn-cartao pn-form"
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={salvar}
+      >
+        <h2>Pagamento · {c.cliente?.negocio}</h2>
+        <p className="pn-suave">
+          {c.descricao}: {reais(c.valor)} · falta {reais(saldo(c))}
+        </p>
+        <div className="pn-campos">
+          <label>
+            Valor pago (R$)
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              value={f.valor}
+              onChange={muda('valor')}
+              required
+            />
+          </label>
+          <label>
+            Data
+            <input
+              type="date"
+              value={f.pago_em}
+              onChange={muda('pago_em')}
+              required
+            />
+          </label>
+          <label>
+            Forma
+            <select value={f.forma} onChange={muda('forma')}>
+              {Object.entries(FORMAS).map(([id, n]) => (
+                <option key={id} value={id}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Observação
+            <input
+              value={f.observacao}
+              onChange={muda('observacao')}
+              maxLength={200}
+              placeholder="Ex: 1ª parcela"
+            />
+          </label>
+        </div>
+        {erro && <p className="pn-erro">{erro}</p>}
+        <div className="pn-form__bts">
+          <button type="button" className="pn-bt" onClick={onFechar}>
+            Cancelar
+          </button>
+          <button className="pn-bt pn-bt--pri">Registrar</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+// Nova cobrança avulsa ou edição de uma existente
+function FormCobranca({ c, clientes, mes, onFechar, onSalvo }) {
+  const [f, setF] = useState({
+    cliente_id: c?.cliente_id || clientes[0]?.id || '',
+    descricao: c?.descricao || 'Criação do site',
+    valor: c?.valor ?? '',
+    vencimento: c?.vencimento || (mes === mesAtual() ? hoje() : `${mes}-10`),
   })
   const [erro, setErro] = useState('')
   const muda = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }))
 
   async function salvar(e) {
     e.preventDefault()
-    const { error } = await db.from('nukze_cobrancas').insert({
-      ...f,
+    const linha = {
       descricao: f.descricao.trim(),
       valor: Number(f.valor),
+      vencimento: f.vencimento,
       referencia: f.vencimento.slice(0, 7) + '-01',
-    })
+    }
+    const { error } = c
+      ? await db.from('nukze_cobrancas').update(linha).eq('id', c.id)
+      : await db
+          .from('nukze_cobrancas')
+          .insert({ ...linha, cliente_id: f.cliente_id })
     if (error)
       return setErro(
         error.code === '23505'
@@ -274,14 +437,18 @@ function FormAvulsa({ clientes, mes, onFechar, onSalvo }) {
         onClick={(e) => e.stopPropagation()}
         onSubmit={salvar}
       >
-        <h2>Cobrança avulsa</h2>
+        <h2>{c ? 'Editar cobrança' : 'Cobrança avulsa'}</h2>
         <div className="pn-campos">
           <label>
             Cliente
-            <select value={f.cliente_id} onChange={muda('cliente_id')}>
-              {clientes.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.negocio}
+            <select
+              value={f.cliente_id}
+              onChange={muda('cliente_id')}
+              disabled={Boolean(c)}
+            >
+              {clientes.map((x) => (
+                <option key={x.id} value={x.id}>
+                  {x.negocio}
                 </option>
               ))}
             </select>

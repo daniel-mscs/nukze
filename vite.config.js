@@ -5,12 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Páginas: a landing (/), a política (/privacidade/) e o painel interno (/painel/)
+    // Páginas: a landing (/), a política (/privacidade/), o suporte (/suporte/) e o painel interno (/painel/)
     rollupOptions: {
       input: {
         principal: 'index.html',
         privacidade: 'privacidade/index.html',
         painel: 'painel/index.html',
+        suporte: 'suporte/index.html',
       },
     },
   },

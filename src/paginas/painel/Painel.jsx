@@ -6,14 +6,19 @@ import Pedidos from './Pedidos'
 import Clientes from './Clientes'
 import Cobrancas from './Cobrancas'
 import Config from './Config'
+import Sites from './Sites'
+import Suporte from './Suporte'
+import Senha from './Senha'
 import './painel.css'
 
-// Abas: 'dono' vê tudo; 'leitor' (Guilherme) só pedidos e clientes, sem dinheiro
+// Abas: 'dono' vê tudo; 'leitor' (Guilherme) vê pedidos, clientes, suporte e sites, sem dinheiro
 const ABAS = [
   ['resumo', '📊', 'Resumo', ['dono']],
   ['pedidos', '📥', 'Pedidos', ['dono', 'leitor']],
   ['clientes', '👥', 'Clientes', ['dono', 'leitor']],
   ['cobrancas', '💰', 'Cobranças', ['dono']],
+  ['suporte', '🛟', 'Suporte', ['dono', 'leitor']],
+  ['sites', '🟢', 'Sites', ['dono', 'leitor']],
   ['config', '⚙️', 'Ajustes', ['dono']],
 ]
 
@@ -21,6 +26,7 @@ export default function Painel() {
   const [sessao, setSessao] = useState(undefined) // undefined = carregando
   const [membro, setMembro] = useState(undefined)
   const [aba, setAba] = useState(null)
+  const [trocaSenha, setTrocaSenha] = useState(false)
 
   // Acompanha o login (entrar, sair, renovar)
   useEffect(() => {
@@ -89,6 +95,7 @@ export default function Painel() {
         <div className="pn-quem">
           <b>{membro.nome}</b>
           <small>{dono ? 'Acesso total' : 'Só leitura'}</small>
+          <button onClick={() => setTrocaSenha(true)}>🔑 Senha</button>
           <button onClick={() => db.auth.signOut()}>Sair</button>
         </div>
       </aside>
@@ -98,8 +105,11 @@ export default function Painel() {
         {aba === 'pedidos' && <Pedidos dono={dono} />}
         {aba === 'clientes' && <Clientes dono={dono} />}
         {aba === 'cobrancas' && <Cobrancas />}
+        {aba === 'suporte' && <Suporte dono={dono} />}
+        {aba === 'sites' && <Sites />}
         {aba === 'config' && <Config />}
       </main>
+      {trocaSenha && <Senha onFechar={() => setTrocaSenha(false)} />}
     </div>
   )
 }

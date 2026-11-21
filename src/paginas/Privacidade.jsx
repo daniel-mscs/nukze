@@ -58,7 +58,10 @@ export default function Privacidade() {
         </p>
 
         <h2>2. Quais dados eu coleto</h2>
-        <p>Só os que você mesmo preenche no formulário "Monte seu plano":</p>
+        <p>
+          Só os que você mesmo preenche nos formulários "Monte seu plano" e
+          "Suporte":
+        </p>
         <ul>
           <li>
             Seu nome, o nome e o tipo (ou nicho) do seu negócio e a cidade;
@@ -66,6 +69,9 @@ export default function Privacidade() {
           <li>Seu número de WhatsApp;</li>
           <li>
             O plano, os módulos e a descrição do que você precisa, se escrever;
+          </li>
+          <li>
+            No suporte: o tipo de problema, a descrição e onde ele aconteceu;
           </li>
           <li>A data e hora do envio e o seu aceite desta política.</li>
         </ul>
@@ -78,6 +84,7 @@ export default function Privacidade() {
         <h2>3. Pra que uso esses dados</h2>
         <ul>
           <li>Entrar em contato com você pelo WhatsApp sobre o seu pedido;</li>
+          <li>Responder e resolver os seus chamados de suporte;</li>
           <li>Preparar a proposta e, se você contratar, criar o seu site.</li>
         </ul>
         <p>

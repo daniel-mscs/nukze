@@ -171,9 +171,10 @@ export default function Pedidos({ dono }) {
         <FormCliente
           pedido={virando}
           onFechar={() => setVirando(null)}
-          onSalvo={() => {
-            muda(virando, { status: 'fechada' })
-            setVirando(null)
+          onSalvo={(_c, fechar) => {
+            // 1º salvamento: o pedido vira "fechado" e a ficha fica aberta pros serviços
+            if (!fechar) muda(virando, { status: 'fechada' })
+            else setVirando(null)
           }}
         />
       )}

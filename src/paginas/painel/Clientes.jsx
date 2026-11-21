@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react'
-import { db, reais, fone, zap, nomePlano, hoje } from './util'
+import {
+  db,
+  reais,
+  data,
+  fone,
+  zap,
+  nomePlano,
+  nomeCiclo,
+  hoje,
+  proximoVencimento,
+  porMes,
+  diasAte,
+} from './util'
 
 const MODULOS = [
   ['clientes', 'Clientes (CRM)'],
@@ -7,22 +19,217 @@ const MODULOS = [
   ['estoque', 'Estoque'],
 ]
 
-// Formulário de cliente (novo, editar, ou vindo de um pedido do site)
+// Lista e edição dos serviços de um cliente (mensal, anual ou único)
+function Servicos({ clienteId }) {
+  const [lista, setLista] = useState(null)
+  const [novo, setNovo] = useState(null)
+
+  const carrega = () =>
+    db
+      .from('nukze_servicos')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .order('criado_em')
+      .then(({ data }) => setLista(data || []))
+  useEffect(() => {
+    carrega()
+  }, [clienteId])
+
+  async function salva(s) {
+    const linha = {
+      nome: s.nome.trim(),
+      valor: Number(s.valor) || 0,
+      ciclo: s.ciclo,
+      primeiro_vencimento: s.primeiro_vencimento,
+      ativo: s.ativo,
+      observacao: s.observacao?.trim() || null,
+    }
+    const { error } = s.id
+      ? await db.from('nukze_servicos').update(linha).eq('id', s.id)
+      : await db
+          .from('nukze_servicos')
+          .insert({ ...linha, cliente_id: clienteId })
+    if (error) return alert('Não deu pra salvar o serviço. Confere os campos.')
+    setNovo(null)
+    carrega()
+  }
+  async function apaga(s) {
+    if (
+      !confirm(
+        `Apagar o serviço "${s.nome}"? As cobranças já criadas continuam.`,
+      )
+    )
+      return
+    await db.from('nukze_servicos').delete().eq('id', s.id)
+    carrega()
+  }
+
+  if (!lista) return <p className="pn-carregando">Carregando serviços…</p>
+  return (
+    <div className="pn-servicos">
+      <div className="pn-servicos__cab">
+        <b>Serviços do cliente</b>
+        {!novo && (
+          <button
+            type="button"
+            className="pn-bt"
+            onClick={() =>
+              setNovo({
+                nome: '',
+                valor: '',
+                ciclo: 'mensal',
+                primeiro_vencimento: hoje(),
+                ativo: true,
+              })
+            }
+          >
+            + Serviço
+          </button>
+        )}
+      </div>
+      {!lista.length && !novo && (
+        <p className="pn-vazio">Nenhum serviço ainda.</p>
+      )}
+      {lista.map((s) => (
+        <LinhaServico key={s.id} s={s} onSalva={salva} onApaga={apaga} />
+      ))}
+      {novo && (
+        <EditaServico
+          s={novo}
+          onSalva={salva}
+          onCancela={() => setNovo(null)}
+        />
+      )}
+    </div>
+  )
+}
+
+function LinhaServico({ s, onSalva, onApaga }) {
+  const [editando, setEditando] = useState(false)
+  if (editando)
+    return (
+      <EditaServico
+        s={s}
+        onSalva={(x) => {
+          onSalva(x)
+          setEditando(false)
+        }}
+        onCancela={() => setEditando(false)}
+      />
+    )
+  const prox = proximoVencimento(s)
+  return (
+    <div className={`pn-servico ${s.ativo ? '' : 'off'}`}>
+      <div>
+        <b>{s.nome}</b>
+        <span>
+          {nomeCiclo[s.ciclo]} · {reais(s.valor)}
+          {prox && ` · próximo ${data(prox)}`}
+          {!s.ativo && ' · pausado'}
+        </span>
+      </div>
+      <div className="pn-servico__bts">
+        <button type="button" onClick={() => setEditando(true)}>
+          Editar
+        </button>
+        <button type="button" className="x" onClick={() => onApaga(s)}>
+          ✕
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function EditaServico({ s, onSalva, onCancela }) {
+  const [f, setF] = useState(s)
+  const muda = (k) => (e) =>
+    setF((x) => ({
+      ...x,
+      [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
+    }))
+  return (
+    <div className="pn-servico-form">
+      <div className="pn-campos">
+        <label>
+          Nome
+          <input
+            value={f.nome}
+            onChange={muda('nome')}
+            placeholder="Ex: Manutenção anual"
+            maxLength={60}
+          />
+        </label>
+        <label>
+          Valor (R$)
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={f.valor}
+            onChange={muda('valor')}
+          />
+        </label>
+        <label>
+          Cobrança
+          <select value={f.ciclo} onChange={muda('ciclo')}>
+            <option value="mensal">Mensal</option>
+            <option value="anual">Anual</option>
+            <option value="unico">Única vez</option>
+          </select>
+        </label>
+        <label>
+          {f.ciclo === 'unico' ? 'Vencimento' : '1º vencimento'}
+          <input
+            type="date"
+            value={f.primeiro_vencimento}
+            onChange={muda('primeiro_vencimento')}
+          />
+        </label>
+      </div>
+      <label className="pn-check">
+        <input type="checkbox" checked={f.ativo} onChange={muda('ativo')} />
+        Ativo (entra nas cobranças)
+      </label>
+      <div className="pn-form__bts">
+        <button type="button" className="pn-bt" onClick={onCancela}>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          className="pn-bt pn-bt--pri"
+          disabled={f.nome.trim().length < 2 || !f.primeiro_vencimento}
+          onClick={() => onSalva(f)}
+        >
+          Salvar serviço
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Ficha do cliente (novo, editar, ou vindo de um pedido do site)
 export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
+  const [atual, setAtual] = useState(cliente || null) // depois de salvar um novo, vira edição
+  const base = atual || {}
   const [f, setF] = useState(() => ({
-    nome: cliente?.nome ?? pedido?.nome ?? '',
-    negocio: cliente?.negocio ?? pedido?.negocio ?? '',
-    whatsapp: (cliente?.whatsapp ?? pedido?.whatsapp ?? '').replace(/^55/, ''),
-    plano: cliente?.plano ?? pedido?.plano ?? 'agenda',
-    modulos: cliente?.modulos ?? pedido?.modulos ?? [],
-    valor_mensal: cliente?.valor_mensal ?? pedido?.valor_mensal ?? '',
-    dia_vencimento: cliente?.dia_vencimento ?? 10,
-    ativo: cliente?.ativo ?? true,
-    observacao: cliente?.observacao ?? '',
+    nome: base.nome ?? pedido?.nome ?? '',
+    negocio: base.negocio ?? pedido?.negocio ?? '',
+    whatsapp: (base.whatsapp ?? pedido?.whatsapp ?? '').replace(/^55/, ''),
+    plano: base.plano ?? pedido?.plano ?? 'agenda',
+    modulos: base.modulos ?? pedido?.modulos ?? [],
+    ativo: base.ativo ?? true,
+    site_url: base.site_url ?? '',
+    dominio: base.dominio ?? '',
+    dominio_vence: base.dominio_vence ?? '',
+    cliente_desde: base.cliente_desde ?? hoje(),
+    observacao: base.observacao ?? '',
   }))
-  const [taxa, setTaxa] = useState({
-    criar: Boolean(pedido?.taxa_criacao),
-    valor: pedido?.taxa_criacao ?? '',
+  // Ao virar cliente a partir de um pedido: já cria os serviços do plano
+  const [inicial, setInicial] = useState({
+    mensal: Boolean(pedido?.valor_mensal),
+    valorMensal: pedido?.valor_mensal ?? '',
+    taxa: Boolean(pedido?.taxa_criacao),
+    valorTaxa: pedido?.taxa_criacao ?? '',
     vencimento: hoje(),
   })
   const [erro, setErro] = useState('')
@@ -36,7 +243,8 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
   async function salvar(e) {
     e.preventDefault()
     setErro('')
-    const whatsapp = '55' + f.whatsapp.replace(/\D/g, '')
+    const whatsapp =
+      '55' + f.whatsapp.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '')
     if (!/^55\d{10,11}$/.test(whatsapp))
       return setErro('WhatsApp precisa ter DDD + número (10 ou 11 dígitos).')
     const linha = {
@@ -45,33 +253,49 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
       whatsapp,
       plano: f.plano,
       modulos: f.modulos,
-      valor_mensal: Number(f.valor_mensal) || 0,
-      dia_vencimento: Number(f.dia_vencimento),
       ativo: f.ativo,
+      site_url: f.site_url.trim() || null,
+      dominio: f.dominio.trim() || null,
+      dominio_vence: f.dominio_vence || null,
+      cliente_desde: f.cliente_desde || null,
       observacao: f.observacao.trim() || null,
     }
-    if (pedido) linha.solicitacao_id = pedido.id
+    if (pedido && !atual) linha.solicitacao_id = pedido.id
     setSalvando(true)
-    const q = cliente
-      ? db.from('nukze_clientes').update(linha).eq('id', cliente.id)
+    const q = atual
+      ? db.from('nukze_clientes').update(linha).eq('id', atual.id)
       : db.from('nukze_clientes').insert(linha)
-    const { data, error } = await q.select().single()
+    const { data: salvo, error } = await q.select().single()
     if (error) {
       setSalvando(false)
       return setErro('Não deu pra salvar. Confere os campos.')
     }
-    // Cobrança da taxa de criação (opcional, só ao criar)
-    if (!cliente && taxa.criar && Number(taxa.valor) > 0) {
-      await db.from('nukze_cobrancas').insert({
-        cliente_id: data.id,
-        referencia: taxa.vencimento.slice(0, 7) + '-01',
-        descricao: 'Criação do site',
-        valor: Number(taxa.valor),
-        vencimento: taxa.vencimento,
-      })
+    if (pedido && !atual) {
+      const servicos = []
+      if (inicial.mensal && Number(inicial.valorMensal) > 0)
+        servicos.push({
+          cliente_id: salvo.id,
+          nome: `Plano ${nomePlano[f.plano] || ''}`.trim(),
+          valor: Number(inicial.valorMensal),
+          ciclo: 'mensal',
+          primeiro_vencimento: inicial.vencimento,
+        })
+      if (inicial.taxa && Number(inicial.valorTaxa) > 0)
+        servicos.push({
+          cliente_id: salvo.id,
+          nome: 'Criação do site',
+          valor: Number(inicial.valorTaxa),
+          ciclo: 'unico',
+          primeiro_vencimento: inicial.vencimento,
+        })
+      if (servicos.length) await db.from('nukze_servicos').insert(servicos)
     }
     setSalvando(false)
-    onSalvo(data)
+    if (!atual) {
+      // novo: continua aberto pra adicionar os serviços
+      setAtual(salvo)
+      onSalvo?.(salvo, false)
+    } else onSalvo?.(salvo, true)
   }
 
   return (
@@ -81,7 +305,7 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
         onClick={(e) => e.stopPropagation()}
         onSubmit={salvar}
       >
-        <h2>{cliente ? 'Editar cliente' : 'Novo cliente'}</h2>
+        <h2>{atual ? atual.negocio : 'Novo cliente'}</h2>
         <div className="pn-campos">
           <label>
             Nome
@@ -124,23 +348,37 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
             </select>
           </label>
           <label>
-            Valor mensal (R$)
+            Site
             <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={f.valor_mensal}
-              onChange={muda('valor_mensal')}
+              value={f.site_url}
+              onChange={muda('site_url')}
+              placeholder="https://www.exemplo.com.br"
+              maxLength={200}
             />
           </label>
           <label>
-            Dia do vencimento
+            Cliente desde
             <input
-              type="number"
-              min="1"
-              max="28"
-              value={f.dia_vencimento}
-              onChange={muda('dia_vencimento')}
+              type="date"
+              value={f.cliente_desde}
+              onChange={muda('cliente_desde')}
+            />
+          </label>
+          <label>
+            Domínio
+            <input
+              value={f.dominio}
+              onChange={muda('dominio')}
+              placeholder="exemplo.com.br"
+              maxLength={100}
+            />
+          </label>
+          <label>
+            Domínio vence em
+            <input
+              type="date"
+              value={f.dominio_vence}
+              onChange={muda('dominio_vence')}
             />
           </label>
         </div>
@@ -178,56 +416,57 @@ export function FormCliente({ cliente, pedido, onFechar, onSalvo }) {
           />
         </label>
 
-        {!cliente && (
+        {pedido && !atual && (
           <div className="pn-taxa">
-            <label>
+            <b>Serviços do pedido</b>
+            <label className="pn-check">
               <input
                 type="checkbox"
-                checked={taxa.criar}
+                checked={inicial.mensal}
                 onChange={(e) =>
-                  setTaxa((t) => ({ ...t, criar: e.target.checked }))
+                  setInicial((x) => ({ ...x, mensal: e.target.checked }))
                 }
               />
-              Criar cobrança da taxa de criação
+              Mensalidade de {reais(inicial.valorMensal)}
             </label>
-            {taxa.criar && (
-              <div className="pn-campos">
-                <label>
-                  Valor (R$)
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={taxa.valor}
-                    onChange={(e) =>
-                      setTaxa((t) => ({ ...t, valor: e.target.value }))
-                    }
-                  />
-                </label>
-                <label>
-                  Vencimento
-                  <input
-                    type="date"
-                    value={taxa.vencimento}
-                    onChange={(e) =>
-                      setTaxa((t) => ({ ...t, vencimento: e.target.value }))
-                    }
-                  />
-                </label>
-              </div>
-            )}
+            <label className="pn-check">
+              <input
+                type="checkbox"
+                checked={inicial.taxa}
+                onChange={(e) =>
+                  setInicial((x) => ({ ...x, taxa: e.target.checked }))
+                }
+              />
+              Criação do site de {reais(inicial.valorTaxa)} (única vez)
+            </label>
+            <label>
+              1º vencimento
+              <input
+                type="date"
+                value={inicial.vencimento}
+                onChange={(e) =>
+                  setInicial((x) => ({ ...x, vencimento: e.target.value }))
+                }
+              />
+            </label>
           </div>
         )}
 
         {erro && <p className="pn-erro">{erro}</p>}
         <div className="pn-form__bts">
           <button type="button" className="pn-bt" onClick={onFechar}>
-            Cancelar
+            {atual ? 'Fechar' : 'Cancelar'}
           </button>
           <button className="pn-bt pn-bt--pri" disabled={salvando}>
-            {salvando ? 'Salvando…' : 'Salvar'}
+            {salvando
+              ? 'Salvando…'
+              : atual
+                ? 'Salvar dados'
+                : 'Salvar e adicionar serviços'}
           </button>
         </div>
+
+        {atual && <Servicos clienteId={atual.id} />}
       </form>
     </div>
   )
@@ -238,11 +477,12 @@ export default function Clientes({ dono }) {
   const [editando, setEditando] = useState(null) // {} = novo
   const [busca, setBusca] = useState('')
 
-  // O leitor (Guilherme) lê a "visão" sem os valores
+  // O leitor (Guilherme) lê a "visão" sem valores; o dono vê os serviços
   const carrega = () =>
-    db
-      .from(dono ? 'nukze_clientes' : 'nukze_clientes_resumo')
-      .select('*')
+    (dono
+      ? db.from('nukze_clientes').select('*, servicos:nukze_servicos(*)')
+      : db.from('nukze_clientes_resumo').select('*')
+    )
       .order('negocio')
       .then(({ data }) => setLista(data || []))
   useEffect(() => {
@@ -279,69 +519,118 @@ export default function Clientes({ dono }) {
       {!visiveis.length && <p className="pn-vazio">Nenhum cliente ainda.</p>}
 
       <div className="pn-grade">
-        {visiveis.map((c) => (
-          <article
-            key={c.id}
-            className={`pn-cartao pn-cliente ${c.ativo ? '' : 'off'}`}
-          >
-            <div className="pn-pedido__topo">
-              <div>
-                <b>{c.negocio}</b>
-                <span>{c.nome}</span>
+        {visiveis.map((c) => {
+          const servicos = (c.servicos || []).filter((s) => s.ativo)
+          const dDom = c.dominio_vence ? diasAte(c.dominio_vence) : null
+          return (
+            <article
+              key={c.id}
+              className={`pn-cartao pn-cliente ${c.ativo ? '' : 'off'}`}
+            >
+              <div className="pn-pedido__topo">
+                <div>
+                  <b>{c.negocio}</b>
+                  <span>
+                    {c.nome}
+                    {c.cliente_desde && ` · desde ${data(c.cliente_desde)}`}
+                  </span>
+                </div>
+                <span
+                  className={`pn-st ${c.ativo ? 'pn-st--fechada' : 'pn-st--descartada'}`}
+                >
+                  {c.ativo ? 'Ativo' : 'Inativo'}
+                </span>
               </div>
-              <span
-                className={`pn-st ${c.ativo ? 'pn-st--fechada' : 'pn-st--descartada'}`}
-              >
-                {c.ativo ? 'Ativo' : 'Inativo'}
-              </span>
-            </div>
-            <dl className="pn-dados">
-              <dt>Plano</dt>
-              <dd>
-                {nomePlano[c.plano]}
-                {c.modulos?.length > 0 && ` + ${c.modulos.join(', ')}`}
-              </dd>
-              {dono && (
-                <>
-                  <dt>Mensal</dt>
-                  <dd>
-                    {reais(c.valor_mensal)} · vence dia {c.dia_vencimento}
-                  </dd>
-                </>
-              )}
-              {dono && c.observacao && (
-                <>
-                  <dt>Notas</dt>
-                  <dd>{c.observacao}</dd>
-                </>
-              )}
-            </dl>
-            <div className="pn-pedido__acoes">
-              <a
-                className="pn-bt pn-bt--zap"
-                href={zap(c.whatsapp)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                💬 {fone(c.whatsapp)}
-              </a>
-              {dono && (
-                <button className="pn-bt" onClick={() => setEditando(c)}>
-                  Editar
-                </button>
-              )}
-            </div>
-          </article>
-        ))}
+              <dl className="pn-dados">
+                <dt>Plano</dt>
+                <dd>
+                  {nomePlano[c.plano]}
+                  {c.modulos?.length > 0 && ` + ${c.modulos.join(', ')}`}
+                </dd>
+                {c.site_url && (
+                  <>
+                    <dt>Site</dt>
+                    <dd>
+                      <a
+                        href={c.site_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {c.site_url.replace(/^https?:\/\//, '')}
+                      </a>
+                    </dd>
+                  </>
+                )}
+                {(c.dominio || c.dominio_vence) && (
+                  <>
+                    <dt>Domínio</dt>
+                    <dd className={dDom != null && dDom <= 30 ? 'pn-am' : ''}>
+                      {c.dominio || '—'}
+                      {c.dominio_vence && ` · vence ${data(c.dominio_vence)}`}
+                      {dDom != null &&
+                        dDom <= 30 &&
+                        (dDom < 0 ? ' ⚠️ vencido' : ` ⚠️ em ${dDom} dia(s)`)}
+                    </dd>
+                  </>
+                )}
+                {dono && servicos.length > 0 && (
+                  <>
+                    <dt>Serviços</dt>
+                    <dd>
+                      {servicos.map((s) => (
+                        <div key={s.id}>
+                          {s.nome}: {reais(s.valor)}{' '}
+                          {s.ciclo === 'unico'
+                            ? '(única)'
+                            : `/${s.ciclo === 'mensal' ? 'mês' : 'ano'}`}
+                        </div>
+                      ))}
+                      <small className="pn-suave">
+                        ≈ {reais(servicos.reduce((t, s) => t + porMes(s), 0))}
+                        /mês
+                      </small>
+                    </dd>
+                  </>
+                )}
+                {dono && c.observacao && (
+                  <>
+                    <dt>Notas</dt>
+                    <dd>{c.observacao}</dd>
+                  </>
+                )}
+              </dl>
+              <div className="pn-pedido__acoes">
+                <a
+                  className="pn-bt pn-bt--zap"
+                  href={zap(c.whatsapp)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  💬 {fone(c.whatsapp)}
+                </a>
+                {dono && (
+                  <button className="pn-bt" onClick={() => setEditando(c)}>
+                    Abrir ficha
+                  </button>
+                )}
+              </div>
+            </article>
+          )
+        })}
       </div>
 
       {editando && (
         <FormCliente
           cliente={editando.id ? editando : null}
-          onFechar={() => setEditando(null)}
-          onSalvo={() => {
+          onFechar={() => {
             setEditando(null)
             carrega()
+          }}
+          onSalvo={(_c, fechar) => {
+            if (fechar) {
+              setEditando(null)
+              carrega()
+            }
           }}
         />
       )}

@@ -50,6 +50,9 @@ export default function Rodape() {
                   WhatsApp
                 </a>
               </li>
+              <li>
+                <a href="/suporte/">Suporte (já sou cliente)</a>
+              </li>
               {links.email && (
                 <li>
                   <a href={`mailto:${links.email}`}>{links.email}</a>
