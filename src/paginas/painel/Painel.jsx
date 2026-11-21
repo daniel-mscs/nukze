@@ -46,22 +46,37 @@ export default function Painel() {
   useEffect(() => {
     if (!db) return setSessao(null)
     db.auth.getSession().then(({ data }) => setSessao(data.session))
-    const { data } = db.auth.onAuthStateChange((_e, s) => setSessao(s))
+    // Renovação do login não troca a sessão na tela (evita recarregar tudo)
+    const { data } = db.auth.onAuthStateChange((evento, s) => {
+      if (evento === 'TOKEN_REFRESHED') return
+      setSessao((atual) =>
+        atual?.user?.id && atual.user.id === s?.user?.id ? atual : s,
+      )
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 
-  // Descobre se quem entrou é da equipe e qual o papel
+  // Descobre se quem entrou é da equipe e qual o papel.
+  // Depende só do ID do usuário: quando o login se renova sozinho (ex.: ao voltar
+  // pra aba do navegador), o ID é o mesmo e nada é recarregado nem fechado.
+  const usuarioId = sessao?.user?.id
   useEffect(() => {
-    if (!sessao) return setMembro(undefined)
+    if (!usuarioId) {
+      setMembro(undefined)
+      setAba(null) // saiu: o próximo a entrar começa na aba inicial dele
+      return
+    }
     db.from('nukze_equipe')
       .select('nome, papel')
-      .eq('user_id', sessao.user.id)
+      .eq('user_id', usuarioId)
       .maybeSingle()
       .then(({ data }) => {
         setMembro(data || null)
-        if (data) setAba(data.papel === 'dono' ? 'resumo' : 'pedidos')
+        // só escolhe a aba inicial uma vez
+        if (data)
+          setAba((a) => a || (data.papel === 'dono' ? 'resumo' : 'pedidos'))
       })
-  }, [sessao])
+  }, [usuarioId])
 
   if (!db)
     return (
