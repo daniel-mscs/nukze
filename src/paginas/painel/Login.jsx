@@ -16,7 +16,14 @@ export default function Login() {
       password: senha,
     })
     setEnviando(false)
-    if (error) setErro('E-mail ou senha incorretos.')
+    if (error)
+      setErro(
+        /confirm/i.test(error.message)
+          ? 'Essa conta ainda não foi confirmada.'
+          : /rate|many/i.test(error.message)
+            ? 'Muitas tentativas. Espera um minuto e tenta de novo.'
+            : 'E-mail ou senha incorretos.',
+      )
   }
 
   return (
